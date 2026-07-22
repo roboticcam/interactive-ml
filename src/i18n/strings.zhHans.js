@@ -32,6 +32,7 @@ export default {
   "ui.paper.newtab": "在新标签页打开 ↗",
   "ui.paper.tip": "在原论文中阅读此处",
   "ui.paper.ref": "论文",
+  "ui.paper.back": "返回应用",
 
   // ── Nav (chapter + sub labels) ────────────────────────────────────────────
   "nav.dpa": "点积注意力",

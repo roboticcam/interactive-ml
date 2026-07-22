@@ -37,6 +37,7 @@ export const EN = {
   "ui.paper.newtab": "Open in new tab ↗",
   "ui.paper.tip": "Read this in the source paper",
   "ui.paper.ref": "Paper",
+  "ui.paper.back": "Back to the app",
 
   // ── Nav (chapter + sub labels) ────────────────────────────────────────────
   "nav.dpa": "Dot-Product Attention",

@@ -31,6 +31,7 @@ export default {
   "ui.paper.newtab": "在新分頁開啟 ↗",
   "ui.paper.tip": "在原始論文中閱讀此段",
   "ui.paper.ref": "論文",
+  "ui.paper.back": "返回應用程式",
 
   // ── Nav (chapter + sub labels) ────────────────────────────────────────────
   "nav.dpa": "點積注意力",

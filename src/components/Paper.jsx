@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useT } from "../i18n/LangContext.jsx";
 
@@ -16,6 +16,14 @@ export function PaperProvider({ children }) {
   const close = useCallback(() => setState(null), []);
   const src = state ? `${PDF_URL}#page=${state.page}&view=FitH` : PDF_URL;
 
+  // Escape returns to the app; lock body scroll while the drawer is open.
+  useEffect(() => {
+    if (!state) return;
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [state, close]);
+
   return (
     <PaperCtx.Provider value={{ open }}>
       {children}
@@ -23,10 +31,18 @@ export function PaperProvider({ children }) {
         {state && (
           <>
             <motion.div
-              className="fixed inset-0 z-[70] bg-slate-900/40 backdrop-blur-sm"
+              className="fixed inset-0 z-[70] cursor-pointer bg-slate-900/25"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={close}
             />
+            {/* Explicit "return to the app" affordance on the dimmed area. */}
+            <motion.button
+              onClick={close}
+              className="fixed left-6 top-6 z-[72] flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-ink shadow-lg ring-1 ring-line hover:text-accent"
+              initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}
+            >
+              <span className="text-base leading-none">←</span> {t("ui.paper.back")}
+            </motion.button>
             <motion.aside
               className="fixed right-0 top-0 z-[71] flex h-full w-full max-w-[720px] flex-col bg-white shadow-2xl"
               initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
