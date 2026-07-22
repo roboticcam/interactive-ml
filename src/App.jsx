@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CHAPTERS } from "./sections/chapters.jsx";
 import { Eyebrow } from "./components/ui.jsx";
-import { PaperProvider, PaperRef } from "./components/Paper.jsx";
+import { PaperProvider, PaperRef, usePaper } from "./components/Paper.jsx";
 import { Rich } from "./i18n/rich.jsx";
 import { useT, LanguageSwitcher } from "./i18n/LangContext.jsx";
 
@@ -47,6 +47,7 @@ function ProgressBar() {
 
 function Sidebar({ active }) {
   const t = useT();
+  const { isOpen, close } = usePaper();
   return (
     <aside className="hidden lg:flex lg:w-[300px] lg:shrink-0 lg:flex-col lg:border-r lg:border-line lg:bg-panel">
       <div className="sticky top-0 flex h-screen flex-col">
@@ -59,7 +60,16 @@ function Sidebar({ active }) {
           <LanguageSwitcher />
         </div>
         <div className="px-6 pb-4">
-          <PaperRef page={1} className="w-full justify-center py-2 text-[13px]">{t("ui.sidebar.readpaper")}</PaperRef>
+          {isOpen ? (
+            <button
+              onClick={close}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+            >
+              <span className="text-base leading-none">←</span> {t("ui.paper.back")}
+            </button>
+          ) : (
+            <PaperRef page={1} className="w-full justify-center py-2 text-[13px]">{t("ui.sidebar.readpaper")}</PaperRef>
+          )}
         </div>
         <nav className="thin-scroll flex-1 overflow-y-auto px-4 pb-10">
           {CHAPTERS.map((c) => {

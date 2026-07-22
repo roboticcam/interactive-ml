@@ -55,7 +55,7 @@ export function PaperProvider({ children }) {
   }, [state, close]);
 
   return (
-    <PaperCtx.Provider value={{ open }}>
+    <PaperCtx.Provider value={{ open, close, isOpen: !!state }}>
       {children}
       <AnimatePresence>
         {state && (
@@ -66,19 +66,12 @@ export function PaperProvider({ children }) {
             initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
           >
-            <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-2.5">
-              <div className="flex min-w-0 items-center gap-3">
-                <button
-                  onClick={close}
-                  className="flex shrink-0 items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-[13px] font-semibold text-ink transition hover:border-accent hover:text-accent"
-                >
-                  <span className="text-base leading-none">←</span> {t("ui.paper.back")}
-                </button>
-                <div className="hidden min-w-0 sm:block">
-                  <div className="text-[14px] font-semibold text-ink">
-                    {state.sec ? `§${state.sec} · ` : ""}{t("ui.paper.page")} {state.page}
-                    <span className="ml-2 font-normal text-faint">{t("ui.paper.title")}</span>
-                  </div>
+            <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-2.5">
+              <div className="min-w-0">
+                <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">{t("ui.paper.eyebrow")}</div>
+                <div className="text-[14px] font-semibold text-ink">
+                  {state.sec ? `§${state.sec} · ` : ""}{t("ui.paper.page")} {state.page}
+                  <span className="ml-2 font-normal text-faint">{t("ui.paper.title")}</span>
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-2">
