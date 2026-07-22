@@ -3,7 +3,7 @@ export default {
   // ── Chrome ────────────────────────────────────────────────────────────────
   "ui.sidebar.kicker": "學習夥伴",
   "ui.sidebar.title": "The Transformer",
-  "ui.sidebar.subtitle": "搭配 PyTorch · Richard Xu",
+  "ui.sidebar.subtitle": "搭配 PyTorch · 徐亦達教授",
   "ui.sidebar.readpaper": "閱讀完整論文",
   "ui.interactive": "互動",
   "ui.chapter": "章",
@@ -18,7 +18,7 @@ export default {
   "ui.hero.stat2": "7 個互動實驗",
   "ui.hero.stat3": "以《Transformer with PyTorch》為基礎",
 
-  "ui.footer.1": "由 Richard Xu 從 `transformer.tex` 打造。互動式學習夥伴——撥弄每一個張量。每一章都連回原始 PDF。",
+  "ui.footer.1": "由徐亦達教授從 `transformer.tex` 打造。互動式學習夥伴——撥弄每一個張量。每一章都連回原始 PDF。",
   "ui.footer.2": "動畫以 SVG + framer-motion 手工打造，靈感取自 [3blue1brown](https://github.com/3b1b) 的視覺風格——並未使用 manim 或 3b1b 的素材。",
 
   "ui.callout.note": "註記",

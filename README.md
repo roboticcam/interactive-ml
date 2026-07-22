@@ -3,7 +3,7 @@
 **Live:** https://roboticcam.github.io/interactive-ml/ (auto-deployed from `main` via GitHub Actions).
 
 
-A hands-on study website built from `../transformer.tex` ("Transformer with PyTorch", Richard Xu).
+A hands-on study website built from `../transformer.tex` ("Transformer with PyTorch", Prof Richard Xu / 徐亦达).
 It walks the whole modern attention stack — from a single dot product to FlashAttention, MLA, RoPE,
 the lightning indexer, hyper-connections and knowledge distillation — and makes the PyTorch operations
 something you can **poke, step through, and watch reshape live**.

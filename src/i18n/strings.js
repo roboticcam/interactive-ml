@@ -9,7 +9,7 @@ export const EN = {
   // ── Chrome ────────────────────────────────────────────────────────────────
   "ui.sidebar.kicker": "Study Companion",
   "ui.sidebar.title": "The Transformer",
-  "ui.sidebar.subtitle": "with PyTorch · Richard Xu",
+  "ui.sidebar.subtitle": "with PyTorch · Prof Richard Xu",
   "ui.sidebar.readpaper": "Read the full paper",
   "ui.interactive": "Interactive",
   "ui.chapter": "Chapter",
@@ -24,7 +24,7 @@ export const EN = {
   "ui.hero.stat2": "7 interactive labs",
   "ui.hero.stat3": "Based on “Transformer with PyTorch”",
 
-  "ui.footer.1": "Built from `transformer.tex` by Richard Xu. Interactive study companion — poke every tensor. Every chapter links back to the source PDF.",
+  "ui.footer.1": "Built from `transformer.tex` by Prof Richard Xu. Interactive study companion — poke every tensor. Every chapter links back to the source PDF.",
   "ui.footer.2": "Animations are hand-built with SVG + framer-motion, inspired by the visual style of [3blue1brown](https://github.com/3b1b) — no manim or 3b1b assets are used.",
 
   "ui.callout.note": "Note",
