@@ -45,57 +45,60 @@ export function PaperProvider({ children }) {
     return () => window.removeEventListener("message", onMsg);
   }, [close]);
 
+  // Clicking a sidebar chapter (any hash change) closes the drawer so the reader
+  // lands on that section — the nav stays live beside the open PDF.
+  useEffect(() => {
+    if (!state) return;
+    const onHash = () => close();
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [state, close]);
+
   return (
     <PaperCtx.Provider value={{ open }}>
       {children}
       <AnimatePresence>
         {state && (
-          <>
-            <motion.div
-              className="fixed inset-0 z-[70] cursor-pointer bg-slate-900/25"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={close}
-            />
-            {/* Explicit "return to the app" affordance on the dimmed area. */}
-            <motion.button
-              onClick={close}
-              className="fixed left-6 top-6 z-[72] flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-ink shadow-lg ring-1 ring-line hover:text-accent"
-              initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}
-            >
-              <span className="text-base leading-none">←</span> {t("ui.paper.back")}
-            </motion.button>
-            <motion.aside
-              className="fixed right-0 top-0 z-[71] flex h-full w-full max-w-[720px] flex-col bg-white shadow-2xl"
-              initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            >
-              <div className="flex items-center justify-between border-b border-line px-5 py-3">
-                <div>
-                  <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">{t("ui.paper.eyebrow")}</div>
+          // Covers the whole reading area but leaves the left nav (300px) visible
+          // and usable; slides in from the right. No backdrop — nothing to dim.
+          <motion.aside
+            className="fixed inset-y-0 left-0 right-0 z-[71] flex flex-col bg-white shadow-2xl lg:left-[300px]"
+            initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+          >
+            <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-2.5">
+              <div className="flex min-w-0 items-center gap-3">
+                <button
+                  onClick={close}
+                  className="flex shrink-0 items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-[13px] font-semibold text-ink transition hover:border-accent hover:text-accent"
+                >
+                  <span className="text-base leading-none">←</span> {t("ui.paper.back")}
+                </button>
+                <div className="hidden min-w-0 sm:block">
                   <div className="text-[14px] font-semibold text-ink">
                     {state.sec ? `§${state.sec} · ` : ""}{t("ui.paper.page")} {state.page}
                     <span className="ml-2 font-normal text-faint">{t("ui.paper.title")}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <a
-                    href={src} target="_blank" rel="noreferrer"
-                    className="rounded-lg border border-line px-3 py-1.5 text-[13px] font-medium text-muted hover:border-accent hover:text-ink"
-                  >
-                    {t("ui.paper.newtab")}
-                  </a>
-                  <button
-                    onClick={close}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-line text-lg text-muted hover:border-accent hover:text-ink"
-                    aria-label="Close"
-                  >
-                    ×
-                  </button>
-                </div>
               </div>
-              <iframe key={state.page} src={src} title="Transformer paper" className="min-h-0 flex-1 bg-slate-100" />
-            </motion.aside>
-          </>
+              <div className="flex shrink-0 items-center gap-2">
+                <a
+                  href={src} target="_blank" rel="noreferrer"
+                  className="rounded-lg border border-line px-3 py-1.5 text-[13px] font-medium text-muted hover:border-accent hover:text-ink"
+                >
+                  {t("ui.paper.newtab")}
+                </a>
+                <button
+                  onClick={close}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-line text-lg text-muted hover:border-accent hover:text-ink"
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            <iframe key={state.page} src={src} title="Transformer paper" className="min-h-0 flex-1 bg-slate-100" />
+          </motion.aside>
         )}
       </AnimatePresence>
     </PaperCtx.Provider>
