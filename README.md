@@ -34,6 +34,22 @@ Single-page reading experience with a scroll-spy sidebar, 10 chapters, and 7 int
 > Animations are hand-built with SVG + [framer-motion](https://www.framer.com/motion/), *inspired by*
 > the visual style of [3blue1brown](https://github.com/3b1b). No `manim` or 3b1b assets are used.
 
+## Languages
+
+Trilingual — **English (default)**, **简体中文**, **繁體中文** — via the `EN / 简体 / 繁體`
+switcher in the sidebar. Choice persists in `localStorage`; first visit guesses from the browser
+but still defaults to English.
+
+- `src/i18n/strings.js` holds the English catalog (source of truth); `strings.zhHans.js` /
+  `strings.zhHant.js` override by key and fall back to English for anything missing.
+- Prose values use a tiny markup rendered by `src/i18n/rich.jsx` — `$math$`, `` `code` ``,
+  `**bold**`, `*italic*`, `[text](url)` — so translations stay flat strings while math/code stay shared.
+- All narrative, nav, callouts, captions, and the PDF drawer translate. The **inside** of the
+  interactive widgets (play/pause, tensor-shape badges, code) stays English by design — it's
+  code-dense and reads cleaner uniform.
+
+To add a language: add an entry to `LANGS` in `src/i18n/LangContext.jsx` and a matching override map.
+
 ## Referencing the source PDF
 
 The paper (`transformer.pdf`) is served from `public/` and cited throughout:

@@ -1,5 +1,6 @@
 // Shared presentational building blocks. Same visual DNA as the SlideSmith
 // "snow" palette: white canvas, slate ink, indigo accent, generous type.
+import { useT } from "../i18n/LangContext.jsx";
 
 export function Eyebrow({ children, className = "" }) {
   return (
@@ -18,6 +19,7 @@ export function Lead({ children }) {
 // A titled interactive/figure card that visually separates "play with this"
 // content from the reading flow.
 export function DemoCard({ title, subtitle, children, tone = "accent" }) {
+  const t = useT();
   const bar = tone === "accent" ? "bg-accent" : "bg-emerald-500";
   return (
     <div className="my-7 overflow-hidden rounded-2xl border border-line bg-white shadow-[0_1px_0_rgba(15,23,42,0.03),0_12px_32px_-18px_rgba(15,23,42,0.25)]">
@@ -25,7 +27,7 @@ export function DemoCard({ title, subtitle, children, tone = "accent" }) {
         <div className={"mt-1 h-8 w-1.5 shrink-0 rounded-full " + bar} />
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-accent">Interactive</span>
+            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-accent">{t("ui.interactive")}</span>
           </div>
           <div className="text-[15px] font-semibold text-ink">{title}</div>
           {subtitle ? <div className="text-[13px] text-faint">{subtitle}</div> : null}
@@ -37,10 +39,11 @@ export function DemoCard({ title, subtitle, children, tone = "accent" }) {
 }
 
 export function Callout({ children, kind = "note", title }) {
+  const t = useT();
   const map = {
-    note: { ring: "border-indigo-200", bg: "bg-indigo-50/60", dot: "text-accent", label: title || "Note" },
-    key: { ring: "border-amber-200", bg: "bg-amber-50/70", dot: "text-amber-600", label: title || "Key idea" },
-    warn: { ring: "border-rose-200", bg: "bg-rose-50/70", dot: "text-rose-600", label: title || "Watch out" },
+    note: { ring: "border-indigo-200", bg: "bg-indigo-50/60", dot: "text-accent", label: title || t("ui.callout.note") },
+    key: { ring: "border-amber-200", bg: "bg-amber-50/70", dot: "text-amber-600", label: title || t("ui.callout.key") },
+    warn: { ring: "border-rose-200", bg: "bg-rose-50/70", dot: "text-rose-600", label: title || t("ui.callout.warn") },
   };
   const s = map[kind] || map.note;
   return (

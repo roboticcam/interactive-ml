@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { CHAPTERS } from "./sections/chapters.jsx";
 import { Eyebrow } from "./components/ui.jsx";
 import { PaperProvider, PaperRef } from "./components/Paper.jsx";
+import { Rich } from "./i18n/rich.jsx";
+import { useT, LanguageSwitcher } from "./i18n/LangContext.jsx";
 
 function useScrollSpy(ids) {
   const [active, setActive] = useState(ids[0]);
@@ -44,23 +46,24 @@ function ProgressBar() {
 }
 
 function Sidebar({ active }) {
-  const activeChapter = CHAPTERS.find((c) => c.id === active) || (CHAPTERS.find((c) => c.subs?.some((s) => s[0] === active)));
+  const t = useT();
   return (
     <aside className="hidden lg:flex lg:w-[300px] lg:shrink-0 lg:flex-col lg:border-r lg:border-line lg:bg-panel">
       <div className="sticky top-0 flex h-screen flex-col">
-        <a href="#top" className="block px-7 pb-5 pt-8">
-          <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-accent">Study Companion</div>
-          <div className="mt-1 text-[19px] font-extrabold leading-tight tracking-tight text-ink">
-            The Transformer
-          </div>
-          <div className="text-[13px] text-faint">with PyTorch · Richard Xu</div>
-        </a>
+        <div className="flex items-start justify-between gap-2 px-7 pb-4 pt-7">
+          <a href="#top" className="block">
+            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-accent">{t("ui.sidebar.kicker")}</div>
+            <div className="mt-1 text-[19px] font-extrabold leading-tight tracking-tight text-ink">{t("ui.sidebar.title")}</div>
+            <div className="text-[13px] text-faint">{t("ui.sidebar.subtitle")}</div>
+          </a>
+          <LanguageSwitcher />
+        </div>
         <div className="px-6 pb-4">
-          <PaperRef page={1} className="w-full justify-center py-2 text-[13px]">Read the full paper</PaperRef>
+          <PaperRef page={1} className="w-full justify-center py-2 text-[13px]">{t("ui.sidebar.readpaper")}</PaperRef>
         </div>
         <nav className="thin-scroll flex-1 overflow-y-auto px-4 pb-10">
           {CHAPTERS.map((c) => {
-            const isActive = active === c.id || c.subs?.some((s) => s[0] === active);
+            const isActive = active === c.id || c.subs?.some((s) => s === active);
             return (
               <div key={c.id} className="mb-0.5">
                 <a
@@ -73,17 +76,17 @@ function Sidebar({ active }) {
                   <span className={"flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-[11px] font-bold " + (isActive ? "bg-accent text-white" : "bg-white text-faint ring-1 ring-line")}>
                     {c.num}
                   </span>
-                  <span className="truncate">{c.label}</span>
+                  <span className="truncate">{t("nav." + c.id)}</span>
                 </a>
                 {isActive && c.subs?.length ? (
                   <div className="ml-6 mt-0.5 flex flex-col border-l border-line pl-3">
-                    {c.subs.map(([sid, slabel]) => (
+                    {c.subs.map((sid) => (
                       <a
                         key={sid}
                         href={`#${sid}`}
                         className={"rounded px-2 py-1 text-[12.5px] transition " + (active === sid ? "font-semibold text-accent" : "text-faint hover:text-muted")}
                       >
-                        {slabel}
+                        {t("sub." + sid)}
                       </a>
                     ))}
                   </div>
@@ -98,6 +101,7 @@ function Sidebar({ active }) {
 }
 
 function Hero() {
+  const t = useT();
   return (
     <header id="top" className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -105,32 +109,31 @@ function Hero() {
         <div className="absolute left-1/3 top-10 h-64 w-64 rounded-full bg-teal-200/30 blur-3xl" />
       </div>
       <div className="px-8 py-16 md:px-14 lg:py-20">
-        <Eyebrow>An interactive study companion</Eyebrow>
-        <h1 className="mt-4 max-w-4xl text-5xl font-black leading-[1.03] tracking-tight text-ink md:text-6xl">
-          The Transformer,{" "}
+        <div className="mb-4 flex items-center gap-3">
+          <Eyebrow>{t("ui.hero.eyebrow")}</Eyebrow>
+          <span className="lg:hidden"><LanguageSwitcher /></span>
+        </div>
+        <h1 className="mt-2 max-w-4xl text-5xl font-black leading-[1.03] tracking-tight text-ink md:text-6xl">
+          {t("ui.hero.title")}{" "}
           <span className="bg-gradient-to-r from-indigo-600 to-teal-500 bg-clip-text text-transparent">
-            one tensor at a time.
+            {t("ui.hero.titleAccent")}
           </span>
         </h1>
-        <p className="mt-6 max-w-2xl text-xl leading-relaxed text-ink/70">
-          A hands-on walk through attention — from the single dot product to FlashAttention, MLA, RoPE and
-          distillation. Every PyTorch operation is something you can poke, step through, and watch reshape
-          live.
-        </p>
+        <p className="mt-6 max-w-2xl text-xl leading-relaxed text-ink/70">{t("ui.hero.lead")}</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="#dpa" className="rounded-xl bg-accent px-5 py-3 text-[15px] font-semibold text-white shadow-sm transition hover:bg-indigo-700">
-            Start with attention →
+            {t("ui.hero.cta1")}
           </a>
           <a href="#flash" className="rounded-xl border border-line bg-white px-5 py-3 text-[15px] font-semibold text-muted transition hover:border-accent hover:text-ink">
-            Jump to FlashAttention
+            {t("ui.hero.cta2")}
           </a>
         </div>
         <div className="mt-10 flex flex-wrap gap-x-8 gap-y-2 text-[13px] text-faint">
-          <span>10 chapters</span>
+          <span>{t("ui.hero.stat1")}</span>
           <span className="text-line">·</span>
-          <span>7 interactive labs</span>
+          <span>{t("ui.hero.stat2")}</span>
           <span className="text-line">·</span>
-          <span>Based on “Transformer with PyTorch”</span>
+          <span>{t("ui.hero.stat3")}</span>
         </div>
       </div>
     </header>
@@ -138,7 +141,8 @@ function Hero() {
 }
 
 export default function App() {
-  const ids = CHAPTERS.flatMap((c) => [c.id, ...(c.subs || []).map((s) => s[0])]);
+  const t = useT();
+  const ids = CHAPTERS.flatMap((c) => [c.id, ...(c.subs || [])]);
   const active = useScrollSpy(ids);
 
   return (
@@ -154,15 +158,9 @@ export default function App() {
                 <Body key={id} />
               ))}
             </div>
-            <footer className="mt-20 border-t border-line pt-8 text-[13px] leading-relaxed text-faint">
-              Built from <span className="font-mono">transformer.tex</span> by Richard Xu. Interactive study
-              companion — poke every tensor. Every chapter links back to the source PDF.
-              <br />
-              Animations are hand-built with SVG + framer-motion, inspired by the visual style of{" "}
-              <a href="https://github.com/3b1b" target="_blank" rel="noreferrer" className="underline decoration-line underline-offset-2 hover:text-muted">
-                3blue1brown
-              </a>{" "}
-              — no manim or 3b1b assets are used.
+            <footer className="mt-20 space-y-2 border-t border-line pt-8 text-[13px] leading-relaxed text-faint">
+              <p><Rich>{t("ui.footer.1")}</Rich></p>
+              <p><Rich>{t("ui.footer.2")}</Rich></p>
             </footer>
           </div>
         </main>
