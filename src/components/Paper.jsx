@@ -16,13 +16,34 @@ export function PaperProvider({ children }) {
   const close = useCallback(() => setState(null), []);
   const src = state ? `${PDF_URL}#page=${state.page}&view=FitH` : PDF_URL;
 
-  // Escape returns to the app; lock body scroll while the drawer is open.
+  // Escape returns to the app while the drawer is open.
   useEffect(() => {
     if (!state) return;
     const onKey = (e) => { if (e.key === "Escape") close(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [state, close]);
+
+  // An "OPEN IN APP" link clicked in the embedded PDF loads the app inside the
+  // drawer iframe, which posts this message (see index.html). Close the drawer
+  // and scroll the real app to that section — no reload, no nested app.
+  useEffect(() => {
+    const onMsg = (e) => {
+      const d = e && e.data;
+      if (!d || d.source !== "pdf-open-app") return;
+      close();
+      const id = (d.hash || "").replace(/^#/, "");
+      if (id) {
+        history.replaceState(null, "", "#" + id);
+        requestAnimationFrame(() => {
+          const el = document.getElementById(id);
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
+    };
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
+  }, [close]);
 
   return (
     <PaperCtx.Provider value={{ open }}>

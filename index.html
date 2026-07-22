@@ -4,6 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Transformer — An Interactive Study Companion</title>
+    <script>
+      // If this app document is loaded INSIDE a frame, it means an "OPEN IN APP"
+      // link was clicked in the embedded PDF (which lives in the drawer iframe).
+      // Instead of rendering a nested app there, tell the parent to close the
+      // drawer and jump to the section; frame-break as a fallback.
+      (function () {
+        if (window.top === window.self) return;
+        window.__EMBEDDED__ = true;
+        var href = location.href, hash = location.hash;
+        try { parent.postMessage({ source: "pdf-open-app", hash: hash, href: href }, "*"); } catch (e) {}
+        setTimeout(function () {
+          if (window.top !== window.self) {
+            try { window.top.location.replace(href); } catch (e) { location.replace(href); }
+          }
+        }, 350);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
