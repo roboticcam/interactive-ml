@@ -1,5 +1,8 @@
 # The Transformer — Interactive Study Companion
 
+**Live:** https://roboticcam.github.io/interactive-ml/ (auto-deployed from `main` via GitHub Actions).
+
+
 A hands-on study website built from `../transformer.tex` ("Transformer with PyTorch", Richard Xu).
 It walks the whole modern attention stack — from a single dot product to FlashAttention, MLA, RoPE,
 the lightning indexer, hyper-connections and knowledge distillation — and makes the PyTorch operations
@@ -61,6 +64,14 @@ The paper (`transformer.pdf`) is served from `public/` and cited throughout:
 - A persistent **"Read the full paper"** button sits in the sidebar.
 - Page numbers come from `../transformer.toc` (the LaTeX table of contents) — update them there if
   the paper is recompiled and pagination shifts.
+
+### Bidirectional cross-reference
+
+The PDF links back too. `public/transformer.pdf` is post-processed (PyMuPDF; script kept out of the
+repo) to stamp a clickable **"OPEN IN APP"** badge on each of the 10 section headings plus a page-1
+banner, each pointing at the matching app anchor (`…/interactive-ml/#<section>`). So: app → PDF page
+via the pills, and PDF → app section via the badges. Regenerate with `scripts/link_pdf.py`
+(`pip install pymupdf`) whenever the paper is recompiled.
 
 ## Architecture
 
