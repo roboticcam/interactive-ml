@@ -1,6 +1,10 @@
 # CATALOG — Prof Richard Xu's ML Course (Phase 0 inventory)
 
-**Status: DRAFT for Richard's approval.** Corpus scanned: 245 `.tex` (228 under `Presentations/`,
+**Status: APPROVED (2026-07-23) with decisions:** pilots = **EM (3.2), MCMC (3.5), VB (3.3)**;
+NN tracks **merged** (1.5 `foundation_neural_network.tex` is the single NN module; `deep_learning/neural_networks.tex`
+becomes supplementary within it); *thin* sources **folded into neighbours** (measure theory→0.3 appendix,
+dim-reduction→1.6, ADMM→2.2, covering numbers→7.3, stability→7.1); exclusions **confirmed**.
+Net: **62 modules** after folds (canonical list = `src/modules/registry.js`). Order remains editable by Richard at any time. Corpus scanned: 245 `.tex` (228 under `Presentations/`,
 17 under `HKBU/MATH3836/latex_notes/`) + 1 PPTX. Rules applied: article-class preferred over Beamer;
 Beamer only when it's the sole version; duplicates/conflicts/backups dropped; talks & research drafts
 excluded. **Bold** = module primary source. `(B)` = beamer-only topic. *thin* = short source, consider
