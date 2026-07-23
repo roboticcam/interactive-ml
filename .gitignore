@@ -6,3 +6,11 @@ dist/
 *.log
 .DS_Store
 .vite/
+# LaTeX aux files
+notes/**/*.aux
+notes/**/*.log
+notes/**/*.out
+notes/**/*.bbl
+notes/**/*.blg
+notes/**/*.toc
+notes/**/*.synctex.gz
