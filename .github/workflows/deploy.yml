@@ -1,8 +1,9 @@
 name: Deploy to GitHub Pages
 
+# Manual deploys only — automatic deploy-on-push is intentionally disabled.
+# To publish: GitHub → Actions → "Deploy to GitHub Pages" → Run workflow,
+# or:  gh workflow run deploy.yml --ref main
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
