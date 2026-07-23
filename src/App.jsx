@@ -4,12 +4,6 @@ import { Eyebrow } from "./components/ui.jsx";
 import { PaperProvider, PaperRef, usePaper } from "./components/Paper.jsx";
 import { Rich } from "./i18n/rich.jsx";
 import { useT, LanguageSwitcher } from "./i18n/LangContext.jsx";
-import { useHashRoute } from "./lib/router.js";
-import Home from "./pages/Home.jsx";
-
-// Anchors that belong to the Transformer module — legacy links (#dpa …, incl.
-// the PDF's "OPEN IN APP" badges) get redirected to #/m/transformer/<anchor>.
-const TRANSFORMER_IDS = new Set(CHAPTERS.flatMap((c) => [c.id, ...(c.subs || [])]));
 
 function useScrollSpy(ids) {
   const [active, setActive] = useState(ids[0]);
@@ -57,16 +51,13 @@ function Sidebar({ active }) {
   return (
     <aside className="hidden lg:flex lg:w-[300px] lg:shrink-0 lg:flex-col lg:border-r lg:border-line lg:bg-panel">
       <div className="sticky top-0 flex h-screen flex-col">
-        <div className="flex items-start justify-between gap-2 px-7 pb-2 pt-7">
-          <a href="#/m/transformer" className="block">
+        <div className="flex items-start justify-between gap-2 px-7 pb-4 pt-7">
+          <a href="#top" className="block">
             <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-accent">{t("ui.sidebar.kicker")}</div>
             <div className="mt-1 text-[19px] font-extrabold leading-tight tracking-tight text-ink">{t("ui.sidebar.title")}</div>
             <div className="text-[13px] text-faint">{t("ui.sidebar.subtitle")}</div>
           </a>
           <LanguageSwitcher />
-        </div>
-        <div className="px-7 pb-3">
-          <a href="#/" className="text-[12.5px] font-medium text-muted hover:text-accent">⌂ {t("ui.module.allmodules")}</a>
         </div>
         <div className="px-6 pb-4">
           {isOpen ? (
@@ -159,22 +150,10 @@ function Hero() {
   );
 }
 
-function TransformerModule({ section }) {
+export default function App() {
   const t = useT();
   const ids = CHAPTERS.flatMap((c) => [c.id, ...(c.subs || [])]);
   const active = useScrollSpy(ids);
-
-  // Deep-link scroll: #/m/transformer/<section>.
-  useEffect(() => {
-    if (!section) {
-      window.scrollTo({ top: 0 });
-      return;
-    }
-    requestAnimationFrame(() => {
-      const el = document.getElementById(section);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }, [section]);
 
   return (
     <PaperProvider>
@@ -198,27 +177,4 @@ function TransformerModule({ section }) {
       </div>
     </PaperProvider>
   );
-}
-
-export default function App() {
-  const route = useHashRoute();
-
-  // Legacy anchors (#dpa …) → module route, keeping PDF back-links working.
-  useEffect(() => {
-    if (route.legacy && TRANSFORMER_IDS.has(route.legacy)) {
-      window.location.replace("#/m/transformer/" + route.legacy);
-    } else if (route.legacy === "top") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, [route.legacy]);
-
-  const seg = route.seg || [];
-  if (seg[0] === "m" && seg[1] === "transformer") {
-    return <TransformerModule section={seg[2]} />;
-  }
-  if (route.legacy && TRANSFORMER_IDS.has(route.legacy)) {
-    // Render the module immediately while the redirect happens (no flash).
-    return <TransformerModule section={route.legacy} />;
-  }
-  return <Home />;
 }

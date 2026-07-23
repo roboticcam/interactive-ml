@@ -94,14 +94,6 @@ numerical example) and re-authored into 10 chapters:
    scroll, with a frame-break fallback); (c) drawer now fills the whole reading area, leaving the left nav
    visible and usable (click a chapter to close + jump); (d) moved "← Back to app" into the left nav.
 9. **Author credit** — Prof Richard Xu / 徐亦达 (徐亦達) in the sidebar + footer, all three languages.
-10. **Course expansion (Phase 0–1)** — per `complete.md`: inventoried all 245 `.tex` files across
-    `Presentations/*` + `HKBU/MATH3836/latex_notes` (3 parallel agents + gap-fill), produced
-    `CATALOG.md` (62 unique modules in 10 parts; approved with decisions: pilots EM/MCMC/VB, NN
-    tracks merged, thin sources folded, exclusions confirmed). Built the multi-module course shell:
-    hash router (`src/lib/router.js`), module registry with trilingual titles
-    (`src/modules/registry.js`), course home with "My subject" picker (`src/pages/Home.jsx`),
-    Transformer relocated to `#/m/transformer` with legacy-anchor redirects so the PDF back-links
-    keep working. Full project plan: `~/.claude/plans/` (phases 0–4, /loop reserved for Phase 3).
 
 ## Key decisions
 

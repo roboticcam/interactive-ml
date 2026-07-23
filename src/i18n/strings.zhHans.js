@@ -34,22 +34,6 @@ export default {
   "ui.paper.ref": "论文",
   "ui.paper.back": "返回应用",
 
-  // ── Course home ───────────────────────────────────────────────────────────
-  "ui.home.eyebrow": "一门交互式机器学习课程",
-  "ui.home.title": "机器学习，一次一个张量。",
-  "ui.home.lead": "徐亦达教授的讲义笔记——从概率与优化到深度学习、机器学习理论与现代架构——重构为交互式学习指南：实时数学、动手实验，原始 PDF 一键可达。",
-  "ui.home.cta": "从 Transformer 开始 →",
-  "ui.home.modules": "个模块",
-  "ui.home.inproduction": "制作中",
-  "ui.home.mysubject": "我的课程",
-  "ui.home.mysubjectHint": "勾选模块，组建你自己的课程",
-  "ui.home.onlymine": "只看我选的",
-  "ui.home.footer": "笔记、数学与课程设计：徐亦达教授。交互式指南由原始 LaTeX 讲义构建。",
-  "ui.status.live": "已上线",
-  "ui.status.pilot": "制作中",
-  "ui.status.planned": "即将推出",
-  "ui.module.allmodules": "全部模块",
-
   // ── Nav (chapter + sub labels) ────────────────────────────────────────────
   "nav.dpa": "点积注意力",
   "nav.mha": "多头注意力",

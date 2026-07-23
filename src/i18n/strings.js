@@ -39,22 +39,6 @@ export const EN = {
   "ui.paper.ref": "Paper",
   "ui.paper.back": "Back to app",
 
-  // ── Course home ───────────────────────────────────────────────────────────
-  "ui.home.eyebrow": "An interactive machine-learning course",
-  "ui.home.title": "Machine Learning, taught one tensor at a time.",
-  "ui.home.lead": "Prof Richard Xu's lecture notes — from probability and optimization to deep learning, ML theory and modern architectures — rebuilt as interactive study companions with live math, hands-on labs, and the original PDFs one click away.",
-  "ui.home.cta": "Start with the Transformer →",
-  "ui.home.modules": "modules",
-  "ui.home.inproduction": "in production",
-  "ui.home.mysubject": "My subject",
-  "ui.home.mysubjectHint": "tick modules to build your own subject",
-  "ui.home.onlymine": "show only my picks",
-  "ui.home.footer": "Notes, mathematics and course design by Prof Richard Xu (徐亦达). Interactive companions built from the original LaTeX sources.",
-  "ui.status.live": "Live",
-  "ui.status.pilot": "In production",
-  "ui.status.planned": "Coming soon",
-  "ui.module.allmodules": "All modules",
-
   // ── Nav (chapter + sub labels) ────────────────────────────────────────────
   "nav.dpa": "Dot-Product Attention",
   "nav.mha": "Multi-Head Attention",

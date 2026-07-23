@@ -33,22 +33,6 @@ export default {
   "ui.paper.ref": "論文",
   "ui.paper.back": "返回應用程式",
 
-  // ── Course home ───────────────────────────────────────────────────────────
-  "ui.home.eyebrow": "一門互動式機器學習課程",
-  "ui.home.title": "機器學習，一次一個張量。",
-  "ui.home.lead": "徐亦達教授的講義筆記——從機率與最佳化到深度學習、機器學習理論與現代架構——重構為互動式學習夥伴：即時數學、動手實驗，原始 PDF 一鍵可達。",
-  "ui.home.cta": "從 Transformer 開始 →",
-  "ui.home.modules": "個模組",
-  "ui.home.inproduction": "製作中",
-  "ui.home.mysubject": "我的課程",
-  "ui.home.mysubjectHint": "勾選模組，組建你自己的課程",
-  "ui.home.onlymine": "只看我選的",
-  "ui.home.footer": "筆記、數學與課程設計：徐亦達教授。互動式夥伴由原始 LaTeX 講義建構。",
-  "ui.status.live": "已上線",
-  "ui.status.pilot": "製作中",
-  "ui.status.planned": "即將推出",
-  "ui.module.allmodules": "全部模組",
-
   // ── Nav (chapter + sub labels) ────────────────────────────────────────────
   "nav.dpa": "點積注意力",
   "nav.mha": "多頭注意力",
