@@ -134,7 +134,7 @@
 
 
 
-\section{Motivation - Mixture Density models}
+\section{Motivation: Mixture Density Models}
 
 
 
@@ -155,15 +155,15 @@ Can you fit them using a single-mode Gaussian distribution, i.e.,:
 
 \begin{equation}
 \begin{split}
-p(X) &=  \mathcal{N}(X | \mu, \Sigma)\\
-&=  (2 \pi)^{-k/2} | \Sigma |^{-\frac{1}{2}} \exp^{-\frac{1}{2} (x- \mu)^T \Sigma^{-1} (x- \mu) } \\
+p(x) &=  \mathcal{N}(x | \mu, \Sigma)\\
+&=  (2 \pi)^{-k/2} | \Sigma |^{-\frac{1}{2}} \exp \Big( -\frac{1}{2} (x- \mu)^\top \Sigma^{-1} (x- \mu) \Big) \\
 \end{split}
 \end{equation}
 
-Clearly Not! This is typically modelling using Mixture Densities, in the case of Gaussian Mixture Model (k-mixture) (GMM):
+Clearly not! Data like this is typically modelled using mixture densities — in this case, a Gaussian Mixture Model with $k$ mixtures (GMM):
 
 \begin{equation}\begin{split}
-p(X) =  \sum_{l=1}^k \alpha_l \mathcal{N} (X | \mu_l, \Sigma_l) \quad\quad \text{s.t.}\quad \sum_{l=1}^k \alpha_l = 1
+p(x) =  \sum_{l=1}^k \alpha_l \mathcal{N} (x | \mu_l, \Sigma_l) \quad\quad \text{s.t.}\quad \sum_{l=1}^k \alpha_l = 1
 \end{split}\end{equation}
 
 
@@ -186,7 +186,7 @@ p(X) =  \sum_{l=1}^k \alpha_l \mathcal{N} (X | \mu_l, \Sigma_l) \quad\quad \text
     \begin{center}
     \includegraphics[scale=0.4]{gmm_result_3_mixtures.jpg}
      \end{center}
-    \caption{gmm fitting result}
+    \caption{GMM fitting result}
 \end{figure}
 
 
@@ -200,21 +200,21 @@ Let $\Theta = \{ \alpha_1, \dots \alpha_k, \mu_1, \dots \mu_k, \Sigma_1, \dots \
 
 \begin{equation}\begin{split}
 \Theta_{\text{MLE}} &= \argmax_{\Theta} \L(\Theta |X)\\
- &=  \argmax_{\Theta} \bigg( \sum_{i=1}^n \log \sum_{l=1}^k \alpha_l \mathcal{N} (X | \mu_l, \Sigma_l) \bigg) \quad\quad \sum_{l=1}^k \alpha_l = 1
+ &=  \argmax_{\Theta} \bigg( \sum_{i=1}^n \log \sum_{l=1}^k \alpha_l \mathcal{N} (x_i | \mu_l, \Sigma_l) \bigg) \quad\quad \sum_{l=1}^k \alpha_l = 1
 \end{split}\end{equation}
 
 \begin{enumerate}
 \item
-Unlike single mode Gaussian, we can't just take derivatives and let it equal zero easily, i.e., optimize it analytically. 
+Unlike the single-mode Gaussian, we cannot simply take derivatives and set them to zero, i.e., optimize it analytically.
 
 \item
-In terms of optimizing its parameters: the problem is {\bf non-concave}. So traditional gradient ascend is {\bf not} suitable for it, i.e., many local maximums.
+In terms of optimizing its parameters: the problem is {\bf non-concave}. So traditional gradient ascent is {\bf not} suitable for it, i.e., there are many local maxima.
 
 \end{enumerate}
 
 The {\bf goal} is to find an iterative process that ensures that $\log(p(X | \Theta^{(g)}))$ remains non-decreasing for $g = 1, \dots $. 
 
-To do so, for data $X = \{x_1, \dots x_n\}$, we introduce ``latent'' variables $Z = \{ z_1, \dots z_n\}$, each $z_i$ indicating which mixture $x_i$ belongs to. The core problem then simply boils down to a single Gaussian fitting.
+To do so, for data $X = \{x_1, \dots x_n\}$, we introduce ``latent'' variables $Z = \{ z_1, \dots z_n\}$, each $z_i$ indicating which mixture component $x_i$ belongs to. The core problem then simply boils down to fitting a single Gaussian.
 
 
 \section[Preliminaries]{Preliminaries \notforexam}
@@ -231,7 +231,7 @@ To do so, for data $X = \{x_1, \dots x_n\}$, we introduce ``latent'' variables $
 
 
 \begin{equation}\begin{split}
-f\left( (1-t) x_1 + t x_2 \right) \leq (1-t) f(x_1) + t  f(x_2)  \hspace{5 mm} t \in (0 \dots 1)
+f\left( (1-t) x_1 + t x_2 \right) \leq (1-t) f(x_1) + t  f(x_2)  \hspace{5 mm} t \in [0, 1]
 \end{split}\end{equation}
 
 
@@ -244,13 +244,13 @@ f\left( (1-t) x_1 + t x_2 \right) \leq (1-t) f(x_1) + t  f(x_2)  \hspace{5 mm} t
 Using notation $\phi$ instead of $f$:
 
 \begin{equation}\begin{split}
-\phi \left( (1-t) x_1 + t x_2 \right) \leq (1-t) \phi (x_1) + t  \phi(x_2)  \hspace{5 mm} t \in (0 \dots 1)
+\phi \left( (1-t) x_1 + t x_2 \right) \leq (1-t) \phi (x_1) + t  \phi(x_2)  \hspace{5 mm} t \in [0, 1]
 \end{split}\end{equation}
 
 Can be generalized further for any convex combination, i.e., let $\sum_{i=1}^n p_i = 1$:
 
 \begin{equation}\begin{split}
-\phi \left( p_1 x_1 + p_2 x_2 + \dots p_n x_n \right) &\leq p_1 \phi (x_1) + p_2  \phi(x_2) \dots p_n \phi (x_n)  \hspace{5 mm} \sum_{i=1}^n p_i = 1\\
+\phi \left( p_1 x_1 + p_2 x_2 + \dots + p_n x_n \right) &\leq p_1 \phi (x_1) + p_2  \phi(x_2) + \dots + p_n \phi (x_n)  \hspace{5 mm} \sum_{i=1}^n p_i = 1\\
 \implies \phi \Big( \sum_{i=1}^n p_i x_i \Big) &\leq \sum_{i=1}^n p_i \phi (x_i) \\
 \implies \phi \Big( \sum_{i=1}^n p_i f(x_i) \Big) &\leq \sum_{i=1}^n p_i \phi (f(x_i)) \hspace{5 mm} \text{ by replacing } x_i \text{ with } f(x_i)
 \end{split}\end{equation}
@@ -258,7 +258,7 @@ Can be generalized further for any convex combination, i.e., let $\sum_{i=1}^n p
 generalize to the continuous case:
 
 \begin{equation}\begin{split}
-\phi \left( \int_{x } f(x) p(x) \right) &\leq \int_{x }  \phi (f(x)) p(x) \implies \phi \big( \E[  f(x) ] \big) \le \E [\phi (f(x))]
+\phi \left( \int_{x } f(x) p(x) \d x \right) &\leq \int_{x }  \phi (f(x)) p(x) \d x \implies \phi \big( \E[  f(x) ] \big) \le \E [\phi (f(x))]
 \end{split}\end{equation}
 
 
@@ -279,7 +279,7 @@ $\phi(x) = -\log(x)$ is a convex function:
 %\end{figure}
 
 \begin{figure}[H]
-\begin{center}\label{fig:responsibilities}
+\begin{center}\label{fig:minus_log}
 \begin{tikzpicture}[scale=0.7]
 \begin{axis}[
     axis lines = left,
@@ -287,11 +287,11 @@ $\phi(x) = -\log(x)$ is a convex function:
     ylabel = {\(-\log(x)\)},
 ]
 \addplot [
-    domain=0:5, 
-    samples=100, 
+    domain=0:5,
+    samples=100,
     color=red,
 ]
-{- ln(x};
+{- ln(x)};
 %\addplot[color=blue,thick] coordinates { (2.05,0) (2.05,0.243) };
 %\addplot[color=red,thick] coordinates { (2.0,0) (2,0.073) };
 \end{axis}
@@ -326,19 +326,19 @@ $\phi(x) = -\log(x)$ is a convex function:
 
 \section{Expectation-Maximization Algorithm}
 
-Instead of perform:
+Instead of performing:
 
 \begin{equation}\begin{split}
 \Theta^{\text{MLE}} &=  \argmax_{\Theta} \L(\Theta | X)\\ 
 &= \argmax_{\Theta} \left(\log [p(X|\Theta)]  \right)  \\
 \end{split}\end{equation}
 
-{\bf The trick } is to assume some ``latent'' variable $Z$ to the model
+{\bf The trick } is to introduce some ``latent'' variable $Z$ into the model.
 
 For each iteration of the E-M algorithm, we perform:
 
 \begin{equation}\begin{split}
-\Theta^{(g+1)} = \argmax_{\Theta} \left( \int_z \log{(p(X,Z|\Theta))} p(Z|X,\Theta^{(g)}) \right) \d Z
+\Theta^{(g+1)} = \argmax_{\Theta} \left( \int_Z \log{(p(X,Z|\Theta))} p(Z|X,\Theta^{(g)}) \d Z \right)
 \end{split}\end{equation}
 
 However, before we apply it, we must ensure convergence, i.e.,
@@ -349,14 +349,14 @@ However, before we apply it, we must ensure convergence, i.e.,
 &= \log (p(X| \Theta^{(g)} )) \quad \forall g
 \end{split}\end{equation}
 
-Note the difference between variable $\Theta$ and the constant $\Theta^{(g)}$. Also note that gradient ascend is {\bf not} suitable for many E-M problems, as they can be {\bf non-concave}.
+Note the difference between the variable $\Theta$ and the constant $\Theta^{(g)}$. Also note that gradient ascent is {\bf not} suitable for many E-M problems, as they can be {\bf non-concave}.
 
 
 %-------------------------------------------------------------
 
-\section[Proof of convergence: Maximization-Maximizatio]{Proof of convergence: Maximization-Maximizatio \notforexam}
+\section[Proof of convergence: Maximization-Maximization]{Proof of convergence: Maximization-Maximization \notforexam}
 
-We have seen it from variational inference literature, for the ELBO-KL decomposition:
+We have seen this in the variational-inference literature, as the ELBO-KL decomposition:
 
 \begin{equation}\begin{split}
 \L(\Theta|X) &= \log \left(p(X|\Theta) \right) \\
@@ -366,7 +366,7 @@ We have seen it from variational inference literature, for the ELBO-KL decomposi
             &= \log \left( \frac{p(X,Z|\Theta)}{q(Z)} \times \frac{ q(Z)}{p(Z|X,\Theta)} \right)\\
             &= \log \left(\frac{p(X,Z|\Theta)}{q(Z)} \right) + \log \left( \frac{q(Z)}{ p(Z|X,\Theta)} \right)\\
 %\implies \log \left(p(X|\Theta) \right)
-            &= \int_Z \log \left(\frac{p(X,Z|\Theta)}{q(Z)} \right)q(Z) + \int_Z \log \left( \frac{ q(Z)}{p(Z|X,\Theta)} \right)q(Z)\\
+            &= \int_Z \log \left(\frac{p(X,Z|\Theta)}{q(Z)} \right)q(Z) \d Z + \int_Z \log \left( \frac{ q(Z)}{p(Z|X,\Theta)} \right)q(Z) \d Z\\
             &= \text{ELBO}(\Theta, q) + \KL \big( q(Z) \| p(Z|X,\Theta) \big) \\
 %         &= F (\Theta, q ) + \int_Z \log \left( \frac{ q(Z)}{p(Z|X,\Theta)} \right)q(Z)\\
 \end{split}\end{equation}
@@ -387,9 +387,9 @@ or to use Jensen's inequality:
 
 \begin{equation}\begin{split}
 \L(\Theta|X) 
-&= \log p(X|\Theta) =  \log \int_Z  p(X, Z |\Theta) \\
-&=\log \Big( \int_Z \frac{  p(X,Z|\Theta)}{q(Z)} q(Z)  \Big)\\
-&\ge  \int_Z \log \Big( \frac{  p(X,Z|\Theta)}{q(Z)} \Big) q(Z) \\
+&= \log p(X|\Theta) =  \log \int_Z  p(X, Z |\Theta) \d Z \\
+&=\log \Big( \int_Z \frac{  p(X,Z|\Theta)}{q(Z)} q(Z) \d Z \Big)\\
+&\ge  \int_Z \log \Big( \frac{  p(X,Z|\Theta)}{q(Z)} \Big) q(Z) \d Z \\
 &= \text{ELBO}(\Theta, q)
 \end{split}\end{equation}
 
@@ -403,7 +403,7 @@ When applying E-M as a Maximization-Maximization algorithm, we only need to opti
 
 
 \begin{equation}\begin{split}\label{eq elbo kl decomposition}
-\L(\Theta|X) &= \int_Z \log \left(\frac{p(X,Z|\Theta)}{q(Z)} \right)q(Z) + \int_Z \log \left( \frac{ q(Z)}{p(Z|X,\Theta)} \right)q(Z)\\
+\L(\Theta|X) &= \int_Z \log \left(\frac{p(X,Z|\Theta)}{q(Z)} \right)q(Z) \d Z + \int_Z \log \left( \frac{ q(Z)}{p(Z|X,\Theta)} \right)q(Z) \d Z\\
 &= \text{ELBO} (\Theta, q ) + \KL ( q(Z) \| p(Z|X,\Theta) )\\
 \end{split}\end{equation}
 
@@ -419,18 +419,18 @@ When applying E-M as a Maximization-Maximization algorithm, we only need to opti
 
 \begin{equation}\begin{split}
 q^* (\cdot)&= \argmax_{q} \{ \text{ELBO} (\Theta^{(g)}, q ) \}\\
-&=\argmax_{q} \Big\{ \int_Z \log \left(\frac{p(X,Z|\Theta^{(g)})}{q(Z)} \right)q(Z) \Big\}\\
+&=\argmax_{q} \Big\{ \int_Z \log \left(\frac{p(X,Z|\Theta^{(g)})}{q(Z)} \right)q(Z) \d Z \Big\}\\
 &= p(Z|X, \Theta^{(g)})\\
 \implies \text{ELBO} (\Theta^{(g)}, q^* )  &= \L(\Theta^{(g)}|X)
 \end{split}\end{equation}
 
-This can be done with the realization that when fixing $\Theta = \Theta^{(g)}$, ELBO is upperbounded by $\L(\Theta^{(g)} | X)$, and maximum occurs, i.e., when $\KL(q^* \| p(Z|X, \Theta^{(g)} )) = 0$
+This follows from the realization that when fixing $\Theta = \Theta^{(g)}$, the ELBO is upper-bounded by $\L(\Theta^{(g)} | X)$, and the maximum is attained exactly when $\KL(q^* \| p(Z|X, \Theta^{(g)} )) = 0$, i.e., $q^* = p(Z|X, \Theta^{(g)})$.
 
-{\bf STEP 1} is invisible to the algorithm, but needs to be considered for interpretation convergence.
+{\bf STEP 1} is invisible to the algorithm, but needs to be considered when interpreting convergence.
 
 
 \begin{description}
-      \item [STEP 2 Fix  $q(\cdot) = p(Z|X, \Theta^{(g)})$, maximize $\Theta$] 
+      \item [STEP 2: fix  $q(\cdot) = p(Z|X, \Theta^{(g)})$, maximize $\Theta$]
 \end{description}
 
 substitute $q^* = p(Z|X, \Theta^{(g)} )$ back into the ELBO:
@@ -442,7 +442,7 @@ substitute $q^* = p(Z|X, \Theta^{(g)} )$ back into the ELBO:
    &= \underbrace{\int_Z \log (p(X,Z|\Theta^{(g)})) p(Z|X, \Theta^{(g)} ) \d Z}_{Q (\Theta^{(g)} | \Theta^{(g)}) } \quad \underbrace{ - \int_Z \log (p(Z|X, \Theta^{(g)} )) p(Z|X, \Theta^{(g)} ) \d Z}_{H (\Theta^{(g)} | \Theta^{(g)}) }\\
 \end{split}\end{equation}
 
-It is obvious that, after we computed the E-M update formula, i.e., Eq.(\ref{eq M-M update formula}), we have:
+It is obvious that, after computing the E-M update from the decomposition in Eq.(\ref{eq M-M update formula}), we have:
 
 \begin{equation}\begin{split}\label{eq optimize Q}
 \Theta^{(g+1)} &= \argmax_{\Theta} Q (\Theta | \Theta^{(g)})\\
@@ -472,11 +472,11 @@ then we can show:
 \end{split}\end{equation}
 
 
-it is obvious that:
+Note that since $Q (\Theta | \Theta^{(g)}) + H (\Theta | \Theta^{(g)}) = \L(\Theta|X)$ identically, jointly maximizing both terms would recover the (intractable) MLE itself. E-M maximizes only $Q$, so in general:
 
 \begin{equation}\begin{split}
 \bar{\Theta} &= \argmax_{\Theta} \big\{ Q (\Theta | \Theta^{(g)}) + H (\Theta | \Theta^{(g)}) \big\}\\
-\implies \L(\Theta^{(g+1)}) &\ne \L(\bar{\Theta}) \\
+\implies \L(\Theta^{(g+1)}) &\le \L(\bar{\Theta}) \\
 \end{split}\end{equation}
 
 
@@ -496,13 +496,13 @@ H(\Theta | \Theta^{(g)}) &= -  \int_{Z } \log (p(Z|X,\Theta)) p(Z|X,\Theta^{(g)}
 
 \begin{equation}\begin{split} 
 &H( \Theta | \Theta^{(g)}) - H(\Theta^{(g)} | \Theta^{(g)})\\
-&= \int_{Z } - \log (p(Z|X,\Theta)) p(Z|X,\Theta^{(g)}) \d z - \int_{Z }  -\log \big( p(Z|X,\Theta^{(g)}) \big) p(Z|X,\Theta^{(g)}) \d Z \\
+&= \int_{Z } - \log (p(Z|X,\Theta)) p(Z|X,\Theta^{(g)}) \d Z - \int_{Z }  -\log \big( p(Z|X,\Theta^{(g)}) \big) p(Z|X,\Theta^{(g)}) \d Z \\
 %------------------------------
 &= \int_{Z }  \log \left( \frac{p(Z|X,\Theta^{(g)})}{p(Z|X,\Theta)} \right) p(Z|X,\Theta^{(g)}) \d Z\\
 %&= \E_{Z \sim p(Z|X,\Theta^{(g)}) } \Big[ \log \Big( \frac{p(Z|X,\Theta^{(g)})}{p(Z|X,\Theta)} \Big) \Big]\\
 &= \int_{Z }  - \log \left( \frac{p(Z|X,\Theta)}{p(Z|X,\Theta^{(g)})} \right) p(Z|X,\Theta^{(g)}) \d Z\\
 &\ge   - \log \left( \int_{Z} \frac{p(Z|X,\Theta)}{p(Z|X,\Theta^{(g)})} p(Z|X,\Theta^{(g)}) \d Z \right)\\ 
-&= 0\quad \because \phi = - \log \text{ a convex unction}
+&= 0\quad \because \phi = - \log \text{ is a convex function}
 \end{split}\end{equation}
 
 
@@ -542,18 +542,18 @@ H(\Theta | \Theta^{(g)}) &= -  \int_{Z } \log (p(Z|X,\Theta)) p(Z|X,\Theta^{(g)}
 let's decompose $\L(\Theta|X)$ into:
 
 \begin{equation}\begin{split}
-\L(\Theta|X) &= \log (p(X |\Theta))\\ 
-&= \log (p(Z,X,\Theta) ) -  \log ( p(Z|X,\Theta) )\\
-% \implies&  \int_{Z} \log (p(X |\Theta)) p(Z|X,\Theta^{(g)}) \d Z\\ 
+\L(\Theta|X) &= \log (p(X |\Theta))\\
+&= \log (p(Z,X|\Theta) ) -  \log ( p(Z|X,\Theta) )\\
+% \implies&  \int_{Z} \log (p(X |\Theta)) p(Z|X,\Theta^{(g)}) \d Z\\
 \end{split}\end{equation}
 
-take expectation with respect to both sides with respect to $ p(Z|X,\Theta^{(g)}) $:
+take the expectation of both sides with respect to $ p(Z|X,\Theta^{(g)}) $:
 
 \begin{equation}\begin{split}\label{eq historical E-M formula}
 \L(\Theta|X) &= 
-\underbrace{\int_{Z } \log (p(Z,X,\Theta)) p(Z|X,\Theta^{(g)}) \d Z}_{Q ( \Theta | \Theta^{(g)}) } \; \underbrace{-  \int_{Z } \log (p(Z|X,\Theta)) p(Z|X,\Theta^{(g)}) \d Z}_{H (\Theta | \Theta^{(g)})}\\
-\implies \L(\Theta^{(g)}|X) &= 
-\underbrace{\int_{Z } \log (p(Z,X,\Theta^{(g)})) p(Z|X,\Theta^{(g)}) \d Z}_{Q ( \Theta^{(g)} | \Theta^{(g)}) } \; \underbrace{-  \int_{Z } \log (p(Z|X,\Theta^{(g)})) p(Z|X,\Theta^{(g)}) \d Z}_{H (\Theta^{(g)} | \Theta^{(g)})}\\
+\underbrace{\int_{Z } \log (p(Z,X|\Theta)) p(Z|X,\Theta^{(g)}) \d Z}_{Q ( \Theta | \Theta^{(g)}) } \; \underbrace{-  \int_{Z } \log (p(Z|X,\Theta)) p(Z|X,\Theta^{(g)}) \d Z}_{H (\Theta | \Theta^{(g)})}\\
+\implies \L(\Theta^{(g)}|X) &=
+\underbrace{\int_{Z } \log (p(Z,X|\Theta^{(g)})) p(Z|X,\Theta^{(g)}) \d Z}_{Q ( \Theta^{(g)} | \Theta^{(g)}) } \; \underbrace{-  \int_{Z } \log (p(Z|X,\Theta^{(g)})) p(Z|X,\Theta^{(g)}) \d Z}_{H (\Theta^{(g)} | \Theta^{(g)})}\\
 \end{split}\end{equation}
 
 where $H (\Theta | \Theta^{(g)}) = \text{Cross-Entropy} \big(p(Z|X,\Theta^{(g)}) \|  p(Z|X,\Theta) \big)$. 
@@ -807,19 +807,19 @@ Gaussian Mixture Model (k-mixture) (GMM):
 
 \begin{equation}
 \begin{split}
-p(X|\Theta) =  \sum_{l=1}^k \alpha_l \mathcal{N} (X | \mu_l, \Sigma_l) \hspace{5 mm} \sum_{l=1}^k \alpha_l = 1\\
+p(x|\Theta) =  \sum_{l=1}^k \alpha_l \mathcal{N} (x | \mu_l, \Sigma_l) \hspace{5 mm} \sum_{l=1}^k \alpha_l = 1\\
 \text{ and } \Theta = \{ \alpha_1, \dots \alpha_k, \mu_1, \dots \mu_k, \Sigma_1, \dots \Sigma_k \}\\
 \end{split}
 \end{equation}
 
 
-For data $X = \{x_1, \dots x_n\}$ we introduce ``latent'' variable $Z = \{ z_1, \dots z_n\}$, each $z_i$ indicates which mixture component $x_i$ belong to.
+For data $X = \{x_1, \dots x_n\}$ we introduce ``latent'' variables $Z = \{ z_1, \dots z_n\}$, where each $z_i$ indicates which mixture component $x_i$ belongs to.
 
 Looking at the E-M algorithm:
 
 \begin{equation}
 \begin{split}
-\Theta^{(g+1)} = \argmax_{\Theta} \left[ q(\Theta, \Theta^{(g)}) \right]= \argmax_{\Theta} \left( \int_z \log{(p(X,Z|\Theta))} p(Z|X,\Theta^{(g)}) \d z \right) 
+\Theta^{(g+1)} = \argmax_{\Theta} \left[ q(\Theta, \Theta^{(g)}) \right]= \argmax_{\Theta} \left( \int_Z \log{(p(X,Z|\Theta))} p(Z|X,\Theta^{(g)}) \d Z \right)
 \end{split}
 \end{equation}
 
@@ -834,7 +834,7 @@ All we need to do is to define both $p(X,Z|\Theta)$ and $p(Z|X,\Theta)$
 
 \begin{equation}
 \begin{split}
-p(X|\Theta) =  \sum_{l=1}^k \alpha_l \mathcal{N} (X | \mu_l, \Sigma_l) = \prod_{i=1}^n \sum_{l=1}^k \alpha_l \mathcal{N} (X | \mu_l, \Sigma_l)
+p(X|\Theta) =  \prod_{i=1}^n p(x_i|\Theta) = \prod_{i=1}^n \sum_{l=1}^k \alpha_l \mathcal{N} (x_i | \mu_l, \Sigma_l)
 \end{split}
 \end{equation}
 
@@ -842,12 +842,12 @@ p(X|\Theta) =  \sum_{l=1}^k \alpha_l \mathcal{N} (X | \mu_l, \Sigma_l) = \prod_{
 
 \begin{equation}
 \begin{split}
-p(X,Z|\Theta) &= \prod_{i=1}^{n} p(x_i, z_i | \Theta) = \prod_{i=1}^{n} \underbrace{p(x_i | z_i , \Theta)}_{\mathcal{N}(\mu_{z_i}, \Sigma_{z_i} )} \underbrace{p ( z_i | \Theta)}_{\alpha_{z_i}}
-= \prod_{i=1}^{n} \alpha_{z_i} \mathcal{N}(\mu_{z_i}, \Sigma_{z_i} )\\
+p(X,Z|\Theta) &= \prod_{i=1}^{n} p(x_i, z_i | \Theta) = \prod_{i=1}^{n} \underbrace{p(x_i | z_i , \Theta)}_{\mathcal{N}(x_i | \mu_{z_i}, \Sigma_{z_i} )} \underbrace{p ( z_i | \Theta)}_{\alpha_{z_i}}
+= \prod_{i=1}^{n} \alpha_{z_i} \mathcal{N}(x_i | \mu_{z_i}, \Sigma_{z_i} )\\
 \end{split}
 \end{equation}
 
-Notice that $p(X,Z|\Theta)$ is actually simple than $p(X|\Theta)$.
+Notice that $p(X,Z|\Theta)$ is actually simpler than $p(X|\Theta)$.
 
 \vspace{5 mm}
 
@@ -855,7 +855,7 @@ Notice that $p(X,Z|\Theta)$ is actually simple than $p(X|\Theta)$.
 
 \begin{equation}
 \begin{split}
-p(Z|X,\Theta) &= \prod_{i=1}^{n} p(z_i | x_i , \Theta) = \prod_{i=1}^{n} \frac{\alpha_{z_i} \mathcal{N}(\mu_{z_i}, \Sigma_{z_i} )}{\sum_{l=1}^k \alpha_{l} \mathcal{N}(\mu_{l}, \Sigma_{l} )}\\
+p(Z|X,\Theta) &= \prod_{i=1}^{n} p(z_i | x_i , \Theta) = \prod_{i=1}^{n} \frac{\alpha_{z_i} \mathcal{N}(x_i | \mu_{z_i}, \Sigma_{z_i} )}{\sum_{l=1}^k \alpha_{l} \mathcal{N}(x_i | \mu_{l}, \Sigma_{l} )}\\
 \end{split}
 \end{equation}
 
@@ -863,12 +863,12 @@ p(Z|X,\Theta) &= \prod_{i=1}^{n} p(z_i | x_i , \Theta) = \prod_{i=1}^{n} \frac{\
 
 %-------------------------------------------------------------
 
-\subsection{The E-Step:}
+\subsection{The E-Step}
 
 
 \begin{equation}\begin{split}
-q(\Theta, \Theta^{(g)}) &=  \int_z \log{(p(X,Z|\Theta))} p(Z|X,\Theta^{(g)}) \d z \\
-&=  \int_{z_1} \dots \int_{z_n} \left( \sum_{i=1}^{n} \log p(z_i ,  x_i | \Theta) \prod_{i=1}^n p(z_i|x_i,\Theta^{(g)}) \right) \d z_1, \dots \d z_n \\
+q(\Theta, \Theta^{(g)}) &=  \int_Z \log{(p(X,Z|\Theta))} p(Z|X,\Theta^{(g)}) \d Z \\
+&=  \int_{z_1} \dots \int_{z_n} \left( \sum_{i=1}^{n} \log p(z_i ,  x_i | \Theta) \prod_{i=1}^n p(z_i|x_i,\Theta^{(g)}) \right) \d z_1 \cdots \d z_n \\
 \end{split}\end{equation}
 
 
@@ -879,17 +879,17 @@ q(\Theta, \Theta^{(g)}) &=  \int_z \log{(p(X,Z|\Theta))} p(Z|X,\Theta^{(g)}) \d 
 \subsection{Some derivation to help}
 
 
-let $p(Y)$ be the joint pdf: $P(y_1,\dots y_n)$, also let $F(Y)$ be a linear function, where each term involves only one variable $y_i$, i.e.,  
+let $p(Y)$ be the joint pdf $p(y_1,\dots y_N)$, and let $F(Y)$ be an additively separable function, where each term involves only one variable $y_i$, i.e.,
 
 \begin{equation}\begin{split}
-F(Y) = f_1(x_1) + \dots f_n (x_n) = \sum_{i=1}^n f_i(y_i)
+F(Y) = f_1(y_1) + \dots + f_N (y_N) = \sum_{i=1}^N f_i(y_i)
 \end{split}\end{equation}
 
 
 then,
 
 \begin{equation}\begin{split}\label{eq integral of sum to sum of integral}
-\int_{y_1} \dots \int_{y_n}  \Big(\sum_{i=1}^n f_i(y_i)\Big) P(Y) \d Y = \sum^N_i \bigg(  \int_{y_i} f_i(y_i) P_i(y_i) \d y_i \bigg)
+\int_{y_1} \dots \int_{y_N}  \Big(\sum_{i=1}^N f_i(y_i)\Big) p(Y) \d Y = \sum^N_{i=1} \bigg(  \int_{y_i} f_i(y_i) p(y_i) \d y_i \bigg)
 \end{split}\end{equation}
 
 
@@ -898,10 +898,10 @@ then,
 \subsubsection{Proof}
 
 \begin{equation}
-\int_Y F(Y) p(Y) \d Y = \int_{y_1} \int_{y_2}\dots \int_{y_N}  \Big(   \sum_{i=1}^N f_i(y_i) \Big) p(Y) \d y_1, \dots \d y_n 
+\int_Y F(Y) p(Y) \d Y = \int_{y_1} \int_{y_2}\dots \int_{y_N}  \Big(   \sum_{i=1}^N f_i(y_i) \Big) p(Y) \d y_1 \cdots \d y_N
 \end{equation}
 
-Expand it out, this equation has $N$ sum terms. The first term is:
+Expanding it out, this equation has $N$ sum terms:
 
 \begin{equation}\begin{split}
 &= \int\limits_{y_1} \int\limits_{y_2} \dots \int\limits_{y_N}  {\color{red} f_1(y_1)} p(y_1,\dots,y_N) \prod_{i=1}^N \big( \d y_i \big)
@@ -910,17 +910,17 @@ Expand it out, this equation has $N$ sum terms. The first term is:
 + \int\limits_{y_N}  {\color{red}f_N(y_N) \d y_N}\int\limits_{y_1} \dots \int\limits_{y_{N-1}}  p(y_1,\dots,y_N) \prod_{i=1}^{N-1} \big( \d y_i \big)\\ 
 \end{split}\end{equation}
 
-inside the first big bracket becomes the marginal probability density of $p(y_1)$, therefore, the first term becomes:
+the inner integral in the first big bracket is the marginal probability density $p(y_1)$; therefore, the first term becomes:
 
 \begin{equation}\begin{split}
 \int_{y_1} f_1(y_1) p(y_1) \d y_1
 \end{split}\end{equation}
 
-Apply this to each of the $N$ terms, therefore:
+Applying this to each of the $N$ terms, therefore:
 
 \begin{equation}
 \begin{split}
-\int_Y (F(Y))P(Y) \d Y =  \int_{y_1} f_1(y_1) P_1(y_1) \d y_1 + \dots +  \int_{y_n} f_n(y_n) P_n(y_n) \d y_n
+\int_Y F(Y) p(Y) \d Y =  \int_{y_1} f_1(y_1) p(y_1) \d y_1 + \dots +  \int_{y_N} f_N(y_N) p(y_N) \d y_N
 \end{split}
 \end{equation}
 
@@ -935,10 +935,10 @@ Apply this to each of the $N$ terms, therefore:
 now apply Eq.(\ref{eq integral of sum to sum of integral}), we have:
 
 \begin{equation}\begin{split}
-q(\Theta, \Theta^{(g)}) &=  \int_{z_1} \dots \int_{z_n} \left( \sum_{i=1}^{n} \log p(z_i , x_i | \Theta) \prod_{i=1}^n p(z_i|x_i,\Theta^{(g)}) \right) \d z_1, \dots \d z_n \\
+q(\Theta, \Theta^{(g)}) &=  \int_{z_1} \dots \int_{z_n} \left( \sum_{i=1}^{n} \log p(z_i , x_i | \Theta) \prod_{i=1}^n p(z_i|x_i,\Theta^{(g)}) \right) \d z_1 \cdots \d z_n \\
 &= \sum_{i=1}^{n} \left(  \int_{z_i}  \log p(z_i , x_i | \Theta)  p(z_i|x_i,\Theta^{(g)}) \d z_i \right)  \hspace{5 mm} z_i \in \{1,\dots, k\} \\
-&= \sum_{z_i=1}^k  \sum_{i=1}^{n}  \log p(z_i , x_i | \Theta) p(z_i|x_i,\Theta^{(g)}) \hspace{5 mm} \text{swap the summation terms}\\
-&= \sum_{l=1}^k  \sum_{i=1}^{n}  \log [ \alpha_{l} \mathcal{N}(x_i | \mu_{l}, \Sigma_{l} )] p(l|x_i,\Theta^{(g)})  \hspace{5 mm} \text{substitute Gaussan and replace } z_i \rightarrow l\\
+&= \sum_{l=1}^k  \sum_{i=1}^{n}  \log p(z_i = l , x_i | \Theta)\, p(z_i = l|x_i,\Theta^{(g)}) \hspace{5 mm} \text{swap the summation order}\\
+&= \sum_{l=1}^k  \sum_{i=1}^{n}  \log [ \alpha_{l} \mathcal{N}(x_i | \mu_{l}, \Sigma_{l} )] p(l|x_i,\Theta^{(g)})  \hspace{5 mm} \text{substitute the Gaussian, write } z_i = l \text{ as } l\\
 \end{split}\end{equation}
 
 
@@ -980,13 +980,13 @@ q(\Theta, \Theta^{(g)}) &= \sum_{l=1}^k  \sum_{i=1}^{n}  \log [ \alpha_{l} \math
 \addplot[mark=*] coordinates {(2,0)};
 \end{axis}
 \end{tikzpicture}
-\caption{compute responsibility probabilities, red and blue each indicate its own un-normalized responsibilities}
+\caption{computing responsibility probabilities; red and blue each indicate their own unnormalized responsibilities}
 \end{center}
 \end{figure}
 
 
 \begin{equation}\begin{split}
-p (l | x_i, \Theta^{(g)}) = \frac{\alpha_l \N(\x_i ; \mu_l, \Sigma_l) }{\sum_{s=1}^k \alpha_s \N(\x_i| \mu_s, \Sigma_s) }
+p (l | x_i, \Theta^{(g)}) = \frac{\alpha_l \N(\x_i | \mu_l, \Sigma_l) }{\sum_{s=1}^k \alpha_s \N(\x_i| \mu_s, \Sigma_s) }
 \end{split}\end{equation}
 
 
@@ -1040,7 +1040,7 @@ So, maximizing $\mu, \Sigma$ means that:
 
 \begin{equation}
 \begin{split}
-\frac{\partial \sum_{l=1}^k  \sum_{i=1}^{n}  \log ( \alpha_{l}) p(l|x_i,\Theta^{(g)}) }
+\frac{\partial \sum_{l=1}^k  \sum_{i=1}^{n}  \log [\mathcal{N}(x_i | \mu_{l}, \Sigma_{l} )] p(l|x_i,\Theta^{(g)}) }
 {\partial \mu_1, \dots, \partial \mu_k, \partial \Sigma_1, \dots, \partial \Sigma_k } = [ 0 \dots 0 ] \hspace{5 mm}\\
 \end{split}
 \end{equation}
@@ -1097,7 +1097,7 @@ So, maximizing $\mu, \Sigma$ means that:
 \hspace{10 mm} where $f(\cdot)$ is the {\color{red} scalar derivative} of $F(\cdot)$
 
 
-\item Derivatives of Traces of inverse, fact 1
+\item Derivatives of Traces, fact 1
 
 \begin{equation}
 \begin{split}
@@ -1154,30 +1154,26 @@ So, maximizing $\mu, \Sigma$ means that:
 \begin{split}
 \text{second part of } q(\Theta, \Theta^{(g)})
 &=  \sum_{l=1}^k  \sum_{i=1}^{n} \log [\mathcal{N}(x_i | \mu_{l}, \SIGMA_{l} ) ] p(l|x_i,\Theta^{(g)})\\
-&=  \sum_{i=1}^{n} \sum_{l=1}^k \log \left(  \frac{1}{\sqrt {(2\pi )^{d}|{ \SIGMA_l}|}}  {\exp \bigg(-{\frac {1}{2}}( x_i -{\boldsymbol {\mu }})^\top \SIGMA^{-1}(x_i -{\boldsymbol {\mu }})\bigg)} \right) p(l|x_i,\Theta^{(g)})\\
-%\implies \mathcal{S}(\mu_{\color{red} l},  \SIGMA_{\color{red} l}) 
-%&=   \sum_{i=1}^{n}  -\frac{1}{2} \log ( | \SIGMA_l | ) p(l|x_i,\Theta^{(g)})  -  \sum_{i=1}^{n}  \frac{1}{2}  ( x_i - \MU_l)^T \SIGMA^{-1} (x- \MU_l)  p(l|x_i,\Theta^{(g)})\\
+&=  \sum_{i=1}^{n} \sum_{l=1}^k \log \left(  \frac{1}{\sqrt {(2\pi )^{d}|{ \SIGMA_l}|}}  {\exp \bigg(-{\frac {1}{2}}( x_i - \MU_l)^\top \SIGMA_l^{-1}(x_i - \MU_l)\bigg)} \right) p(l|x_i,\Theta^{(g)})\\
 \end{split}
 \end{equation}
 
 
-Let $\Y$ be zero-meaned data matrix, where each {\color{blue} column} of $\Y$ is $\x_i - \MU_l$: 
+As a template, recall the log-likelihood of $N$ i.i.d.\ zero-meaned columns $\Y$ (each column in $\mathbb{R}^D$) under $\N({\bf 0}, \K)$:
 
 \begin{equation}
 \begin{split}
-\L \equiv \L(p(\Y| \K)) &= - \frac{D N }{2} \log(2 \pi)  - \frac{D}{2} \log | \K | - \frac{1}{2}  \tr \big( \K^{-1} \Y {\Y}^\top \big)\\
+\L \equiv \L(p(\Y| \K)) &= - \frac{D N }{2} \log(2 \pi)  - \frac{N}{2} \log | \K | - \frac{1}{2}  \tr \big( \K^{-1} \Y {\Y}^\top \big)\\
 \end{split}
 \end{equation}
 
 
+Let $\Y$ be the zero-meaned data matrix, where each {\color{blue} column} of $\Y$ is $\x_i - \MU_l$:
 
 \begin{equation}
 \begin{split}
-\text{second part of } q(\Theta, \Theta^{(g)})
-&=  \sum_{l=1}^k  \sum_{i=1}^{n} \log [\mathcal{N}(x_i | \mu_{l}, \SIGMA_{l} ) ] p(l|x_i,\Theta^{(g)})\\
-&=  \sum_{i=1}^{n} \sum_{l=1}^k \log \left(  \frac{1}{\sqrt {(2\pi )^{d}|{ \SIGMA_l}|}}  {\exp \bigg(-{\frac {1}{2}}( x_i -{\boldsymbol {\mu }})^\top \SIGMA^{-1}(x_i -{\boldsymbol {\mu }})\bigg)} \right) p(l|x_i,\Theta^{(g)})\\
-\implies \mathcal{S}(\mu_{\color{red} l},  \SIGMA_{\color{red} l}) 
-&=   \sum_{i=1}^{n}  -\frac{1}{2} \log ( | \SIGMA_l | ) p(l|x_i,\Theta^{(g)})  -  \sum_{i=1}^{n}  \frac{1}{2}  ( x_i - \MU_l)^T \SIGMA^{-1} (x- \MU_l)  p(l|x_i,\Theta^{(g)})\\
+\mathcal{S}(\mu_{\color{red} l},  \SIGMA_{\color{red} l})
+&=   \sum_{i=1}^{n}  -\frac{1}{2} \log ( | \SIGMA_l | ) p(l|x_i,\Theta^{(g)})  -  \sum_{i=1}^{n}  \frac{1}{2}  ( x_i - \MU_l)^\top \SIGMA_l^{-1} (x_i - \MU_l)  p(l|x_i,\Theta^{(g)}) + \C\\
 \end{split}
 \end{equation}
 
@@ -1185,9 +1181,9 @@ Let $\Y$ be zero-meaned data matrix, where each {\color{blue} column} of $\Y$ is
 
 \begin{equation}
 \begin{split}
-\implies \mathcal{S}(\mu_l, \Sigma_l^{-1})  &=   - \tr \left( \frac{\Sigma_l^{-1}}{2} \sum_{i=1}^{n}  ( x_i - \mu_l)  (x- \mu_l)^T p(l|x_i,\Theta^{(g)})   \right)   + \text{ Constant} \\
+\implies \mathcal{S}(\mu_l, \Sigma_l^{-1})  &=   - \tr \left( \frac{\Sigma_l^{-1}}{2} \sum_{i=1}^{n}  ( x_i - \mu_l)  (x_i - \mu_l)^\top p(l|x_i,\Theta^{(g)})   \right)   + \text{ Constant} \\
 %----------------------------------------------------------
-\implies  \frac{\partial \mathcal{S}(\mu_l, \Sigma_l^{-1})}{\partial \mu_l} &=   \frac{\Sigma^{-1} }{2} \sum_{i=1}^{n}   2  ( x_i - \mu_l) p(l|x_i,\Theta^{(g)}) = 0\\
+\implies  \frac{\partial \mathcal{S}(\mu_l, \Sigma_l^{-1})}{\partial \mu_l} &=   \frac{\Sigma_l^{-1} }{2} \sum_{i=1}^{n}   2  ( x_i - \mu_l) p(l|x_i,\Theta^{(g)}) = 0\\
 %----------------------------------------------------------
 \implies  \sum_{i=1}^{n}  x_i  p(l|x_i,\Theta^{(g)})  &= \mu_l  \sum_{i=1}^{n}  p(l|x_i,\Theta^{(g)})   \\
 %----------------------------------------------------------
@@ -1210,7 +1206,7 @@ Let $\Y$ be zero-meaned data matrix, where each {\color{blue} column} of $\Y$ is
 \begin{split}
 \text{second part of } q(\Theta, \Theta^{(g)})
 &=  \sum_{l=1}^k  \sum_{i=1}^{n} \log [\mathcal{N}(x_i | \mu_{l}, \SIGMA_{l} ) ] p(l|x_i,\Theta^{(g)})\\
-&=  \sum_{i=1}^{n} \sum_{l=1}^k \log \left(  \frac{1}{\sqrt {(2\pi )^{d}|{ \SIGMA_l}|}}  {\exp \bigg(-{\frac {1}{2}}( x_i - \MU_l )^\top \SIGMA^{-1}(x_i - \MU_l )\bigg)} \right) p(l|x_i,\Theta^{(g)})\\
+&=  \sum_{i=1}^{n} \sum_{l=1}^k \log \left(  \frac{1}{\sqrt {(2\pi )^{d}|{ \SIGMA_l}|}}  {\exp \bigg(-{\frac {1}{2}}( x_i - \MU_l )^\top \SIGMA_l^{-1}(x_i - \MU_l )\bigg)} \right) p(l|x_i,\Theta^{(g)})\\
 %\implies \mathcal{S}(\mu_{\color{red} l},  \SIGMA_{\color{red} l}) 
 %&=   \sum_{i=1}^{n}  -\frac{1}{2} \log ( | \SIGMA_l | ) p(l|x_i,\Theta^{(g)})  -  \sum_{i=1}^{n}  \frac{1}{2}  ( x_i - \MU_l)^T \SIGMA^{-1} (x- \MU_l)  p(l|x_i,\Theta^{(g)})\\
 \end{split}
@@ -1248,11 +1244,11 @@ let $\P$ be diagonal matrix in which $\P_{ii}$ correspond to $p( l | x_i,\Theta^
  {\SIGMA_l}^{-1}  \Y \P \Y^\top \SIGMA_l^{-1} - \tr(\P)  \SIGMA_l^{-1} = {\bf 0}  \\
 %  ( {\SIGMA_l}^{-1}  \Y) ( \SIGMA_l^{-1} \Y)^\top - D \SIGMA_l^{-1} = {\bf 0} \\
 \implies  {\SIGMA_l}^{-1}  \Y \P \Y^\top \SIGMA_l^{-1}  &=  \tr(\P)  \SIGMA_l^{-1} \\
-\implies  \Y \P \Y^\top  \SIGMA_l^{-1}  &=  \tr(\P)  
-\implies  \SIGMA_l^{-1}  =  \tr(\P)  (\Y \P \Y^\top)^{-1}  \\
-\implies  \SIGMA_l  &=  \tr(\P)^{-1}  (\Y \P \Y^\top) 
+\implies  \Y \P \Y^\top  \SIGMA_l^{-1}  &=  \tr(\P) \, \I \\
+\implies  \SIGMA_l^{-1}  &=  \tr(\P)  (\Y \P \Y^\top)^{-1}  \\
+\implies  \SIGMA_l  &=  \tr(\P)^{-1}  (\Y \P \Y^\top)
 =  \frac{(\Y \P \Y^\top)}{\tr(\P) }\\
- &=  \frac{\sum_{i=1}^{n}  ( x_i - \mu_l) (x- \mu_l)^T p(l | x_i,\Theta^{(g)})}{ \sum_{i=1}^{n} p(l | x_i,\Theta^{(g)})} \\
+ &=  \frac{\sum_{i=1}^{n}  ( x_i - \mu_l) (x_i - \mu_l)^\top p(l | x_i,\Theta^{(g)})}{ \sum_{i=1}^{n} p(l | x_i,\Theta^{(g)})} \\
 \end{split}
 \end{equation}
 
@@ -1260,7 +1256,7 @@ let $\P$ be diagonal matrix in which $\P_{ii}$ correspond to $p( l | x_i,\Theta^
 
 %\begin{equation}
 %\begin{split}
-%\implies \mathcal{S}(\mu_l, \Sigma_l^{-1})  &=   - \text{Tr} \left( \frac{\Sigma_l^{-1}}{2} \sum_{i=1}^{n}  ( x_i - \mu_l)  (x- \mu_l)^T p(l|x_i,\Theta^{(g)})   \right)   + \text{ Constant} \\
+%\implies \mathcal{S}(\mu_l, \Sigma_l^{-1})  &=   - \text{Tr} \left( \frac{\Sigma_l^{-1}}{2} \sum_{i=1}^{n}  ( x_i - \mu_l)  (x_i - \mu_l)^T p(l|x_i,\Theta^{(g)})   \right)   + \text{ Constant} \\
 %%----------------------------------------------------------
 %\implies  \frac{\partial \mathcal{S}(\mu_l, \Sigma_l^{-1})}{\partial \mu_l} &=   \frac{\Sigma^{-1} }{2} \sum_{i=1}^{n}   2  ( x_i - \mu_l) p(l|x_i,\Theta^{(g)}) = 0\\
 %%----------------------------------------------------------
@@ -1277,21 +1273,21 @@ let $\P$ be diagonal matrix in which $\P_{ii}$ correspond to $p( l | x_i,\Theta^
 
 \begin{equation}
 \begin{split}
- \mathcal{S}(\mu_l, \Sigma_l^{-1}) &=   \sum_{i=1}^{n}   \left(  -\frac{1}{2} \log ( | \Sigma_l | )  -\frac{1}{2} ( x_i - \mu_l)^T \Sigma^{-1} (x- \mu_l) \right)  p(l|x_i,\Theta^{(g)})\\
+ \mathcal{S}(\mu_l, \Sigma_l^{-1}) &=   \sum_{i=1}^{n}   \left(  -\frac{1}{2} \log ( | \Sigma_l | )  -\frac{1}{2} ( x_i - \mu_l)^\top \Sigma_l^{-1} (x_i - \mu_l) \right)  p(l|x_i,\Theta^{(g)})\\
 \end{split}
 \end{equation}
 
 Change $\Sigma$ to $\Sigma^{-1}$, this is so that after taking derivative of $\log (X) $, the result is in terms of $X^{-1}$
 
 \begin{equation}\begin{split}
- &=    \Bigg(   \sum_{i=1}^{n}  \log ( | \Sigma_l^{-1} | )  p(l|x_i,\Theta^{(g)})  -\frac{1}{2} \text{tr} \Bigg( \Sigma^{-1} \underbrace{\sum_{i=1}^{n}  ( x_i - \mu_l) (x- \mu_l)^T  p(l|x_i,\Theta^{(g)}) }_{M_l} \Bigg) \Bigg) \\
+ &=    \Bigg(  \frac{1}{2} \sum_{i=1}^{n}  \log ( | \Sigma_l^{-1} | )  p(l|x_i,\Theta^{(g)})  -\frac{1}{2} \text{tr} \Bigg( \Sigma_l^{-1} \underbrace{\sum_{i=1}^{n}  ( x_i - \mu_l) (x_i - \mu_l)^\top  p(l|x_i,\Theta^{(g)}) }_{M_l} \Bigg) \Bigg) \\
 %------------------------------------------------------------
-\implies  \frac{\partial \mathcal{S}(\mu_l, \Sigma_l^{-1})}{\partial \Sigma^{-1}_l} &=     \frac{2   \sum_{i=1}^{n} \Sigma_l p(l|x_i,\Theta^{(g)}) -  \sum_{i=1}^{n} \text{diag}(\Sigma) p(l|x_i,\Theta^{(g)}) }{2}    -\frac{2M_l - \text{diag}(M_l)}{2} = 0 \\
+\implies  \frac{\partial \mathcal{S}(\mu_l, \Sigma_l^{-1})}{\partial \Sigma^{-1}_l} &=     \frac{2   \sum_{i=1}^{n} \Sigma_l p(l|x_i,\Theta^{(g)}) -  \sum_{i=1}^{n} \text{diag}(\Sigma_l) p(l|x_i,\Theta^{(g)}) }{2}    -\frac{2M_l - \text{diag}(M_l)}{2} = 0 \\
 %------------------------------------------------------------
-\implies & 2 (  \sum_{i=1}^{n} \Sigma p(l | x_i,\Theta^{(g)}) - M_l)   -  \sum_{i=1}^{n} \text{diag} ( \Sigma p(l | x_i,\Theta^{(g)}) - M_l)   = 0\\
+\implies & 2 \Big(  \sum_{i=1}^{n} \Sigma_l p(l | x_i,\Theta^{(g)}) - M_l \Big)   -  \text{diag} \Big( \sum_{i=1}^{n} \Sigma_l p(l | x_i,\Theta^{(g)}) - M_l \Big)   = 0\\
 %------------------------------------------------------------
-\implies & \sum_{i=1}^{n} \Sigma p(l | x_i,\Theta^{(g)}) - M_l = 0\\
-\implies & \Sigma = \frac{\sum_{i=1}^{n} M_l}{\sum_{i=1}^{n} p(l | x_i,\Theta^{(g)})} =  \frac{\sum_{i=1}^{n}  ( x_i - \mu_l) (x- \mu_l)^T p(l | x_i,\Theta^{(g)})}{ \sum_{i=1}^{n} p(l | x_i,\Theta^{(g)})} 
+\implies & \sum_{i=1}^{n} \Sigma_l p(l | x_i,\Theta^{(g)}) - M_l = 0\\
+\implies & \Sigma_l = \frac{M_l}{\sum_{i=1}^{n} p(l | x_i,\Theta^{(g)})} =  \frac{\sum_{i=1}^{n}  ( x_i - \mu_l) (x_i - \mu_l)^\top p(l | x_i,\Theta^{(g)})}{ \sum_{i=1}^{n} p(l | x_i,\Theta^{(g)})}
 \end{split}\end{equation}
 
 
@@ -1304,32 +1300,32 @@ Change $\Sigma$ to $\Sigma^{-1}$, this is so that after taking derivative of $\l
 
 \subsection{Summary of Gaussian Mixture Model}
 
-Maximizing $\mu, \Sigma$ means that to update $\Theta^{(g)} \rightarrow \Theta^{(g+1)}$: 
+In summary, to update $\Theta^{(g)} \rightarrow \Theta^{(g+1)}$:
 
 \begin{equation}\begin{split}
-\alpha_l^{(g+1)} = \frac{1}{N} \sum_{i=1}^N p (l | x_i, \Theta^{(g)})
+\alpha_l^{(g+1)} = \frac{1}{n} \sum_{i=1}^n p (l | x_i, \Theta^{(g)})
 \end{split}\end{equation}
 
 \begin{equation}\begin{split}
-\mu_l^{(g+1)} = \frac{\sum_{i=1}^N x_i p (l | x_i, \Theta^{(g)})}{\sum_{i=1}^N p (l | x_i, \Theta^{(g)})} 
+\mu_l^{(g+1)} = \frac{\sum_{i=1}^n x_i p (l | x_i, \Theta^{(g)})}{\sum_{i=1}^n p (l | x_i, \Theta^{(g)})}
 \end{split}\end{equation}
 
 \begin{equation}\begin{split}
-\Sigma_l^{(g+1)} = \frac{\sum_{i=1}^N [x_i - \mu_l^{(i+1)}] [ x_i - \mu_l^{(i+1)} ]^\top p (l | x_i, \Theta^{(g)})}{\sum_{i=1}^N p (l | x_i, \Theta^{(g)})} 
+\Sigma_l^{(g+1)} = \frac{\sum_{i=1}^n [x_i - \mu_l^{(g+1)}] [ x_i - \mu_l^{(g+1)} ]^\top p (l | x_i, \Theta^{(g)})}{\sum_{i=1}^n p (l | x_i, \Theta^{(g)})}
 \end{split}\end{equation}
 
-One can verify that when the number of component $K = 1 \implies p (l=1 | x_i, \Theta^{(g)}) = 1$, then:
+One can verify that when the number of components $k = 1 \implies p (l=1 | x_i, \Theta^{(g)}) = 1$, then:
 
 \begin{equation}\begin{split}
 \alpha_l^{(g+1)} = 1
 \end{split}\end{equation}
 
 \begin{equation}\begin{split}
-\mu_l^{(g+1)} = \frac{1}{N }\sum_{i=1}^N x_i 
+\mu_l^{(g+1)} = \frac{1}{n }\sum_{i=1}^n x_i
 \end{split}\end{equation}
 
 \begin{equation}\begin{split}
-\Sigma_l^{(g+1)} = \frac{1}{N} \sum_{i=1}^N [x_i - \mu_l^{(i+1)}] [ x_i - \mu_l^{(i+1)} ]^\top  
+\Sigma_l^{(g+1)} = \frac{1}{n} \sum_{i=1}^n [x_i - \mu_l^{(g+1)}] [ x_i - \mu_l^{(g+1)} ]^\top
 \end{split}\end{equation}
 
 which becomes the parameter update of a single Gaussian
@@ -1340,7 +1336,7 @@ which becomes the parameter update of a single Gaussian
 
 %-------------------------------------------------------------
 
-\subsection{To show the diagram again}
+\subsection{GMM fitting: initialization vs.\ convergence}
 
 \begin{figure}[H]
      \centering
@@ -1352,7 +1348,7 @@ which becomes the parameter update of a single Gaussian
      \begin{subfigure}[b]{0.48\textwidth}
          \centering
          \includegraphics[width=\textwidth]{gmm_result_3_mixtures.jpg}
-         \caption{GMM at convergence: $\Theta^{(f)}$}
+         \caption{GMM at convergence: $\Theta^{(\text{final})}$}
      \end{subfigure}
 \end{figure}
 
