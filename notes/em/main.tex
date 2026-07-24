@@ -122,15 +122,61 @@
 }
 
 
-\title{Expectation Maximization}
-%\title{Neural Network Gaussian Process and NTK for Seismology and Artificial Intelligence Workshop @ Fias}
+% ── Paper-style layout (matches the transformer_standard_paper reference) ──────
+\geometry{a4paper, textwidth=6.3in, textheight=9.2in}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Expectation Maximization}
+\fancyhead[R]{\small Richard Xu}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+
+\title{\bfseries Expectation Maximization:\\
+From Mixture Densities to a Provably\\
+Convergent Algorithm}
 \author{Richard Xu}
+\date{}
 
 \begin{document}
 
-\begingroup \fontsize{9pt}{9pt}\selectfont 
-
 \maketitle
+\thispagestyle{plain}
+
+\begin{center}
+\textit{Lecture notes and tutorial}
+\end{center}
+
+\begin{abstract}
+\noindent
+Data with several clusters cannot be described by a single Gaussian, and the
+natural remedy --- a mixture of Gaussians --- produces a log-likelihood that
+neither yields a closed-form maximum nor suits plain gradient ascent, since the
+objective is non-concave. These notes develop the Expectation-Maximization
+(E-M) algorithm as the standard answer. After reviewing convexity and Jensen's
+inequality, we state the E-M update and prove its central guarantee: each
+iteration leaves the log-likelihood non-decreasing. The proof is given twice
+--- once through the ELBO--KL decomposition familiar from variational
+inference, viewing E-M as maximization-maximization, and once directly through
+the classical $Q$/$H$ decomposition, where a one-line Jensen argument shows the
+cross-entropy term can never decrease. The framework is then applied in full to
+the Gaussian Mixture Model: responsibilities form the E-step, and Lagrange
+multipliers plus matrix calculus give closed-form M-step updates for the
+mixing weights, means, and covariances, each a responsibility-weighted
+average. A sanity check confirms the updates collapse to the single-Gaussian
+maximum-likelihood estimates when $k=1$. Exercises with worked solutions
+conclude the notes.
+\end{abstract}
+
+\vspace{2mm}
+\noindent
+\textbf{Keywords:} expectation maximization; Gaussian mixture model; latent
+variables; Jensen's inequality; ELBO; maximum likelihood
+
+\newpage
+\tableofcontents
+\newpage
 
 
 

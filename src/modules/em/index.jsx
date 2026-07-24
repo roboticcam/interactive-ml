@@ -16,7 +16,7 @@ const IMG = (name) => import.meta.env.BASE_URL + "em/" + name;
 function Motivation() {
   const t = useT();
   return (
-    <Chapter id="em-motivation" num={1} title={t("em.ch1.title")} paper={{ sec: "1", page: 1 }} lead={t("em.ch1.lead")}>
+    <Chapter id="em-motivation" num={1} title={t("em.ch1.title")} paper={{ sec: "1", page: 3 }} lead={t("em.ch1.lead")}>
       <P t={t} k="em.ch1.p1" />
       <div className="my-5 flex flex-wrap gap-4">
         <img src={IMG("gmm_data_3_mixtures.jpg")} alt="3-mixture data" className="w-[46%] min-w-[260px] rounded-xl border border-line" />
@@ -36,7 +36,7 @@ function Motivation() {
 function Preliminaries() {
   const t = useT();
   return (
-    <Chapter id="em-jensen" num={2} title={t("em.ch2.title")} paper={{ sec: "2", page: 3 }} lead={t("em.ch2.lead")}>
+    <Chapter id="em-jensen" num={2} title={t("em.ch2.title")} paper={{ sec: "2", page: 4 }} lead={t("em.ch2.lead")}>
       <P t={t} k="em.ch2.p1" />
       <MB>{"\\phi\\big((1-t)x_1 + t x_2\\big) \\le (1-t)\\,\\phi(x_1) + t\\,\\phi(x_2), \\qquad t \\in [0,1]"}</MB>
       <DemoCard title={t("em.ch2.demo.title")} subtitle={t("em.ch2.demo.sub")}>
@@ -53,7 +53,7 @@ function Preliminaries() {
 function Algorithm() {
   const t = useT();
   return (
-    <Chapter id="em-algorithm" num={3} title={t("em.ch3.title")} paper={{ sec: "3", page: 4 }} lead={t("em.ch3.lead")}>
+    <Chapter id="em-algorithm" num={3} title={t("em.ch3.title")} paper={{ sec: "3", page: 5 }} lead={t("em.ch3.lead")}>
       <P t={t} k="em.ch3.p1" />
       <MB>{"\\Theta^{(g+1)} = \\arg\\max_{\\Theta} \\left( \\int_Z \\log\\big(p(X, Z \\mid \\Theta)\\big)\\, p(Z \\mid X, \\Theta^{(g)}) \\,\\mathrm{d}Z \\right)"}</MB>
       <P t={t} k="em.ch3.p2" />
@@ -67,7 +67,7 @@ function Algorithm() {
 function Convergence() {
   const t = useT();
   return (
-    <Chapter id="em-convergence" num={4} title={t("em.ch4.title")} paper={{ sec: "4", page: 5 }} lead={t("em.ch4.lead")}>
+    <Chapter id="em-convergence" num={4} title={t("em.ch4.title")} paper={{ sec: "4", page: 6 }} lead={t("em.ch4.lead")}>
       <P t={t} k="em.ch4.p1" />
       <MB>{"\\mathcal{L}(\\Theta \\mid X) = \\underbrace{\\int_Z \\log\\Big(\\tfrac{p(X,Z\\mid\\Theta)}{q(Z)}\\Big) q(Z)\\,\\mathrm{d}Z}_{\\text{ELBO}(\\Theta,\\,q)} + \\underbrace{\\int_Z \\log\\Big(\\tfrac{q(Z)}{p(Z\\mid X,\\Theta)}\\Big) q(Z)\\,\\mathrm{d}Z}_{\\mathrm{KL}\\left(q \\,\\|\\, p(Z\\mid X,\\Theta)\\right)\\; \\ge\\; 0}"}</MB>
       <Sub id="em-step1" kicker="4.1">{t("em.ch4.h.step1")}</Sub>
@@ -87,18 +87,18 @@ function Convergence() {
 function GMMExample() {
   const t = useT();
   return (
-    <Chapter id="em-gmm" num={5} title={t("em.ch5.title")} paper={{ sec: "5", page: 8 }} lead={t("em.ch5.lead")}>
+    <Chapter id="em-gmm" num={5} title={t("em.ch5.title")} paper={{ sec: "5", page: 9 }} lead={t("em.ch5.lead")}>
       <P t={t} k="em.ch5.p1" />
       <MB>{"p(X, Z \\mid \\Theta) = \\prod_{i=1}^{n} \\alpha_{z_i} \\mathcal{N}(x_i \\mid \\mu_{z_i}, \\Sigma_{z_i}), \\qquad p(Z \\mid X, \\Theta) = \\prod_{i=1}^{n} \\frac{\\alpha_{z_i} \\mathcal{N}(x_i \\mid \\mu_{z_i}, \\Sigma_{z_i})}{\\sum_{l=1}^{k} \\alpha_l \\mathcal{N}(x_i \\mid \\mu_l, \\Sigma_l)}"}</MB>
 
-      <Sub id="em-resp" kicker="5.1" paper={{ sec: "5.3", page: 9 }}>{t("em.ch5.h.resp")}</Sub>
+      <Sub id="em-resp" kicker="5.1" paper={{ sec: "5.4", page: 11 }}>{t("em.ch5.h.resp")}</Sub>
       <P t={t} k="em.ch5.p2" />
       <MB>{"p(l \\mid x_i, \\Theta^{(g)}) = \\frac{\\alpha_l\\, \\mathcal{N}(x_i \\mid \\mu_l, \\Sigma_l)}{\\sum_{s=1}^{k} \\alpha_s\\, \\mathcal{N}(x_i \\mid \\mu_s, \\Sigma_s)}"}</MB>
       <DemoCard title={t("em.ch5.demo1.title")} subtitle={t("em.ch5.demo1.sub")}>
         <ResponsibilityDemo />
       </DemoCard>
 
-      <Sub id="em-updates" kicker="5.2" paper={{ sec: "5.6", page: 13 }}>{t("em.ch5.h.updates")}</Sub>
+      <Sub id="em-updates" kicker="5.2" paper={{ sec: "5.7", page: 14 }}>{t("em.ch5.h.updates")}</Sub>
       <P t={t} k="em.ch5.p3" />
       <MB>{"\\alpha_l^{(g+1)} = \\frac{1}{n} \\sum_{i=1}^{n} p(l \\mid x_i, \\Theta^{(g)}) \\qquad \\mu_l^{(g+1)} = \\frac{\\sum_i x_i\\, p(l \\mid x_i, \\Theta^{(g)})}{\\sum_i p(l \\mid x_i, \\Theta^{(g)})}"}</MB>
       <MB>{"\\Sigma_l^{(g+1)} = \\frac{\\sum_i [x_i - \\mu_l^{(g+1)}][x_i - \\mu_l^{(g+1)}]^{\\top}\\, p(l \\mid x_i, \\Theta^{(g)})}{\\sum_i p(l \\mid x_i, \\Theta^{(g)})}"}</MB>
@@ -134,7 +134,7 @@ function Exercise({ n }) {
 function Exercises() {
   const t = useT();
   return (
-    <Chapter id="em-exercises" num={6} title={t("em.ch6.title")} paper={{ sec: "6", page: 15 }} lead={t("em.ch6.lead")}>
+    <Chapter id="em-exercises" num={6} title={t("em.ch6.title")} paper={{ sec: "6", page: 16 }} lead={t("em.ch6.lead")}>
       {[1, 2, 3, 4, 5].map((n) => <Exercise key={n} n={n} />)}
     </Chapter>
   );
