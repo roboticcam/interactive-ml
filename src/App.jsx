@@ -7,6 +7,7 @@ import { useT, LanguageSwitcher } from "./i18n/LangContext.jsx";
 import { useHashRoute } from "./lib/router.js";
 import Home from "./pages/Home.jsx";
 import ModuleStub from "./pages/ModuleStub.jsx";
+import EMModule from "./modules/em/index.jsx";
 import { getModule } from "./modules/registry.js";
 
 // Anchors that belong to the Transformer module — legacy links (#dpa …, incl.
@@ -217,6 +218,9 @@ export default function App() {
   const seg = route.seg || [];
   if (seg[0] === "m" && seg[1] === "transformer") {
     return <TransformerModule section={seg[2]} />;
+  }
+  if (seg[0] === "m" && seg[1] === "em") {
+    return <EMModule section={seg[2]} />;
   }
   if (seg[0] === "m" && seg[1] && getModule(seg[1])) {
     // Not-yet-live modules get a status landing page (never a dead click).

@@ -4,16 +4,18 @@ import { useT } from "../i18n/LangContext.jsx";
 
 // Base-aware so it resolves under the Pages sub-path ("/interactive-ml/") in
 // production and "/" in local dev.
-const PDF_URL = import.meta.env.BASE_URL + "transformer.pdf";
+// Default paper; PaperProvider can override per module via the pdf prop.
+const DEFAULT_PDF = "transformer.pdf";
 const PaperCtx = createContext({ open: () => {} });
 export const usePaper = () => useContext(PaperCtx);
 
 // Provider + the slide-in drawer that embeds the source PDF at a given page.
-export function PaperProvider({ children }) {
+export function PaperProvider({ children, pdf = DEFAULT_PDF, titleKey = "ui.paper.title" }) {
   const t = useT();
   const [state, setState] = useState(null); // { page, sec }
   const open = useCallback((page, sec) => setState({ page, sec }), []);
   const close = useCallback(() => setState(null), []);
+  const PDF_URL = import.meta.env.BASE_URL + pdf;
   const src = state ? `${PDF_URL}#page=${state.page}&view=FitH` : PDF_URL;
 
   // Escape returns to the app while the drawer is open.
@@ -71,7 +73,7 @@ export function PaperProvider({ children }) {
                 <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">{t("ui.paper.eyebrow")}</div>
                 <div className="text-[14px] font-semibold text-ink">
                   {state.sec ? `§${state.sec} · ` : ""}{t("ui.paper.page")} {state.page}
-                  <span className="ml-2 font-normal text-faint">{t("ui.paper.title")}</span>
+                  <span className="ml-2 font-normal text-faint">{t(titleKey)}</span>
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-2">
