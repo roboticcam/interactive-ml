@@ -134,7 +134,7 @@ function Exercise({ n }) {
 function Exercises() {
   const t = useT();
   return (
-    <Chapter id="em-exercises" num={6} title={t("em.ch6.title")} paper={{ sec: "6", page: 16 }} lead={t("em.ch6.lead")}>
+    <Chapter id="em-exercises" num={6} title={t("em.ch6.title")} lead={t("em.ch6.lead")}>
       {[1, 2, 3, 4, 5].map((n) => <Exercise key={n} n={n} />)}
     </Chapter>
   );
