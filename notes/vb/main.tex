@@ -94,11 +94,11 @@
 
 \section{Motivation}
 
-Given that we are now in the Artificial Intelligence Generated Content (AIGC) era. The goal of AIGC is to be able to sample   from the data distribution $p(\x)$. For example, there may be a dataset of images $\mathcal{D}$, if we can build a distribution $p(\x)$ reflecting the training data, then we are able to generate new images that are similar to $\mathcal{D}$ by sample from its distribution $p(\x)$. 
+We are now in the Artificial Intelligence Generated Content (AIGC) era. The goal of AIGC is to be able to sample from the data distribution $p(\x)$. For example, there may be a dataset of images $\mathcal{D}$; if we can build a distribution $p(\x)$ reflecting the training data, then we are able to generate new images that are similar to $\mathcal{D}$ by sampling from its distribution $p(\x)$.
 
 
 
-To do so, we must be able to find out the parameterised distribution of $p_\theta(\x)$ first. However, we cannot possibly compute the distribution of $p(\x)$ over $\mathcal{D}$ or even assume what type of distribution it is. Therefore, we only can approximate such with simple (or simpler) distributions $q_\phi(\z)$, where $\phi$ are the parameters of the distribution.
+To do so, we must be able to find out the parameterised distribution of $p_\theta(\x)$ first. However, we cannot possibly compute the distribution of $p(\x)$ over $\mathcal{D}$ or even assume what type of distribution it is. Therefore, we can only approximate it with simple (or simpler) distributions $q_\phi(\z)$, where $\phi$ are the parameters of the distribution.
 
 \subsection{notation}
 
@@ -134,19 +134,19 @@ $q_\tau(\tau)$ & Variational distribution for $\tau$ \\ \hline
 
 \subsection{a starting point}
 
-However, let's start with a much simpler problem first. We assume that we know part of information of  distribution $p(\x)$, the prior $p(\z)$ and the prior and the likelihood $p(\x | \z)$ (hence we also know the joint density $p(\x,\z)$). Although it appears that we also know the posterior distribution $p(\z | \x)$, as we can use Bayes rule to compute the posterior distribution, i.e.,:
+However, let's start with a much simpler problem first. We assume that we know part of the information of the distribution $p(\x)$: the prior $p(\z)$ and the likelihood $p(\x | \z)$ (hence we also know the joint density $p(\x,\z)$). It appears that we also know the posterior distribution $p(\z | \x)$, as we can use Bayes' rule to compute the posterior distribution, i.e.,:
 
 \begin{equation}\begin{split}
-p(\z | \x) = \frac{\overbrace{p(\x | \z)}^{\text{knows}}\; \overbrace{p(\z)}^{\text{knows}}}{\underbrace{\int_{\z'} p(\x|\z') p(\z') \d \z'}_{\text{don't know analytically}} }
+p(\z | \x) = \frac{\overbrace{p(\x | \z)}^{\text{known}}\; \overbrace{p(\z)}^{\text{known}}}{\underbrace{\int_{\z'} p(\x|\z') p(\z') \d \z'}_{\text{don't know analytically}} }
 \end{split}\end{equation}
 
-But unfortunately, we do not always neccessary to have access to the posterior distribution in closed form.
+But unfortunately, we do not always have access to the posterior distribution in closed form.
 
 Also in this section, we do not worry about learning the parameters $\theta$ associated with $p_\theta(\z | \x)$, which is something we will consider later for Variational Autoencoders (VAE).
 
 \subsubsection{toy example}
 
-to illustate what is a observed data $\x$ and what is a latent space $\z$, let's look at the same ``student mark'' toy example you saw in both the probabilistic graphical models (which we will restrorpsectivley visit again) and MCMC (which we will not discuss in 2024) sections:
+to illustrate what is an observed data $\x$ and what is a latent space $\z$, let's look at the same ``student mark'' toy example you saw in both the probabilistic graphical models (which we will retrospectively visit again) and MCMC sections:
 
 \begin{enumerate}
 \item
@@ -175,7 +175,7 @@ to illustate what is a observed data $\x$ and what is a latent space $\z$, let's
 	\end{tikzpicture}
 \end{center}
 
-We have three latent variables, (stu), (pkw), (mot) and one observation (mrk), then if we want to perform posterior inference, i.e.,:
+We have three latent variables, (stu), (pkw), (mot) and one observation (mrk). Then, if we want to perform posterior inference, i.e.,:
 
 \begin{equation}\begin{split}
 &\Pr \big(\underbrace{\text{stu},\text{pkw},\text{mot}}_{\text{latent}} | \underbrace{\text{mrk}}_{\text{observation}}\big)
@@ -190,7 +190,7 @@ which allows us to compute things such as:
 %Unlike Markov Chain Monte Carlo (MCMC), in variational inference, there is NO sampling, instead we propose a set of distributions, $q_{\phi_\text{stu}}(\text{stu})$, $q_{\phi_\text{pkw}}(\text{pkw})$ and $q_{\phi_\text{mot}}(\text{mot})$, such that the $\KL$ divergence between $q( \text{stu}, \text{pkw}, \text{mot}) = q_{\phi_\text{stu}}(\text{stu}) \times q_{\phi_\text{pkw}}(\text{pkw}) \times q_{\phi_\text{mot}}(\text{mot})$ and  $\Pr \big(\text{stu},\text{pkw},\text{mot} | \text{mrk} \big)$ are minimized!. Obviously, we need to optimize with respect with the parameters $\phi_\text{stu}$, $\phi_\text{pkw}$ and $\phi_\text{mot}$.
 
 
-Unlike Markov Chain Monte Carlo (MCMC), in variational inference, instead of sampling, we propose a set of proposal distributions, $q_{\phi_\text{stu}}(\text{stu})$, $q_{\phi_\text{pkw}}(\text{pkw})$ and $q_{\phi_\text{mot}}(\text{mot})$ which aim to minimize between:
+Unlike Markov Chain Monte Carlo (MCMC), in variational inference, instead of sampling, we propose a set of proposal distributions, $q_{\phi_\text{stu}}(\text{stu})$, $q_{\phi_\text{pkw}}(\text{pkw})$ and $q_{\phi_\text{mot}}(\text{mot})$ which aim to minimize the $\KL$ divergence between:
 
 
 \begin{equation}\begin{split}
@@ -203,7 +203,7 @@ and
 \Pr \big(\underbrace{\text{stu}}_{z_1},\underbrace{\text{pkw}}_{z_2},\underbrace{\text{mot}}_{z_3} | \underbrace{\text {mrk}}_{\x} \big)\\
 \end{split}\end{equation}
 
-Obviously, we need to optimize with respect to the parameters $\phi_\text{stu}$, $\phi_\text{pkw}$ and $\phi_\text{mot}$. then after that one can approximate:
+Obviously, we need to optimize with respect to the parameters $\phi_\text{stu}$, $\phi_\text{pkw}$ and $\phi_\text{mot}$. Then after that one can approximate:
 
 \begin{equation}\begin{split}
 \E_{ \Pr \big(\text{stu},\text{pkw},\text{mot} | \text{mrk} \big)} [ \text{stu},\text{pkw},\text{mot}  ]
@@ -242,17 +242,17 @@ we just need to optimize with respect to $\{  \llambda_j \}, \{ \ggamma_d \}, \{
 
 \subsection{A bit of history \dots}
 
-This note started in 2010 when I was inspired to help people read Chapter 10 of Bishop \cite{bishop2006pattern} where I was trying to explain a few things in an oversimplified (hopefully!) way. I revamped it for the class. I also added exponential family distributions and an example on LDA when the model is fully conjugate \cite{hoffman2013stochastic}  
+This note started in 2010 when I was inspired to help people read Chapter 10 of Bishop \cite{bishop2006pattern} where I was trying to explain a few things in an oversimplified (hopefully!) way. I later revamped it. I also added exponential family distributions and an example on LDA when the model is fully conjugate \cite{hoffman2013stochastic}.
 
 \section{The Variational Bayes Framework}
 
-now imagine we have some training data for us to compute the distribution of it, i.e, $p(\x)$. Imagine we are able to compute its analytical form, then we can just sample from it, i.e., to create new data. However, in many cases, the distribution is intractable, i.e., we cannot compute it. Therefore, we need to approximate it.
+Now imagine we have some training data for us to compute the distribution of it, i.e., $p(\x)$. Imagine we are able to compute its analytical form, then we can just sample from it, i.e., to create new data. However, in many cases, the distribution is intractable, i.e., we cannot compute it. Therefore, we need to approximate it.
 
 Now, let's consider the following:
 
-\subsection{what is Evidence Lowerbound?}
+\subsection{what is the Evidence Lower Bound?}
 
-\subsection{use Jensen Inequality}
+\subsection{use Jensen's Inequality}
 
 
 \begin{equation}\begin{split}
@@ -260,14 +260,14 @@ Now, let's consider the following:
 &= \log \int_{\z} \frac{ p(\x,\z)}{q_{\phi}(\z|\x)} q_{\phi}(\z|\x) \d \z\\
 &= \log \left[ \E_{z \sim q_{\phi}(\z|\x)} \left(\frac{ p(\x,\z)}{q_{\phi}(\z|\x)} \right) \right]\\
 &\ge \E_{z \sim q_{\phi}(\z|\x)} \left[ \log  \left( \frac{ p(\x,\z)}{q_{\phi}(\z|\x)} \right) \right]\quad\quad\text{by Jensen's inequality}\\
-&= \E_{z \sim q_{\phi}(\z|\x)} \left[ \log (  p(\x,\z) \right]  - 
-\E_{z \sim q_{\phi}(\z|\x)} \left[ \log ( q_{\phi}(\z|\x) \right]\\
+&= \E_{z \sim q_{\phi}(\z|\x)} \left[ \log (  p(\x,\z) ) \right]  -
+\E_{z \sim q_{\phi}(\z|\x)} \left[ \log ( q_{\phi}(\z|\x) ) \right]\\
 &= \text{ELBO}(q)\\
 \end{split}\end{equation}
 
 \subsection{another expansion}
 
-the above do not show what is the missing bit between $\log p(\x) - \text{ELBO}(q)$. So what is it?
+the above does not show what the missing bit $\log p(\x) - \text{ELBO}(q)$ is. So what is it?
 
 \begin{equation}\begin{split}
 \log{(p(\x))} &=  \log{  \left( \frac{p(\x,\z)}{p(\z|\x)} \right)  } \\
@@ -277,28 +277,28 @@ the above do not show what is the missing bit between $\log p(\x) - \text{ELBO}(
 \end{split}\end{equation}
 
 
-now, let's taking the expectation on both sides, given $q_\phi(\z)$:
+now, let's take the expectation on both sides, given $q_\phi(\z)$:
 
 
 
 \begin{equation}\begin{split}
-\log{(p(\x))} &=   \int q_\phi(\z) \log{  \left(   \frac{p(\x,\z)}{q_\phi(\z)}  \right)  } d \text{z} -  \int q_\phi(\z) \log{  \left(   \frac{p(\z|\x)}{q_\phi(\z)}  \right)  } \d \z\\
-&=   \int q_\phi(\z) \log{  \left(   \frac{p(\x,\z)}{q_\phi(\z)}  \right)  } d \text{z} + \int q_\phi(\z) \log{  \left(   \frac{q_\phi(\z)}{p(\z|\x)}  \right)  } \d \z\\
+\log{(p(\x))} &=   \int q_\phi(\z) \log{  \left(   \frac{p(\x,\z)}{q_\phi(\z)}  \right)  } \d \z -  \int q_\phi(\z) \log{  \left(   \frac{p(\z|\x)}{q_\phi(\z)}  \right)  } \d \z\\
+&=   \int q_\phi(\z) \log{  \left(   \frac{p(\x,\z)}{q_\phi(\z)}  \right)  } \d \z + \int q_\phi(\z) \log{  \left(   \frac{q_\phi(\z)}{p(\z|\x)}  \right)  } \d \z\\
 &= \text{ELBO}(q) + \KL(q\|p)
 \end{split}\end{equation}
 
 
 
-\subsubsection{name to both terms}
+\subsubsection{names for both terms}
 
 \begin{equation}\begin{split}
 \text{ELBO}(q) &= \int q_\phi(\z) \log{  \left(   \frac{p(\x,\z)}{q_\phi(\z)}  \right)  } \d \z
-= \E_{z \sim q_\phi(\z) } \big[ \left(   \frac{p(\x,\z)}{q_\phi(\z)}  \right) \big]\\
+= \E_{z \sim q_\phi(\z) } \big[ \log \left(   \frac{p(\x,\z)}{q_\phi(\z)}  \right) \big]\\
 \KL(q\|p) &= \int q_\phi(\z) \log{  \left(   \frac{q_\phi(\z)}{p(\z|\x)}  \right)  } \d \z 
 \end{split}\end{equation}
 
 
-now we can answer the question of why we do not minimize $\KL$ term directly? The {\bf key} is that the $\KL$ term contains $p(z | x)$ and ELBO term contains $p(x|z) p(z)$! Why is this the problem? Because then one has to compute:
+now we can answer the question of why we do not minimize the $\KL$ term directly. The {\bf key} is that the $\KL$ term contains $p(\z | \x)$ and the ELBO term contains $p(\x|\z) p(\z)$! Why is this a problem? Because then one has to compute:
 
 
 \begin{equation}\begin{split}
@@ -316,20 +316,20 @@ p(\x) = \int_{\z'} p(\x | \z') p(\z') \d \z'
 
 %Now here comes the trick part: let's consider that $p(\x)$ is fixed with respect to the choice of $q_\phi(\z)$. We wanted to choose a $q_\phi(\z)$ function that minimize KL divergence, so that $q_\phi(\z)$ becomes closer and closer to $p(\z|\x)$. Of course, let's see what happens when $q_\phi(\z) = p(\z|\x)$:
 
-since we can choose any $q_\phi(\z)$ we'd like, and since we want $\KL(\cdot)$ to be minimized, there it's ideal to make:
+since we can choose any $q_\phi(\z)$ we'd like, and since we want $\KL(\cdot)$ to be minimized, it is ideal to make:
 
 \begin{equation}\begin{split}
 q_\phi(\z) \equiv q_\phi(\z|\x)
 \end{split}\end{equation}
 
-i.e., it should also depend on $x$. Otherwise, it's highly unlikely that the $ \KL \big(q\|p(\z|\x) \big) $ will be minimized:
+i.e., it should also depend on $\x$. Otherwise, it's highly unlikely that the $ \KL \big(q\|p(\z|\x) \big) $ will be minimized:
 
 
 \begin{equation}\begin{split}
  \KL(q\|p) = \int q_\phi(\z|\x) \log{  \left(   \frac{q_\phi(\z|\x)}{p(\z|\x)}  \right)  } \d \z
 \end{split}\end{equation}
 
-We know that $p(\x) = \text{ELBO}(q) + \KL(q\|p) $. We consider $\text{ELBO}(q)$ is the lower bound of $p(\x)$. Minimizing $\KL (q\| p)$ is the same as maximizing the lower bound $\text{ELBO}(q)$, since the addition of the two becomes $p(\x)$
+We know that $\log p(\x) = \text{ELBO}(q) + \KL(q\|p) $. We consider $\text{ELBO}(q)$ to be the lower bound of $\log p(\x)$. Minimizing $\KL (q\| p)$ is the same as maximizing the lower bound $\text{ELBO}(q)$, since the addition of the two becomes $\log p(\x)$.
 \newpage
 
 
@@ -337,7 +337,7 @@ We know that $p(\x) = \text{ELBO}(q) + \KL(q\|p) $. We consider $\text{ELBO}(q)$
 
 \subsection{the update formula}\label{sec: the goal}
 
-By letting $q(\z) = \prod_{i=1}^M q_i(z_i)$, by fixing all the other distributions $\{ q_{i \ne j} \}$,the following is the optimal update formula for $q_i(z_i)$ which we derived in \ref{eq: ELBO meanfield}:
+By letting $q(\z) = \prod_{i=1}^M q_i(z_i)$ and fixing all the other distributions $\{ q_{i \ne j} \}$, the following is the optimal update formula for $q_j(z_j)$, which we derive in \ref{eq: ELBO meanfield}:
 
 \begin{equation}\begin{split}
 	q_j^*(z_j) &= \exp(\E_{\z \setminus z_j} [ \log{(p(\x,\z))} ])\\ 
@@ -346,20 +346,20 @@ By letting $q(\z) = \prod_{i=1}^M q_i(z_i)$, by fixing all the other distributio
 in a sense that it will maximize the component-wise ELBO $\text{ELBO}(q_j)$, i.e.,:
 
 \begin{equation}\begin{split}
-	 \text{ELBO}(q_j) &= - \KL \Big( q_j(z_j) \| \exp(\E_{\z \setminus z_j} [ \log{(p(\x,\z)) })  \Big)\\
+	 \text{ELBO}(q_j) &= - \KL \Big( q_j(z_j) \| \exp(\E_{\z \setminus z_j} [ \log{(p(\x,\z))} ])  \Big)\\
 \end{split}\end{equation}
 
-note however, the expection $\E_{\z \setminus z_j} [ \log{(p(\x,\z))} ]$ may not always be tractable. Therefore, it is not the general solution to VB. Also note that the optimality only occurs for the current component-wise ELBO, and not the global ELBO $\text{ELBO}(q)$.
+note however, the expectation $\E_{\z \setminus z_j} [ \log{(p(\x,\z))} ]$ may not always be tractable. Therefore, it is not the general solution to VB. Also note that the optimality only occurs for the current component-wise ELBO, and not the global ELBO $\text{ELBO}(q)$.
 
 \subsection{derivation in section \ref{sec: the goal}?}
 
-Since any $q(\z)$ will work, therefore, we will choose the most simple form. Suppose let's choose $q(\z)$, such that:
+Since any $q(\z)$ will work, we will choose the simplest form. Let's choose $q(\z)$, such that:
 
 \begin{equation}
  q(\z) = \prod_{i=1}^M q_i(z_i)
 \end{equation}
 
-this is called mean-filed approximation.
+this is called mean-field approximation.
 
 \begin{equation}\begin{split}
 \text{ELBO}(q) 
@@ -383,7 +383,7 @@ first, let's consider the term $- H(q,p)$, which is the first term in $\text{ELB
  \end{split}\end{equation}
 
 
-Rearrange the expression by taking a particular $q_j(z_j)$ out of the integral. Note that unlike Part $H(q)$, we are not treating any terms to $\C$. The component-wise of $- H(q,p)$ can be written as:
+Rearrange the expression by taking a particular $q_j(z_j)$ out of the integral. Note that unlike Part $H(q)$, we are not treating any terms as $\C$. The component-wise of $- H(q,p)$ can be written as:
 
 
 \begin{equation}\begin{split}
@@ -392,7 +392,7 @@ Rearrange the expression by taking a particular $q_j(z_j)$ out of the integral. 
 &= \int\limits_{z_j} q_j(z_j) \bigg(  \idotsint\limits_{Z_{i \neq j}}  \log{(p(\x,\z))} \prod_{ i \neq j}^M q_i(z_i)\d z_i  \bigg)  \d z_j
  \end{split}\end{equation}
 
-or, even more meaningfully, it can be put into an expectation function, and since $\prod_{ i \neq j}^M q_i(z_i)$ is a joint probability density
+or, even more meaningfully, it can be put into an expectation function, since $\prod_{ i \neq j}^M q_i(z_i)$ is a joint probability density:
 
 \begin{equation}\begin{split}
  {- H(q,p)}_{j} = \int\limits_{z_j} q_j(z_j) \big[  \E_{\z \setminus z_j} \big[ \log{(p(\x,\z))} \big]   \big]  \d z_j
@@ -407,7 +407,7 @@ or, even more meaningfully, it can be put into an expectation function, and sinc
 %
 %and we have:
 
-therefore, by adding an $\exp$ to the $\E_{\z \setminus z_j} \big[ \log{(p(\x,\z))} \big] $ term, we then obtained a pseudo distribution:
+therefore, by adding an $\exp$ to the $\E_{\z \setminus z_j} \big[ \log{(p(\x,\z))} \big] $ term, we then obtain a pseudo distribution:
 
 \begin{equation}\begin{split}
 %\tilde{p}_j (\x, \z) &= 
@@ -429,25 +429,25 @@ H(q) &= \sum_{i=1}^M \bigg(- \int\limits_{z_i} q_i(z_i)  \log { (q_i(z_i))} \d z
 \end{split}\end{equation}
 
 
-For a particular $p_j(z_j)$, the rest of the sum can be treated like a constant, therefore for  $p_j(z_j)$ can be written as:
+For a particular $q_j(z_j)$, the rest of the sum can be treated like a constant, therefore ${H(q)}_{j}$ can be written as:
 
 \begin{equation}\begin{split}
-{H(q)}_{j} &= - \int\limits_{z_j} q_i(z_i) \log { (q_i(z_i))} \d z_j + \C\\
-&= H ( q_i(z_i) )  + \C\\
+{H(q)}_{j} &= - \int\limits_{z_j} q_j(z_j) \log { (q_j(z_j))} \d z_j + \C\\
+&= H ( q_j(z_j) )  + \C\\
 \end{split}\end{equation}
 
-where $\C$ are the term does not involve $z_j$.
+where $\C$ are the terms that do not involve $z_j$.
 
 \subsection{Putting $- H(q,p)$ and Part $H(q)$ together: component-wise ELBO} 
 
-write $ \text{ELBO}(q)$ in terms of $q_j$, i.e., $ \text{ELBO}(q_j)$, in which we try to optimize $q_j$. The rest of the terms  would also need to be optimized $\{ q_i \}_{i \ne j}$:
+write $ \text{ELBO}(q)$ in terms of $q_j$, i.e., $ \text{ELBO}(q_j)$, in which we try to optimize $q_j$. The rest of the terms $\{ q_i \}_{i \ne j}$ would also need to be optimized:
 
 \begin{equation}\begin{split}\label{eq ELBO qj}
 \text{ELBO}(q_j) &= {- H(q,p)}_{j} + {H(q)}_{j}\\
 &= \int\limits_{z_j} q_j(z_j)  \E_{\z \setminus z_j} \big[ \log{(p(\x,\z))} \big]   \d z_j - \int\limits_{z_j} q_j(z_j) \log { (q_j(z_j))} \d z_j + \C\\
  \end{split}\end{equation}
 
-the key to realize is that we do not need to take derivative as one would normally do. All we need is to re-arrange the terms, and to realise it's the KL term, so we can just match the two distributions, between $\exp(\E_{\z \setminus z_j} \big[ \log{(p(\x,\z))} \big]  )$ and $q_j(z_j)$. Note that both are distributions of $z_j$
+the key to realize is that we do not need to take derivatives as one would normally do. All we need is to re-arrange the terms, and to realize it's the KL term, so we can just match the two distributions, between $\exp(\E_{\z \setminus z_j} \big[ \log{(p(\x,\z))} \big]  )$ and $q_j(z_j)$. Note that both are distributions of $z_j$.
 
 
 %Note that  $\E_{i\neq j} \left[ \log{(p(\x,\z))} \right]$ would be some log probability of $z$, we name it $ \log( \tilde{p} (\x, \z)) $, i.e.,:
@@ -459,11 +459,11 @@ the key to realize is that we do not need to take derivative as one would normal
 therefore Eq.(\ref{eq ELBO qj}) can be expressed equivalently as:
 
 \begin{equation}\begin{split}\label{eq ELBO as KL}
- \text{ELBO}(q_j) &= \int\limits_{z_j} q_j(z_j) \log \left[  \frac{\exp(\E_{\z \setminus z_j} \big[ \log{(p(\x,\z))} \big]  )} { q_j(z_j) }   \right] + \C.\\
+ \text{ELBO}(q_j) &= \int\limits_{z_j} q_j(z_j) \log \left[  \frac{\exp(\E_{\z \setminus z_j} \big[ \log{(p(\x,\z))} \big]  )} { q_j(z_j) }   \right] \d z_j + \C.\\
 &=- \KL \Big(  q_j(z_j) \| \exp(\E_{\z \setminus z_j} [ \log{(p(\x,\z))} ]) \Big)\\
 \end{split}\end{equation}
 
-Now {\bf this is the key}: We can maximise $\text{ELBO}(q)$, by minimising the KL divergence, where we can find approximate and optimal  $q_{j}^*(z_j)$, by setting KL divergence in Eq.(\ref{eq ELBO as KL}) to zero, i.e., $\exp(\E_{\z \setminus z_j} [ \log{(p(\x,\z))} ]) =  q_j^*(z_j) $. We also assume other $\{ q_i(z_i) \}_{i \ne j}$ set is fixed.
+Now {\bf this is the key}: We can maximize $\text{ELBO}(q)$, by minimizing the KL divergence, where we can find the approximate and optimal  $q_{j}^*(z_j)$, by setting the KL divergence in Eq.(\ref{eq ELBO as KL}) to zero, i.e., $\exp(\E_{\z \setminus z_j} [ \log{(p(\x,\z))} ]) =  q_j^*(z_j) $. We also assume the other $\{ q_i(z_i) \}_{i \ne j}$ are fixed.
 
 \begin{equation}\begin{split}\label{eq: ELBO meanfield}
 q_j^*(z_j) &= \exp(\E_{\z \setminus z_j} [ \log{(p(\x,\z))} ])\\ 
@@ -474,16 +474,16 @@ q_j^*(z_j) &= \exp(\E_{\z \setminus z_j} [ \log{(p(\x,\z))} ])\\
 
 \subsection{the update formula}
 
-therefore, the algorithm, imagine $\z = \{ z_1, z_2, z_3 \}$, and at iteration $t -1$, where we already have $q_1^{(t-1)}, q_2^{(t-1)}, q_3^{(t-1)}$
+therefore, for the algorithm, imagine $\z = \{ z_1, z_2, z_3 \}$, and at iteration $t -1$ we already have $q_1^{(t-1)}, q_2^{(t-1)}, q_3^{(t-1)}$:
 
 \begin{equation}\begin{split}
 q^{(t)}(z_1,z_2,z_3)&: \begin{cases}
-{\color{red}q_1^{(t)}(z_1)} &= \exp(\E_{z_2 \sim q_2^{(t-1)}, z_3^{(t-1)} \sim q_3^{(t-1)}} [ \log{(p(\x,z_1,z_2,z_3))} ])\\ 
+{\color{red}q_1^{(t)}(z_1)} &= \exp(\E_{z_2 \sim q_2^{(t-1)}, z_3 \sim q_3^{(t-1)}} [ \log{(p(\x,z_1,z_2,z_3))} ])\\
 {\color{green}q_2^{(t)}(z_2)} &= \exp(\E_{z_1 \sim {\color{red}q_1^{(t)}}, z_3 \sim q_3^{(t-1)}} [ \log{(p(\x,z_1,z_2,z_3))} ])\\ 
 q_3^{(t)}(z_3) &= \exp(\E_{z_1 \sim q_1^{(t)}, z_2 \sim {\color{green}q_2^{(t)}}} [ \log{(p(\x,z_1,z_2,z_3))} ])\\ 
 \end{cases}\\
 q^{(t+1)}(z_1,z_2,z_3)&: \begin{cases}
-q_1^{(t+1)}(z_1) &= \exp(\E_{z_2 \sim q_2^{(t)}, z_3^{(t)} \sim q_3^{(t)}} [ \log{(p(\x,z_1,z_2,z_3))} ])\\ 
+q_1^{(t+1)}(z_1) &= \exp(\E_{z_2 \sim q_2^{(t)}, z_3 \sim q_3^{(t)}} [ \log{(p(\x,z_1,z_2,z_3))} ])\\
 q_2^{(t+1)}(z_2) &= \exp(\E_{z_1 \sim q_1^{(t+1)}, z_3 \sim q_3^{(t)}} [ \log{(p(\x,z_1,z_2,z_3))} ])\\ 
 q_3^{(t+1)}(z_3) &= \exp(\E_{z_1 \sim q_1^{(t+1)}, z_2 \sim q_2^{(t+1)}} [ \log{(p(\x,z_1,z_2,z_3))} ])\\ 
 \end{cases}\\
@@ -503,7 +503,7 @@ q_3^{(t+1)}(z_3) &= \exp(\E_{z_1 \sim q_1^{(t+1)}, z_2 \sim q_2^{(t+1)}} [ \log{
 
 \subsubsection{likelihood}
 
-Let $\mathcal{D} = \{x_1, \dots x_n \}$:
+Let $\mathcal{D} = \{x_1, \dots, x_n \}$:
 
 \begin{equation}\begin{split}
 p ( \mathcal{D}| \mu, \tau ) &= \prod_{i=1}^n \left( \frac{\tau}{2 \pi}  \right)^{\frac{1}{2}}   \exp \left( \frac{-\tau}{2} (x_i - \mu)^2 \right) \\
@@ -514,7 +514,7 @@ p ( \mathcal{D}| \mu, \tau ) &= \prod_{i=1}^n \left( \frac{\tau}{2 \pi}  \right)
 
 \begin{equation}\begin{split}
 p ( \mu | \tau ) &= \mathcal{N} (\mu_0,  (\lambda_0 \tau)^{-1}) \propto \exp \left( \frac{-\lambda_0 \tau}{2} (\mu - \mu_0)^2 \right) \\
-p(\tau) &=  \text{Gamma}( \tau | a_0, b_0) \propto \tau^{a_0-1}\exp^{-b_0 \tau} \\
+p(\tau) &=  \text{Gamma}( \tau | a_0, b_0) \propto \tau^{a_0-1}\exp(-b_0 \tau) \\
 \end{split}\end{equation}
 
 \subsubsection{posterior}
@@ -538,7 +538,7 @@ b_n &= b_0 + \frac{1}{2} \sum_{i=1}^n (x_i - \bar{x})^2 +  \frac{\lambda_0 n (\b
 
 the exact derivation will be omitted and can be found from external sources easily.
 
-But we pretended that we canot compute the posterior, and we will use Variational Inference to approximate the posterior. The following is Python code for the true posterior:
+But we pretend that we cannot compute the posterior, and we will use Variational Inference to approximate the posterior. The following is Python code for the true posterior:
 
 \begin{lstlisting}[language=Python]
 def true_posterior(mu, tau, data, mu0, lambda0, a0, b0):
@@ -558,7 +558,7 @@ def true_posterior(mu, tau, data, mu0, lambda0, a0, b0):
 
 \subsection{mean-field Variational Inference algorithm}
 
-we let $q(\z)$ to be:
+we let $q(\z)$ be:
 
 \begin{equation}\begin{split}
 q (\mu, \tau) &= q_{\mu} (\mu) q_{\tau}(\tau)
@@ -570,22 +570,22 @@ We use Variational Bayes formula from \ref{eq: ELBO meanfield}, $\log q_j^*(z_j)
 
 \begin{equation}\begin{split}\label{eq log q mu}
     \log{ ( q_\mu^*(\mu)) } &= \E_{q_\tau}  \big[ \log{(p(\mu, \tau , \mathcal{D}))} \big]\\
-&= \E_{q_\tau}  \Big[ \log ( p ( \mathcal{D}| \mu, \tau ) ) +  \log p (\mu | \tau) \Big] + \C \hspace{5 mm} \text{ leave out terms do NOT contain } \mu \\
-&= \E_{q_\tau}  \Big[ \underbrace{ \frac{n}{2 }  \log \left( \tau \right) - \frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 }_{\log ( p ( \mathcal{D}| \mu, \tau ) )} \underbrace{ -  \frac{\lambda_0 \tau}{2} (\mu - \mu_0)^2}_{\log p (\mu | \gamma) }    \Big] + \C \\
+&= \E_{q_\tau}  \Big[ \log ( p ( \mathcal{D}| \mu, \tau ) ) +  \log p (\mu | \tau) \Big] + \C \hspace{5 mm} \text{ leave out terms that do NOT contain } \mu \\
+&= \E_{q_\tau}  \Big[ \underbrace{ \frac{n}{2 }  \log \left( \tau \right) - \frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 }_{\log ( p ( \mathcal{D}| \mu, \tau ) )} \underbrace{ -  \frac{\lambda_0 \tau}{2} (\mu - \mu_0)^2}_{\log p (\mu | \tau) }    \Big] + \C \\
 &= -  \frac{\E_{q_\tau }[ \tau] }{2}  \underbrace{\bigg[  \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0 (\mu - \mu_0)^2  \bigg]}_{\text{terms taking out of $\E_{\tau}[\cdot]$ }} + \C \\
 \end{split}\end{equation}
 
-Completing the square for the $\mu$ terms (well, you guess it, we are going to trying to make it a guassian distribution $\N(\mu; \mu^\star, \tau^\star)$). So let's find out what $\mu^\star$ and $\tau^\star$ are:
+Completing the square for the $\mu$ terms (well, you guessed it, we are going to try to make it a Gaussian distribution $\N(\mu; \mu^\star, \tau^\star)$). So let's find out what $\mu^\star$ and $\tau^\star$ are:
 
 
 \begin{equation}\begin{split}\label{eq complete the square}
 \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0 (\mu - \mu_0)^2 &= n \mu^2 - 2 n \mu \bar{x}  + \lambda_0 \mu^2 - 2 \lambda_0 \mu_0 \mu + \C \\
 %--------------------------
-&= (n + \lambda_0) \mu^2 - 2 \mu (n \bar{\x} + \lambda_0 \mu_0 ) \\
+&= (n + \lambda_0) \mu^2 - 2 \mu (n \bar{x} + \lambda_0 \mu_0 ) \\
 %---------------------------
-&=(n + \lambda_0) \left( \mu^2 - \frac{  2 \mu (n \bar{\x} + \lambda_0 \mu_0)}{(n + \lambda_0) }  \right) \\
+&=(n + \lambda_0) \left( \mu^2 - \frac{  2 \mu (n \bar{x} + \lambda_0 \mu_0)}{(n + \lambda_0) }  \right) \\
 %--------------------------
-&= (n + \lambda_0) \left( \mu - \frac{n \bar{\x} + \lambda_0 \mu_0}{n + \lambda_0}  \right)^2 + \C \\
+&= (n + \lambda_0) \left( \mu - \frac{n \bar{x} + \lambda_0 \mu_0}{n + \lambda_0}  \right)^2 + \C \\
 %--------------------------
 \end{split}\end{equation}
 
@@ -593,29 +593,29 @@ Therefore, we have:
 
 \begin{equation}\begin{split}
     \log{ ( q_\mu^*(\mu)) } &= -  \frac{\E_{q_\tau }[ \tau] }{2}    \left[  \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0 (\mu - \mu_0)^2  \right] + \C \\
-&= -  \frac{\E_{q_\tau }[ \tau] (n + \lambda_0) }{2}    \left( \mu - \frac{n \bar{\x} + \lambda_0 \mu_0}{n + \lambda_0}  \right)^2 + \C \\
-&= - \frac{1}{2} \underbrace{\E_{q_\tau }[ \tau] (n + \lambda_0)}_{\tau^\star}    \left( \mu - \underbrace{\frac{n \bar{\x} + \lambda_0 \mu_0}{n + \lambda_0}}_{\mu^\star}  \right)^2 + \C \\
-\implies  q_\mu^*(\mu) &= \N\left( \frac{n \bar{\x} + \lambda_0 \mu_0}{n + \lambda_0 } , \E_{q_\tau }[ \tau] (n + \lambda_0) \right)\quad\quad \because -\frac{\tau}{2} (x - \mu)^2\\
+&= -  \frac{\E_{q_\tau }[ \tau] (n + \lambda_0) }{2}    \left( \mu - \frac{n \bar{x} + \lambda_0 \mu_0}{n + \lambda_0}  \right)^2 + \C \\
+&= - \frac{1}{2} \underbrace{\E_{q_\tau }[ \tau] (n + \lambda_0)}_{\tau^\star}    \left( \mu - \underbrace{\frac{n \bar{x} + \lambda_0 \mu_0}{n + \lambda_0}}_{\mu^\star}  \right)^2 + \C \\
+\implies  q_\mu^*(\mu) &= \N\left( \frac{n \bar{x} + \lambda_0 \mu_0}{n + \lambda_0 } , \E_{q_\tau }[ \tau] (n + \lambda_0) \right)\quad\quad \because -\frac{\tau}{2} (x - \mu)^2\\
 \end{split}\end{equation}
 
-{\bf by the way}, from Eq.(\ref{eq log q mu}), without the $ \E_{q_\tau} \big[ \cdot \big]$, we obtained the expression for $p(\mu | \mathcal{D}, \tau)$:
+{\bf by the way}, from Eq.(\ref{eq log q mu}), without the $ \E_{q_\tau} \big[ \cdot \big]$, we obtain the expression for $p(\mu | \mathcal{D}, \tau)$:
 
 
 \begin{equation}\begin{split}
 \log ( p ( \mathcal{D}| \mu, \tau ) ) + \log p (\mu | \tau)
-&=  \underbrace{  - \frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 }_{\log ( p ( \mathcal{D}| \mu, \tau ) )} \underbrace{ -  \frac{\lambda_0 \tau}{2} (\mu - \mu_0)^2}_{\log p (\mu | \gamma) }   + \C \\
+&=  \underbrace{  - \frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 }_{\log ( p ( \mathcal{D}| \mu, \tau ) )} \underbrace{ -  \frac{\lambda_0 \tau}{2} (\mu - \mu_0)^2}_{\log p (\mu | \tau) }   + \C \\
 &= -  \frac{\tau }{2}  \bigg[  \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0 (\mu - \mu_0)^2  \bigg] + \C \\
-&= -  \frac{\tau (n + \lambda_0) }{2}    \left( \mu - \frac{n \bar{\x} + \lambda_0 \mu_0}{n + \lambda_0}  \right)^2 + \C \\
-\implies p(\mu | \mathcal{D}, \tau) &= \N\left( \frac{n \bar{\x} + \lambda_0 \mu_0}{n + \lambda_0 } , \tau (n + \lambda_0) \right)\quad\quad\text{Eq.(\ref{eq complete the square})}\\
+&= -  \frac{\tau (n + \lambda_0) }{2}    \left( \mu - \frac{n \bar{x} + \lambda_0 \mu_0}{n + \lambda_0}  \right)^2 + \C \\
+\implies p(\mu | \mathcal{D}, \tau) &= \N\left( \frac{n \bar{x} + \lambda_0 \mu_0}{n + \lambda_0 } , \tau (n + \lambda_0) \right)\quad\quad\text{Eq.(\ref{eq complete the square})}\\
 \end{split}\end{equation}
 
 
-\subsection{Computing $\log{ ( q_{i}^*(\tau)) } = \E_{q_\mu(\mu)}  \left[ \log{(p(\mu, \tau , \mathcal{D}))} \right]$}
+\subsection{Computing $\log{ ( q_{\tau}^*(\tau)) } = \E_{q_\mu(\mu)}  \left[ \log{(p(\mu, \tau , \mathcal{D}))} \right]$}
 
 \begin{equation}\begin{split}\label{eq log q tau}
     \log{ ( q_\tau^*(\tau)) } &= \E_{q_\mu}  \left[ \log{(p(\mu, \tau , \mathcal{D}))} \right]\\
 &= \E_{q_\mu}  \left[ \log ( p ( \mathcal{D}| \mu, \tau ) ) +  \log p (\mu | \tau) + \log p ( \tau)   \right] + \C \\
-&= \E_{q_\mu}  \Big[ \underbrace{ \frac{n}{2 }  \log \left( \tau \right) - \frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 }_{\log ( p ( \mathcal{D}| \mu, \tau ) )} \underbrace{ -  \frac{\lambda_0 \tau}{2} (\mu - \mu_0)^2}_{\log p (\mu | \gamma) }  \underbrace{+ (a_0-1) \log (  \tau )  -b_0 \tau}_{\log p ( \tau) }   \Big] + \C \\
+&= \E_{q_\mu}  \Big[ \underbrace{ \frac{n}{2 }  \log \left( \tau \right) - \frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 }_{\log ( p ( \mathcal{D}| \mu, \tau ) )} \underbrace{ -  \frac{\lambda_0 \tau}{2} (\mu - \mu_0)^2}_{\log p (\mu | \tau) }  \underbrace{+ (a_0-1) \log (  \tau )  -b_0 \tau}_{\log p ( \tau) }   \Big] + \C \\
 \end{split}\end{equation}
 
 Bring terms without $\mu$ outside of the integral:
@@ -623,7 +623,7 @@ Bring terms without $\mu$ outside of the integral:
 \begin{equation}\begin{split}
 &= \frac{n}{2 }\log ( \tau ) + (a_0-1) \log (  \tau )  -b_0 \tau - \frac{\tau}{2} \E_{q_\mu(\mu)}  \left[   \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0(\mu - \mu_0)^2 \right] + \C \\
 &= \Big(  \underbrace{ \frac{n}{2 } + a_0   }_{a_n}  -1 \Big) \log ( \tau )  - \tau \Big( \underbrace{ b_0  + \frac{1}{2} \E_{q_\mu(\mu)}  \Big[   \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0(\mu - \mu_0)^2 \Big] }_{b_n} \Big)+ \C \\
-\implies q_\tau^*(\tau))&= \text{Gamma}(a_n, b_n)
+\implies q_\tau^*(\tau) &= \text{Gamma}(a_n, b_n)
 \end{split}\end{equation}
 
 We can rewrite,
@@ -632,23 +632,23 @@ We can rewrite,
 \begin{split}
 b_n &= b_0 + \frac{1}{2} \E_{q_\mu}  \left[   \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0(\mu - \mu_0)^2 \right] \\
 %------------------
-&= b_0 + \frac{1}{2} \E_{q_\mu}  \left[  - 2 \mu n \bar{x}  + n \mu^2 +  \lambda_0 \mu^2 - 2 \lambda_0 \mu_0 \mu \right] + \sum_{i=1}^n (x_i)^2 + \lambda_0 \mu_0^2 \\
+&= b_0 + \frac{1}{2} \left[ \E_{q_\mu}  \left[  - 2 \mu n \bar{x}  + n \mu^2 +  \lambda_0 \mu^2 - 2 \lambda_0 \mu_0 \mu \right] + \sum_{i=1}^n (x_i)^2 + \lambda_0 \mu_0^2 \right] \\
 &=  b_0 + \frac{1}{2} \left[ (n + \lambda_0) \E_{q_\mu} [\mu^2] - 2 \left(n \bar{x} + \lambda_0 \mu_0 \right)  \E_{q_\mu} [\mu]   + \sum_{i=1}^n (x_i)^2 + \lambda_0 \mu_0^2 \right] \\
 \end{split}
 \end{equation}
 
-We will compute $\E_{q_\mu} [\mu]$ and $\E_{q_\mu} [\mu^2]$ since we know of $q_\mu(\mu)$ from previously.
+We will compute $\E_{q_\mu} [\mu]$ and $\E_{q_\mu} [\mu^2]$ since we know $q_\mu(\mu)$ from previously.
 
 
 \vspace{2mm}
 
-{\bf By the way}, from Eq.(\ref{eq log q tau}), without the $ \E_{q_\mu} [ \cdot ]$, we obtained expression for $p(\tau | \mathcal{D}, \mu )$:
+{\bf By the way}, from Eq.(\ref{eq log q tau}), without the $ \E_{q_\mu} [ \cdot ]$, we obtain the expression for $p(\tau | \mathcal{D}, \mu )$:
 
 
 \begin{equation}\begin{split}
 \log p(\tau | \mathcal{D}, \mu ) &= \log ( p ( \mathcal{D}| \mu, \tau ) ) +  \log p (\mu | \tau) + \log p ( \tau)  + \C \\
-&= \underbrace{ \frac{n}{2 }  \log \left( \tau \right) - \frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 }_{\log ( p ( \mathcal{D}| \mu, \tau ) )} \underbrace{ -  \frac{\lambda_0 \tau}{2} (\mu - \mu_0)^2}_{\log p (\mu | \gamma) }  \underbrace{+ (a_0-1) \log (  \tau )  -b_0 \tau}_{\log p ( \tau) }  + \C \\
-&= \Big(  \underbrace{ \frac{n}{2 } + a_0   }_{a_n}  -1 \Big) \log ( \tau ) - \tau \Big( \underbrace{ b_0  + \frac{1}{2}   \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0(\mu - \mu_0)^2 }_{b_n} \Big)+ \C \\
+&= \underbrace{ \frac{n}{2 }  \log \left( \tau \right) - \frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 }_{\log ( p ( \mathcal{D}| \mu, \tau ) )} \underbrace{ -  \frac{\lambda_0 \tau}{2} (\mu - \mu_0)^2}_{\log p (\mu | \tau) }  \underbrace{+ (a_0-1) \log (  \tau )  -b_0 \tau}_{\log p ( \tau) }  + \C \\
+&= \Big(  \underbrace{ \frac{n}{2 } + a_0   }_{a_n}  -1 \Big) \log ( \tau ) - \tau \Big( \underbrace{ b_0  + \frac{1}{2}  \Big( \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0(\mu - \mu_0)^2 \Big) }_{b_n} \Big)+ \C \\
 \implies p(\tau | \mathcal{D}, \mu ) &= \text{Gamma}(a_n, b_n)\quad\quad \text{where:}
 \end{split}\end{equation}
 
@@ -656,7 +656,7 @@ We will compute $\E_{q_\mu} [\mu]$ and $\E_{q_\mu} [\mu^2]$ since we know of $q_
 \begin{equation}\begin{split}
 \begin{cases}
 a_n &= \frac{n}{2 } + a_0\\
-b_n &= b_0  + \frac{1}{2}   \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0(\mu - \mu_0)^2\\
+b_n &= b_0  + \frac{1}{2}  \Big( \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0(\mu - \mu_0)^2 \Big)\\
 \end{cases}
 \end{split}\end{equation}
 
@@ -675,7 +675,7 @@ b_n &= b_0  + \frac{1}{2}   \sum_{i=1}^n (x_i - \mu)^2  +  \lambda_0(\mu - \mu_0
 In summary, the update for $q_\mu(\mu)$ and $q_\tau(\tau)$ are:
 
 \begin{equation}\begin{split}
-q_\mu^*(\mu) &= \N\left( \frac{n \bar{\x} + \lambda_0 \mu_0}{n + \lambda_0 } , \E_{q_\tau }[ \tau] (n + \lambda_0) \right)\\
+q_\mu^*(\mu) &= \N\left( \frac{n \bar{x} + \lambda_0 \mu_0}{n + \lambda_0 } , \E_{q_\tau }[ \tau] (n + \lambda_0) \right)\\
 q_\tau^*(\tau) &= \text{Gamma}(a_n, b_n)
 \end{split}\end{equation}
 
@@ -697,7 +697,7 @@ with:
 
 Note that $\E_{q_\tau}[\tau] = \frac{a_n}{b_n}$ for the Gamma distribution.
 
-a {\bf part of } Python code is listed for the variational parameters update. Of coure, one needs look at the full code for the complete picture.
+a {\bf part of } the Python code is listed for the variational parameters update. Of course, one needs to look at the full code for the complete picture.
 
 \begin{lstlisting}[language=Python]
 def update(self):
@@ -744,26 +744,26 @@ first, is the probability of mixture indices, $Z = \{ z_1, ..., z_N\}$, given we
 
 \begin{equation}
 \begin{split}
-p (Z |\pi) &= \prod^N_{i=1} p(z_n|\pi)\\
+p (Z |\pi) &= \prod^N_{i=1} p(z_i|\pi)\\
 &= \prod^N_{i=1} \prod^K_{k=1} \pi^{z_{ik}}_k\\
 \end{split}
 \end{equation}
 
-The reason for which $\left(p(z_n|\pi) = \prod^K_{k=1} \pi^{z_{ik}}_k \right)$, or $\left(p(z|\pi) = \prod^K_{k=1} \pi^{z_{k}}_k\right)$, is because in Bishop, $z$ is not represented in a scalar form, but rather in a vector of dimension $K$, which has a single element $1$, and the rest are all $0$s. For example, instead of using $p(z_n = 2 | \pi = [0.2, 0.3, 0.5]) = 0.3 $, Bishop uses $p(z_n = [0, 1, 0] | \pi = [0.2, 0.3, 0.5]) = 0.3 $. In any case, this refers to the second element of $\pi$. Therefore, a more simpler and vocal representation for $p(z|\pi)$ is just the $z^{th}$ value of $\pi$.
+The reason for which $\left(p(z_i|\pi) = \prod^K_{k=1} \pi^{z_{ik}}_k \right)$, or $\left(p(z|\pi) = \prod^K_{k=1} \pi^{z_{k}}_k\right)$, is because in Bishop, $z$ is not represented in a scalar form, but rather in a vector of dimension $K$, which has a single element $1$, and the rest are all $0$s. For example, instead of using $p(z_i = 2 | \pi = [0.2, 0.3, 0.5]) = 0.3 $, Bishop uses $p(z_i = [0, 1, 0] | \pi = [0.2, 0.3, 0.5]) = 0.3 $. In any case, this refers to the second element of $\pi$. Therefore, a simpler and vocal representation for $p(z|\pi)$ is just the $z^{th}$ value of $\pi$.
 
 \subsubsection{Definition for $p(X| Z, \mu, \Lambda)$:}
 
 \begin{equation}
 \begin{split}
-p(X| Z, \mu, \Lambda) &= \prod^N_{i=1} p(x_n | z_n, \mu, \Lambda)\\
-&\text{In normal literatures, such as Bilmes, it is defined as:}\\
-&= \prod^N_{i=1} \mathcal{N}(x_n | \mu_{z_n}, \Lambda_{z_n}^{-1})\\
+p(X| Z, \mu, \Lambda) &= \prod^N_{i=1} p(x_i | z_i, \mu, \Lambda)\\
+&\text{In the normal literature, such as Bilmes, it is defined as:}\\
+&= \prod^N_{i=1} \mathcal{N}(x_i | \mu_{z_i}, \Lambda_{z_i}^{-1})\\
 &\text{However, due to the vector representation of Bishop, the above is defined as:}\\
-&= \prod^N_{i=1} \prod^K_{k=1} \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})^{z_{ik}}\\
+&= \prod^N_{i=1} \prod^K_{k=1} \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})^{z_{ik}}\\
 \end{split}
 \end{equation}
 
-However, the above two represent the same thing:
+However, the above two represent the same thing.
 
 \subsubsection{Definition for $p(\pi)$:}
 
@@ -772,7 +772,7 @@ This is just a straight Dirichlet probability:
 \begin{equation}
 \begin{split}
 p(\pi | \alpha_0) &= \mathrm{Dir}(\pi| \alpha_0) \propto C(\alpha_0) \prod_{k=1}^K \pi_k^{\alpha_{0k} - 1}  \\
-&\implies \log (\pi | \alpha_0) \propto (\alpha_0 -1)  \sum_{k=1}^K \log \pi_k\\
+&\implies \log p(\pi | \alpha_0) \propto (\alpha_0 -1)  \sum_{k=1}^K \log \pi_k\\
 \end{split}
 \end{equation}
 
@@ -797,13 +797,13 @@ p (\mu, \Lambda) &= p (\mu | \Lambda) p (\Lambda)\\
 \begin{split}
     \log q^*(Z) &= \E_{\pi,\mu,\Lambda} \left[ \log p (X,Z, \pi, \mu, \Lambda)  \right] + \C \\
     &= \E_{\pi} \left[ \log p (Z | \pi)  \right]  + \E_{\mu, \Lambda} \left[ \log p (X | Z, \mu, \Lambda)  \right] + \C \\
-    &= \E_{\pi} \left[ \log \prod^N_{i=1} \prod^K_{k=1} \pi^{z_{ik}}_k  \right]  + \E_{\mu, \Lambda} \left[ \log  \prod^N_{i=1} \prod^K_{k=1} \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})^{z_{ik}}  \right] + \C \\
-    &= \E_{\pi} \left[ \sum^N_{i=1} \sum^K_{k=1} \log \pi^{z_{ik}}_k  \right]  + \E_{\mu, \Lambda} \left[  \sum^N_{i=1} \sum^K_{k=1} \log \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})^{z_{ik}}  \right] + \C \\
+    &= \E_{\pi} \left[ \log \prod^N_{i=1} \prod^K_{k=1} \pi^{z_{ik}}_k  \right]  + \E_{\mu, \Lambda} \left[ \log  \prod^N_{i=1} \prod^K_{k=1} \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})^{z_{ik}}  \right] + \C \\
+    &= \E_{\pi} \left[ \sum^N_{i=1} \sum^K_{k=1} \log \pi^{z_{ik}}_k  \right]  + \E_{\mu, \Lambda} \left[  \sum^N_{i=1} \sum^K_{k=1} \log \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})^{z_{ik}}  \right] + \C \\
     &\text{given that:}, ( \log a^b = b \log a):\\
-    &= \E_{\pi} \left[ \sum^N_{i=1} \sum^K_{k=1} z_{ik} \log \pi_k  \right]  + \E_{\mu, \Lambda} \left[  \sum^N_{i=1} \sum^K_{k=1} z_{ik} \log \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})  \right] + \C \\
-    &= \sum^N_{i=1} \sum^K_{k=1} z_{ik} \E_{\pi}  [ \log \pi_k ]  +  \sum^N_{i=1} \sum^K_{k=1} z_{ik} \E_{\mu, \Lambda} [ \log \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1}) ]  + \C \\
+    &= \E_{\pi} \left[ \sum^N_{i=1} \sum^K_{k=1} z_{ik} \log \pi_k  \right]  + \E_{\mu, \Lambda} \left[  \sum^N_{i=1} \sum^K_{k=1} z_{ik} \log \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})  \right] + \C \\
+    &= \sum^N_{i=1} \sum^K_{k=1} z_{ik} \E_{\pi}  [ \log \pi_k ]  +  \sum^N_{i=1} \sum^K_{k=1} z_{ik} \E_{\mu, \Lambda} [ \log \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1}) ]  + \C \\
     &\text{Taking the common term to the left}, \sum^N_{i=1} \sum^K_{k=1} z_{ik}:\\
-    &= \sum^N_{i=1} \sum^K_{k=1} z_{ik} \left( \E_{\pi}  [ \log \pi_k ]  + \E_{\mu, \Lambda} [ \log \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1}) ] \right) + \C \\
+    &= \sum^N_{i=1} \sum^K_{k=1} z_{ik} \left( \E_{\pi}  [ \log \pi_k ]  + \E_{\mu, \Lambda} [ \log \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1}) ] \right) + \C \\
     &\text{Bishop nominates a new term:} \log \rho_{ik} \\
     &= \sum^N_{i=1} \sum^K_{k=1} z_{ik} \left( \log \rho_{ik} \right) + \C \\
 \end{split}
@@ -813,15 +813,15 @@ Let's look at the expression for $\log \rho_{ik}$:
 
 \begin{equation}
 \begin{split}
-    \log \rho_{ik} &= \E_{\pi}  [ \log \pi_k ]  + \E_{\mu_k, \Lambda_k} [ \log \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})] \\
-    &= \E_{\pi}  [ \log \pi_k ]  + \E_{\mu_k, \Lambda_k} \left[ \log \left( \frac{1}{(2\pi)^{(d/2)} } | \Lambda_k |^{1/2} \exp \left( -\frac{1}{2} (x_n - \mu_{k})^\top \Lambda_k (x_n - \mu_{k}) \right) \right) \right] \\
-    &= \E_{\pi}  [ \log \pi_k ]  + \E_{\mu_k, \Lambda_k} \left[ \log (2\pi)^{\frac{-d}{2}} + \frac{1}{2} \log |\Lambda_k| + \left( -\frac{1}{2} (x_n - \mu_{k})^\top \Lambda_k (x_n - \mu_{k}) \right) \right] \\
-    &= \E_{\pi}  [ \log \pi_k ]  + \E_{\mu_k, \Lambda_k} \left[ \frac{-d}{2} \log (2\pi) + \frac{1}{2} \log |\Lambda_k| - \left( \frac{1}{2} (x_n - \mu_{k})^\top \Lambda_k (x_n - \mu_{k}) \right) \right] \\
-    &= \E_{\pi}  [ \log \pi_k ]  + \frac{-d}{2} \log (2\pi) + \frac{1}{2} \E_{\Lambda_k} \left[  \log |\Lambda_k| \right] - \frac{1}{2} \E_{\mu_k, \Lambda_k} \left[   (x_n - \mu_{k})^\top \Lambda_k (x_n - \mu_{k})  \right] \\
+    \log \rho_{ik} &= \E_{\pi}  [ \log \pi_k ]  + \E_{\mu_k, \Lambda_k} [ \log \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})] \\
+    &= \E_{\pi}  [ \log \pi_k ]  + \E_{\mu_k, \Lambda_k} \left[ \log \left( \frac{1}{(2\pi)^{(d/2)} } | \Lambda_k |^{1/2} \exp \left( -\frac{1}{2} (x_i - \mu_{k})^\top \Lambda_k (x_i - \mu_{k}) \right) \right) \right] \\
+    &= \E_{\pi}  [ \log \pi_k ]  + \E_{\mu_k, \Lambda_k} \left[ \log (2\pi)^{\frac{-d}{2}} + \frac{1}{2} \log |\Lambda_k| + \left( -\frac{1}{2} (x_i - \mu_{k})^\top \Lambda_k (x_i - \mu_{k}) \right) \right] \\
+    &= \E_{\pi}  [ \log \pi_k ]  + \E_{\mu_k, \Lambda_k} \left[ \frac{-d}{2} \log (2\pi) + \frac{1}{2} \log |\Lambda_k| - \left( \frac{1}{2} (x_i - \mu_{k})^\top \Lambda_k (x_i - \mu_{k}) \right) \right] \\
+    &= \E_{\pi}  [ \log \pi_k ]  + \frac{-d}{2} \log (2\pi) + \frac{1}{2} \E_{\Lambda_k} \left[  \log |\Lambda_k| \right] - \frac{1}{2} \E_{\mu_k, \Lambda_k} \left[   (x_i - \mu_{k})^\top \Lambda_k (x_i - \mu_{k})  \right] \\
 \end{split}
 \end{equation}
 
-Now, since $\log q^*(Z) =  \log \rho_{ik}$
+Now, with $\log q^*(Z)$ expressed in terms of $\log \rho_{ik}$:
 
 \begin{equation}
 \begin{split}
@@ -833,7 +833,7 @@ Now, since $\log q^*(Z) =  \log \rho_{ik}$
 \end{split}
 \end{equation}
 
-Since  $q^*(Z) = \prod^N_{i=1}q^*(z_n)$:
+Since  $q^*(Z) = \prod^N_{i=1}q^*(z_i)$:
 
 \begin{equation}
 \begin{split}
@@ -841,17 +841,17 @@ Since  $q^*(Z) = \prod^N_{i=1}q^*(z_n)$:
 \end{split}
 \end{equation}
 
-In a way,  $\rho_{ik}^{z_{ik}}$ plays the same role as  $\pi \text{ in } p(z_n|\pi)$, therefore, $\sum^K_{k=1} \pi_k = 1 \implies \sum^K_{k=1} \rho_{ik} = 1$:
+In a way,  $\rho_{ik}^{z_{ik}}$ plays the same role as  $\pi \text{ in } p(z_i|\pi)$, therefore, just as $\sum^K_{k=1} \pi_k = 1$, we need to normalize $\rho_{ik}$ over $k$:
 
 \begin{equation}
 \begin{split}
-    q^*(Z) &= \prod_{i=1}^N q^*(z_i) =  \prod^N_{i=1} \left(\frac{1}{ \sum^K_{j=1} \rho_{nj}} \prod^K_{k=1} \rho_{ik}^{z_{ik}} \right) \\
-    &=  \prod^N_{i=1} \prod^K_{k=1} \frac{\rho_{ik}^{z_{ik}}}{ \sum^K_{j=1} \rho_{nj}} 
-    =  \prod^N_{i=1} \prod^K_{k=1} r_{nk}^{z_{ik}}\\
+    q^*(Z) &= \prod_{i=1}^N q^*(z_i) =  \prod^N_{i=1} \left(\frac{1}{ \sum^K_{j=1} \rho_{ij}} \prod^K_{k=1} \rho_{ik}^{z_{ik}} \right) \\
+    &=  \prod^N_{i=1} \prod^K_{k=1} \frac{\rho_{ik}^{z_{ik}}}{ \sum^K_{j=1} \rho_{ij}}
+    =  \prod^N_{i=1} \prod^K_{k=1} r_{ik}^{z_{ik}}\\
 \end{split}
 \end{equation}
 
-This is a multinomial distribution, therefore, $\E [z_i = k ] = r_{ik}$
+This is a multinomial distribution, therefore, $\E [z_{ik} ] = r_{ik}$
 
 \subsubsection{The expression for $q^*(\pi,\mu,\Lambda)$:}
 
@@ -868,11 +868,11 @@ Combine the mean and precision together:
 \begin{equation}
 \begin{split}
     &= \E_{Z} \left[ \log p (X | Z, \mu, \Lambda)  \right] + \E_{Z} \left[ \log p ( Z | \pi)  \right] + \log p (\pi) + \log p ( \mu, \Lambda) + \C \\
-    &\text{And since each }  ( \mu_k, \Lambda_k) \text{ are independent, therefore:} \\
-    &= \E_{Z} \left[ \log  \prod^N_{i=1} \prod^K_{k=1} \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})^{z_{ik}}  \right] + \E_{Z} \left[ \log p ( Z | \pi)  \right] + \log p (\pi) + \sum^K_{k=1} \log p ( \mu_k, \Lambda_k) + \C \\
-    &= \E_{Z} \left[  \sum^N_{i=1} \sum^K_{k=1} \log (z_{ik}) \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})  \right] + \E_{Z} \left[ \log p ( Z | \pi)  \right] + \log p (\pi) + \sum^K_{k=1} \log p ( \mu_k, \Lambda_k) + \C\\
-     &=  \sum^K_{k=1} \sum^N_{i=1} \E_{Z}[ \log (z_{ik})] \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})  + \E_{Z} \left[ \log p ( Z | \pi)  \right] + \log p (\pi) + \sum^K_{k=1} \log p ( \mu_k, \Lambda_k) + \C\\
-     &= \underbrace{ \E_{Z} \left[ \log p ( Z | \pi)  \right] + \log p (\pi)}_{\log q^*(\pi)} + \underbrace{ \sum^K_{k=1} \sum^N_{i=1} \E_{Z}[ \log (z_{ik})] \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})  +  \sum^K_{k=1} \log p ( \mu_k, \Lambda_k)}_{\log q^*(\mu,\Lambda)} + \C\\
+    &\text{And since each }  ( \mu_k, \Lambda_k) \text{ is independent, therefore:} \\
+    &= \E_{Z} \left[ \log  \prod^N_{i=1} \prod^K_{k=1} \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})^{z_{ik}}  \right] + \E_{Z} \left[ \log p ( Z | \pi)  \right] + \log p (\pi) + \sum^K_{k=1} \log p ( \mu_k, \Lambda_k) + \C \\
+    &= \E_{Z} \left[  \sum^N_{i=1} \sum^K_{k=1} z_{ik} \log \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})  \right] + \E_{Z} \left[ \log p ( Z | \pi)  \right] + \log p (\pi) + \sum^K_{k=1} \log p ( \mu_k, \Lambda_k) + \C\\
+     &=  \sum^K_{k=1} \sum^N_{i=1} \E_{Z}[ z_{ik}] \log \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})  + \E_{Z} \left[ \log p ( Z | \pi)  \right] + \log p (\pi) + \sum^K_{k=1} \log p ( \mu_k, \Lambda_k) + \C\\
+     &= \underbrace{ \E_{Z} \left[ \log p ( Z | \pi)  \right] + \log p (\pi)}_{\log q^*(\pi)} + \underbrace{ \sum^K_{k=1} \sum^N_{i=1} \E_{Z}[ z_{ik}] \log \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})  +  \sum^K_{k=1} \log p ( \mu_k, \Lambda_k)}_{\log q^*(\mu,\Lambda)} + \C\\
 \end{split}
 \end{equation}
 
@@ -885,8 +885,8 @@ For the part of $\log q^*(\pi)$:
 &= \E_{Z} \left[   \sum^N_{i=1} \sum^K_{k=1} z_{ik} \log \pi_k \right] + \log p (\pi)\\
 &=  \sum^N_{i=1} \sum^K_{k=1} \log \pi_k  \E_{Z} [z_{ik}] + (\alpha_0 -1)  \sum_{k=1}^K \log \pi_k + \C \\
 &=  \sum^K_{k=1} \log \pi_k   \sum_{i=1}^N r_{i,k} + (\alpha_0 -1)  \sum_{k=1}^K \log \pi_k + \C \\
-&=  \Bigg( \underbrace{ \sum_{i=1}^N r_{i,k} + \alpha_0}_{a_n} -1 \Bigg) \sum^K_{k=1} \log \pi_k  + \C
-= \text{DIR} \left( \pi | a_n \right)
+&=  \sum^K_{k=1} \Bigg( \underbrace{ \sum_{i=1}^N r_{i,k} + \alpha_0}_{a_k} -1 \Bigg) \log \pi_k  + \C
+\implies q^*(\pi) = \text{Dir} \left( \pi | a_1, \dots, a_K \right)
 \end{split}
 \end{equation}
 
@@ -896,8 +896,8 @@ For the part of $\log q^*(\mu,\Lambda)$:
 
 \begin{equation}
 \begin{split}
-\log q^*(\mu,\Lambda) &= \sum^K_{k=1} \sum^N_{i=1} \E_{Z}[ \log (z_{ik})] \mathcal{N}(x_n | \mu_{k}, \Lambda_{k}^{-1})  +  \sum^K_{k=1} \log p ( \mu_k, \Lambda_k)\\
-&\text{We only have the expression for $\E_{q^*(Z)}[Z]$, but not $\E_{q^*(Z)}[ \log (Z) ]$}:
+\log q^*(\mu,\Lambda) &= \sum^K_{k=1} \sum^N_{i=1} \E_{Z}[ z_{ik}] \log \mathcal{N}(x_i | \mu_{k}, \Lambda_{k}^{-1})  +  \sum^K_{k=1} \log p ( \mu_k, \Lambda_k)\\
+&\text{We have the expression for $\E_{q^*(Z)}[Z]$ from the previous section, i.e., $\E_{q^*(Z)}[z_{ik}] = r_{ik}$}:
 \end{split}
 \end{equation}
 
@@ -1421,7 +1421,7 @@ For the part of $\log q^*(\mu,\Lambda)$:
 
 \subsection{Big picture}
 
-Given both the prior and likelihood are exponential family distributions and they form a conjugacy pair, then the variational inference (also mean-field approximation), i.e., $q(\z) = \prod_i q_i(z_i)$ can have the following update formula:
+Given both the prior and likelihood are exponential family distributions and they form a conjugate pair, then the variational inference (also mean-field approximation), i.e., $q(\z) = \prod_i q_i(z_i)$ can have the following update formula:
 
 \begin{equation}\begin{split}\label{eq exponential family update}
 \eta_j =  \E_{q(\z \setminus z_j | \cdot)} [\eta_\post (\z \setminus z_j )]
@@ -1431,11 +1431,11 @@ where $\eta_\post (\z \setminus z_j )$ is the natural parameter associated with 
 
 \begin{equation}
 	\begin{split}
-	p_{\eta_\post (\z \setminus z_j )}p( z_j \; | \; \z \setminus z_j , \x  )
+	p_{\eta_\post (\z \setminus z_j )}( z_j \; | \; \z \setminus z_j , \x  )
 	\end{split}
 \end{equation}
 
-I know the probablity form of the above seems to be very complicated, however, you will see that it is no different to how we normally expressing distributions, $p_{\theta}(\z | \x)$, where:
+I know the probability form of the above seems to be very complicated, however, you will see that it is no different from how we normally express distributions, $p_{\theta}(\z | \x)$, where:
 
 
 \begin{equation}\begin{split}
@@ -1445,10 +1445,10 @@ p_{\underbrace{\theta}_{\text{parameters}}}(\underbrace{\z}_{\text{variable}} | 
 
 \vspace{2mm}
 
-It is very important to note that we are expressing a posterior distribution $p(\cdot) $ in terms of variable $z_j$. Therefore variables $\z \setminus z_j$ is now part of the parameters of the distribution, hence we use $\eta_\post (\z \setminus z_j )$ to denote the natural parameter of the distribution $p(z_j | -)$.
+It is very important to note that we are expressing a posterior distribution $p(\cdot) $ in terms of variable $z_j$. Therefore the variables $\z \setminus z_j$ are now part of the parameters of the distribution, hence we use $\eta_\post (\z \setminus z_j )$ to denote the natural parameter of the distribution $p(z_j | -)$.
 
 
-We can be made much clearly by using an example: if we have a posterior distribution concerning $z_1, \dots, z_3$, and we are interested in the posterior distribution of $z_2$ given $z_1$ and $z_3$ and $\x$, i.e.,
+This can be made much clearer by using an example: if we have a posterior distribution concerning $z_1, \dots, z_3$, and we are interested in the posterior distribution of $z_2$ given $z_1$ and $z_3$ and $\x$, i.e.,
 
 
 \begin{equation}\begin{split}
@@ -1467,7 +1467,7 @@ then the update formula for $q_{\eta_2}(z_2)$ is:
 compare this with the generic update formula:
 
 \begin{equation}\begin{split}
-\log{ ( q_{i}^*(z_i)) } &= \E_{i\neq j} \big[ \log{(p(\x,\z))} \big]
+\log{ ( q_{j}^*(z_j)) } &= \E_{\z \setminus z_j} \big[ \log{(p(\x,\z))} \big]
 \end{split}\end{equation}
 
 using exponential family update formula Eq.(\ref{eq exponential family update}), the update is directly applied to the parameter. 
@@ -1477,8 +1477,8 @@ using exponential family update formula Eq.(\ref{eq exponential family update}),
 Sounds too easy? Yes, it is! However, it is important to note that this is only applicable to exponential family distributions and conjugacy, and also $\eta$ is the natural parameter when we are dealing with exponential family distributions. Then, obviously, we need to study a few things:
 
 \begin{enumerate}
-\item What is exponential family distribution?
-\item What is natural parameter?
+\item What is an exponential family distribution?
+\item What is a natural parameter?
 \item What is conjugacy?
 \end{enumerate}
 
@@ -1489,7 +1489,7 @@ Let's talk about exponential family distribution first.
 
 
 
-Most of the distributions we are going to look at are from {\bf exponential family}. They are expressed in terms of its natural parameter $\eta$:
+Most of the distributions we are going to look at are from the {\bf exponential family}. They are expressed in terms of their natural parameter $\eta$:
 
 \begin{equation}\begin{split}\label{eq exponential family distribution formula}
 h(x) \exp \big(   T(x)^\top \eta  - A(\eta)   \big)\\
@@ -1497,8 +1497,8 @@ h(x) \exp \big(   T(x)^\top \eta  - A(\eta)   \big)\\
 
 \begin{equation}\begin{split}
 \underbrace{\exp( - A(\eta))}_{\text{normalization}} h (x) \exp \{ T (x)^\top \eta \}\\
-\implies   \exp( - A(\eta)) \int_{x} h (x) \exp \{ T (x)^\top \eta \} = 1\\
-\implies \int_{x}  h (x) \exp \{ T (x)^\top \eta  \} = \exp(A (\eta) )
+\implies   \exp( - A(\eta)) \int_{x} h (x) \exp \{ T (x)^\top \eta \} \d x = 1\\
+\implies \int_{x}  h (x) \exp \{ T (x)^\top \eta  \} \d x = \exp(A (\eta) )
 \end{split}\end{equation}
 
 
@@ -1509,7 +1509,7 @@ h(x) \exp \big(   T(x)^\top \eta  - A(\eta)   \big)\\
 
 
 \begin{equation}\begin{split}\label{eq Gaussian: Natural Parameter Representation}
-\N(x; \mu, \sigma^2) &= (2 \pi \sigma^2)^{-1/2} \exp^{-\frac{(x-\mu)^2}{2 \sigma^2}}\\
+\N(x; \mu, \sigma^2) &= (2 \pi \sigma^2)^{-1/2} \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right)\\
 &= \exp \left(  - \frac{x^2 - 2x \mu + \mu^2}{ 2 \sigma^2} - \frac{1}{2} \log ( 2 \pi \sigma^2) \right)\\
 &= \exp \left(  - \frac{1}{ 2 \sigma^2} x^2 + \frac{ \mu}{\sigma^2} x  - \frac{\mu^2}{ 2 \sigma^2} - \frac{1}{2} \log ( 2 \pi \sigma^2) \right)\\
 &= \exp \Bigg(   \begin{bmatrix} x & x^2   \end{bmatrix} \begin{bmatrix} \frac{ \mu}{ \sigma^2}  & - \frac{1}{ 2 \sigma^2}   \end{bmatrix}^\top  - \frac{\mu^2}{ 2 \sigma^2} - \frac{1}{2} \log ( 2 \pi \sigma^2) \Bigg)\\
@@ -1517,7 +1517,7 @@ h(x) \exp \big(   T(x)^\top \eta  - A(\eta)   \big)\\
 
 
 \begin{equation}\begin{split}
-T(\x) &= \begin{bmatrix} x & x^2   \end{bmatrix}\\
+T(x) &= \begin{bmatrix} x & x^2   \end{bmatrix}\\
 \eeta &= \begin{bmatrix} \eta_1 & \eta_2   \end{bmatrix}\\
 &= \begin{bmatrix} \frac{ \mu}{ \sigma^2}  & - \frac{1}{ 2 \sigma^2}   \end{bmatrix}\\
 \end{split}\end{equation}
@@ -1557,7 +1557,7 @@ T(\x) &= \begin{bmatrix} x & x^2   \end{bmatrix}\\
 %Reverse is: $\theta = \begin{bmatrix} \mu \\ \sigma^2   \end{bmatrix} = \begin{bmatrix}  \frac{ - \eta_1}{ 2 \eta_2} \\  \frac{-1}{ 2 \eta_2}    \end{bmatrix}$
 %\end{itemize}
 
-summarize, we have:
+To summarize, we have:
 
 \begin{equation}\begin{split}
 \theta = \begin{bmatrix} \mu \\ \; \\ \sigma^2   \end{bmatrix} 
@@ -1581,20 +1581,20 @@ now we can remove $\mu$ and $\sigma^2$:
 &= \exp \left(   T(x)^\top \eeta  + \frac{\eta_1^2}{4 \eta_2} + \frac{1}{2} \log(-2 \eta_2)  - \frac{1}{2} \log (2 \pi) \right)\\
 \end{split}\end{equation}
 
-now that the probability is fully in terms of the natural parameter
+now the probability is fully in terms of the natural parameter:
 
 \begin{equation}\begin{split}
-\N_{\text{nat}}(x, \eeta) = \exp \Big(   T(x)^\top \eeta  -  \underbrace{\left( \frac{-\eta_1^2}{4 \eta_2} - \frac{1}{2} \log(-2 \eta_2)  \right) - \frac{1}{2} \log (2 \pi) }_{A(\eeta)}\Big)\\
+\N_{\text{nat}}(x, \eeta) = \exp \Big(   T(x)^\top \eeta  -  \underbrace{\left( \frac{-\eta_1^2}{4 \eta_2} - \frac{1}{2} \log(-2 \eta_2)  + \frac{1}{2} \log (2 \pi) \right) }_{A(\eeta)}\Big)\\
 \end{split}\end{equation}
 
 
 \subsection{Python time: 2-d Gaussian}
 
 \begin{equation}\begin{split}
-\N(\z; \boldsymbol{\mu}, \Sigma) &= \exp \left( - \frac{1}{2} (\x - \boldsymbol{\mu})^\top \Sigma^{-1} (\x - \boldsymbol{\mu}) - \frac{1}{2} \log | \Sigma | - \frac{d}{2} \log (2 \pi) \right)\\
+\N(\z; \boldsymbol{\mu}, \Sigma) &= \exp \left( - \frac{1}{2} (\z - \boldsymbol{\mu})^\top \Sigma^{-1} (\z - \boldsymbol{\mu}) - \frac{1}{2} \log | \Sigma | - \frac{d}{2} \log (2 \pi) \right)\\
 \end{split}\end{equation}
 
-let $\Sigma = \begin{bmatrix} \Sigma_{1,1} & \Sigma_{1,2} \\ \Sigma_{2,1} & \Sigma_{2,2}\end{bmatrix}$, then we can obtain two conditional distribution:
+let $\Sigma = \begin{bmatrix} \Sigma_{1,1} & \Sigma_{1,2} \\ \Sigma_{2,1} & \Sigma_{2,2}\end{bmatrix}$, then we can obtain two conditional distributions:
 
 \begin{enumerate}
 \item $p(z_1 | z_2)$
@@ -1610,20 +1610,20 @@ let $\Sigma = \begin{bmatrix} \Sigma_{1,1} & \Sigma_{1,2} \\ \Sigma_{2,1} & \Sig
 The conditional distribution of $z_1$ given $z_2$ for a 2-D Gaussian is:
 
 \begin{equation}\begin{split}
-p(z_1 | z_2) &= \N\left(z_1; \mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(z_2 - \mu_2), \Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}\right)
+p(z_1 | z_2) &= \N\left(z_1; \mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(z_2 - \mu_2), \Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}}\right)
 \end{split}\end{equation}
 
-where $\sigma_{i,j}$ are the elements of the covariance matrix $\Sigma$.
+where $\Sigma_{i,j}$ are the elements of the covariance matrix $\Sigma$.
 
 \item
-The natural parameters of conditional distribution parameters correspond to the conditional distribution $p(z_1|z_2)$ is:
+The natural parameters corresponding to the conditional distribution $p(z_1|z_2)$ are:
 	
 
 \begin{equation}\begin{split}
 \eta_1 &= \frac{ \mu}{ \sigma^2}\\
-&=\frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(z_2 - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}} \\
+&=\frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(z_2 - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}}} \\
 \eta_2 &= - \frac{1}{ 2 \sigma^2}\\
-&= -\frac{1}{2(\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}})}
+&= -\frac{1}{2(\Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}})}
 \end{split}\end{equation}
 
 Note that $\Sigma_{1,2} = \Sigma_{2,1}$ in a symmetric covariance matrix. 
@@ -1632,27 +1632,27 @@ Note that $\Sigma_{1,2} = \Sigma_{2,1}$ in a symmetric covariance matrix.
 therefore, the update formula for $q_{\eeta}(z_1)$ is:
 
 \begin{equation}\begin{split}
-\eta_1 &= \E_{q(z_2)} \left[ \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(z_2 - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}} \right] \\
-&= \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(\E_{q(z_2)}[z_2] - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}} \\
-\eta_2 &= -\frac{1}{2(\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}})}
+\eta_1 &= \E_{q(z_2)} \left[ \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(z_2 - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}}} \right] \\
+&= \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(\E_{q(z_2)}[z_2] - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}}} \\
+\eta_2 &= -\frac{1}{2(\Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}})}
 \end{split}\end{equation}
 
 where $\eeta = \big[ \eta_1, \eta_2 \big]$
 
 \item
-Converting these natural parameters back to the standard Gaussian parameterization, converting $\eeta$ back to $\mu^{(q)}_1$ and $\sigma^2_1$, i.e., $q(z_1) \sim \N(\mu_1^{(q)},\sigma_1^2)$. The reason to have parameter $\mu_1^{(q)}$ is so that it refers to the variation distribution $q$, not the true distribution $p$.
+Converting these natural parameters back to the standard Gaussian parameterization, i.e., converting $\eeta$ back to $\mu^{(q)}_1$ and $\sigma^2_1$, i.e., $q(z_1) \sim \N(\mu_1^{(q)},\sigma_1^2)$. The reason to have parameter $\mu_1^{(q)}$ is so that it refers to the variational distribution $q$, not the true distribution $p$.
 
 \begin{equation}\begin{split}
-\mu^{(q)}_1 = -\frac{\eta_1}{2\eta_2} &= - \frac{1}{2} \left( \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(\E_{q(z_2)}[z_2] - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}} \right) \times  \left( (-2) \Big( \Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}\Big) \right) \\
-&= \left( \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(\E_{q(z_2)}[z_2] - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}} \right) \times  \left(  \Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}\right) \\
+\mu^{(q)}_1 = -\frac{\eta_1}{2\eta_2} &= - \frac{1}{2} \left( \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(\E_{q(z_2)}[z_2] - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}}} \right) \times  \left( (-2) \Big( \Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}}\Big) \right) \\
+&= \left( \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(\E_{q(z_2)}[z_2] - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}}} \right) \times  \left(  \Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}}\right) \\
 &= \mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(\E_{q(z_2)}[z_2] - \mu_2)\\
 \end{split}\end{equation}
 
 \begin{equation}\begin{split}
 \sigma_1^2 &= -\frac{1}{2\eta_2} \\
-&= -\frac{1}{2} \left(-\frac{1}{2(\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}})}\right)^{-1} \\
-&= -\frac{1}{2} \left(-2(\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}})\right) \\
-&= \Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}
+&= -\frac{1}{2} \left(-\frac{1}{2(\Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}})}\right)^{-1} \\
+&= -\frac{1}{2} \left(-2(\Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}})\right) \\
+&= \Sigma_{1,1} - \frac{\Sigma_{1,2}^2}{\Sigma_{2,2}}
 \end{split}\end{equation}
 
 
@@ -1669,7 +1669,7 @@ Basically, we can just swap the role of $z_1$ and $z_2$ in the above derivation.
 The conditional distribution of $z_2$ given $z_1$ for a 2-D Gaussian is:
 
 \begin{equation}\begin{split}
-p(z_2 | z_1) &= \N\left(z_2; \mu_2 + \frac{\Sigma_{2,1}}{\Sigma_{1,1}}(z_1 - \mu_1), \Sigma_{2,2} - \frac{\Sigma_{2,1}}{\Sigma_{1,1}}\right)
+p(z_2 | z_1) &= \N\left(z_2; \mu_2 + \frac{\Sigma_{2,1}}{\Sigma_{1,1}}(z_1 - \mu_1), \Sigma_{2,2} - \frac{\Sigma_{2,1}^2}{\Sigma_{1,1}}\right)
 \end{split}\end{equation}
 
 where $\Sigma_{i,j}$ are the elements of the covariance matrix $\Sigma$.
@@ -1687,22 +1687,20 @@ where $\Sigma_{i,j}$ are the elements of the covariance matrix $\Sigma$.
 For the conditional distribution $p(z_2|z_1)$, the corresponding natural parameters are:
 
 \begin{equation}\begin{split}
-\eta_1 &= \frac{\mu_2 + \frac{\Sigma_{2,1}}{\Sigma_{1,1}}(z_1 - \mu_1)}{\Sigma_{2,2} - \frac{\Sigma_{2,1}}{\Sigma_{1,1}}} \\
-\eta_2 &= -\frac{1}{2(\Sigma_{2,2} - \frac{\Sigma_{2,1}}{\Sigma_{1,1}})}
+\eta_1 &= \frac{\mu_2 + \frac{\Sigma_{2,1}}{\Sigma_{1,1}}(z_1 - \mu_1)}{\Sigma_{2,2} - \frac{\Sigma_{2,1}^2}{\Sigma_{1,1}}} \\
+\eta_2 &= -\frac{1}{2(\Sigma_{2,2} - \frac{\Sigma_{2,1}^2}{\Sigma_{1,1}})}
 \end{split}\end{equation}
 
 Note that $\Sigma_{1,2} = \Sigma_{2,1}$ in a symmetric covariance matrix. 
 
 \item
-therefore, the update formula for $q_{\eeta}(z_2)$ is:
-
-we can express the update formula for $q_{\eeta}(z_2)$ in terms of the covariance matrix elements:
+therefore, the update formula for $q_{\eeta}(z_2)$, in terms of the covariance matrix elements, is:
 
 
 \begin{equation}\begin{split}
-\eta_1 &= \E_{q(z_2)} \left[ \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(z_2 - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}} \right] \\
-&= \frac{\mu_1 + \frac{\Sigma_{1,2}}{\Sigma_{2,2}}(\E_{q(z_2)}[z_2] - \mu_2)}{\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}}} \\
-\eta_2 &= -\frac{1}{2(\Sigma_{1,1} - \frac{\Sigma_{1,2}}{\Sigma_{2,2}})}
+\eta_1 &= \E_{q(z_1)} \left[ \frac{\mu_2 + \frac{\Sigma_{2,1}}{\Sigma_{1,1}}(z_1 - \mu_1)}{\Sigma_{2,2} - \frac{\Sigma_{2,1}^2}{\Sigma_{1,1}}} \right] \\
+&= \frac{\mu_2 + \frac{\Sigma_{2,1}}{\Sigma_{1,1}}(\E_{q(z_1)}[z_1] - \mu_1)}{\Sigma_{2,2} - \frac{\Sigma_{2,1}^2}{\Sigma_{1,1}}} \\
+\eta_2 &= -\frac{1}{2(\Sigma_{2,2} - \frac{\Sigma_{2,1}^2}{\Sigma_{1,1}})}
 \end{split}\end{equation}
 
 where $\eeta = \big[ \eta_1, \eta_2 \big]$
@@ -1712,7 +1710,7 @@ Converting these natural parameters back to the standard Gaussian parameterizati
 
 \begin{equation}\begin{split}
 \mu_2^{(q)} &= \mu_2 + \frac{\Sigma_{2,1}}{\Sigma_{1,1}}(\E_{q(z_1)}[z_1] - \mu_1) \\
-\sigma_2^2 &= \Sigma_{2,2} - \frac{\Sigma_{2,1}}{\Sigma_{1,1}}
+\sigma_2^2 &= \Sigma_{2,2} - \frac{\Sigma_{2,1}^2}{\Sigma_{1,1}}
 \end{split}\end{equation}
 
 \end{enumerate}
@@ -1731,11 +1729,11 @@ conjugacy means that the prior and posterior are of the same {\bf type } of dist
 \end{split}\end{equation}
 
 
-Note that prior and posterior are of the same type, but they are usually not the same distribution, otherwise, the likelihood $p(\x | \theta)$ is not useful at all!
+Note that the prior and posterior are of the same type, but they are usually not the same distribution, otherwise, the likelihood $p(\x | \theta)$ is not useful at all!
 
-Using exponential family distribution representation, when conjugacy is achieved, it means the prior and posterior have the {\bf same} sufficient statistics $T(\theta)$ and $h(\theta)$, but different natural parameter, i.e., $\eta_{\text{post}}$ and $\eta_{\text{prior}}$, and different log-normalizer for both.
+Using the exponential family distribution representation, when conjugacy is achieved, it means the prior and posterior have the {\bf same} sufficient statistics $T(\theta)$ and $h(\theta)$, but different natural parameters, i.e., $\eta_{\text{post}}$ and $\eta_{\text{prior}}$, and different log-normalizers for both.
 
-It turns out that the posterior inherits $h(\theta)$ from the prior, so we just need to make sure to put the appropriate criteria on the likelihood so that $T(\theta)$ is the same in both the prior and posterior
+It turns out that the posterior inherits $h(\theta)$ from the prior, so we just need to make sure to put the appropriate criteria on the likelihood so that $T(\theta)$ is the same in both the prior and posterior.
 
 %you can also rewrite your exponential distribution as:
 %
@@ -1752,7 +1750,7 @@ It turns out that the posterior inherits $h(\theta)$ from the prior, so we just 
 %
 %making $\log(h(x))$ to be part of the sufficient statistics.
 
-\subsection{What is the criteria for likelihood to pair up with conjugate prior? \optional}
+\subsection{What is the criterion for the likelihood to pair up with a conjugate prior? \optional}
 
 It's always better to have a discussion with a concrete example setup. So we have the following problem setup, described in \cite{hoffman2013stochastic}, without actually defining what distributions they are using:
 
@@ -1794,11 +1792,11 @@ the conditionals are based on Exponential family:
 
 \begin{equation}\begin{split}
 p(\bbeta | \x, \z, \alpha) &= h(\bbeta) \exp \left\{  T(\bbeta)^\top \eta_\post( \x, \z, \alpha) - A_\post( \eta_\post ( \x, \z, \alpha) ) \right\}\\
-p(z_{n,j} | x_{n}, z_{n,-j},\bbeta ) &= h(z_{n,j}) \exp\left\{ T (z_{n,j}) \eta_{z_{n,j}}(x_n, z_{n,-j},\bbeta)  - A_l \big(\eta_{z_{n,j}}(x_n, z_{n,-j},\bbeta)\big) \right\}\\
+p(z_{n,j} | x_{n}, z_{n,-j},\bbeta ) &= h(z_{n,j}) \exp\left\{ T (z_{n,j})^\top \eta_{z_{n,j}}(x_n, z_{n,-j},\bbeta)  - A_l \big(\eta_{z_{n,j}}(x_n, z_{n,-j},\bbeta)\big) \right\}\\
 \end{split}\end{equation}
 
 
-Think about why is this representation useful? Let's have look at a numerical example:
+Think about why this representation is useful. Let's have a look at a numerical example:
 
 %\vspace{5 mm}
 %{\bf Always have in mind } ask yourself where are the {\bf support} of these distributions, i.e., where $p(\x) > 0$?
@@ -1815,7 +1813,7 @@ Think about why is this representation useful? Let's have look at a numerical ex
 
 \subsubsection{Conjugacy of exponential family distribution}
 
-Let's work through a concrete example of posterior $p (\bbeta | x_n, z_n)$, instead of writing $\eeta_\beta$, we write $\bbeta$ directly:
+Let's work through a concrete example of the posterior $p (\bbeta | x_n, z_n)$; instead of writing $\eeta_\beta$, we write $\bbeta$ directly:
 
 \begin{itemize}
 
@@ -1827,7 +1825,7 @@ p (\bbeta | \aalpha ) &= h (\bbeta) \exp \{  T(\bbeta)^\top \aalpha- A_\pri (\aa
 suppose the sufficient statistics of the {\bf prior} can be written as:
 
 \begin{equation}\begin{split}
-T(\boldsymbol{\bbeta}) &= 
+T(\bbeta) &=
 \begin{bmatrix}
 \bbeta \\ {\color{red} -A_l(\bbeta)}
 \end{bmatrix}\\
@@ -1837,7 +1835,7 @@ T(\boldsymbol{\bbeta}) &=
 \end{bmatrix}
 \end{split}\end{equation}
 
-note that $\aalpha_1$ has the same dimensionality to $\bbeta$, and $\alpha_2$ is a scalar quantity. Then the prior itself can be written as:
+note that $\aalpha_1$ has the same dimensionality as $\bbeta$, and $\alpha_2$ is a scalar quantity. Then the prior itself can be written as:
 
 \begin{equation}\begin{split}
 p (\bbeta) &= h (\bbeta) \exp \left\{\begin{bmatrix} \bbeta \\ {\color{red} - A_l(\bbeta)} \end{bmatrix}^\top \;
@@ -1846,7 +1844,7 @@ p (\bbeta) &= h (\bbeta) \exp \left\{\begin{bmatrix} \bbeta \\ {\color{red} - A_
 
 \item {\bf likelihood}:
 
-and if the likelihood density $(x_n, z_n)$ can be defined as:
+and if the likelihood density of $(x_n, z_n)$ can be defined as:
 
 \begin{equation}\begin{split}
 p(x_n, z_n | \bbeta ) = h(x_n,z_n) \exp\Big\{  T ( x_n, z_n)^\top \bbeta \; {\color{red} - A_l(\bbeta)} \Big\} \\
@@ -1875,7 +1873,7 @@ p(\bbeta | x_n, z_n, \aalpha) &\propto \underbrace{h (\bbeta) \exp \{ T(\bbeta)^
 &= h (\bbeta) \exp \bigg\{ T(\bbeta)^\top \; \begin{bmatrix} \aalpha_1 +  T ( x_n, z_n)  \\ \alpha_2  + 1 \end{bmatrix}  \bigg\}  \\
 \end{split}\end{equation}
 
-notice the posterior ``inherited'' $h(\bbeta)$ from the prior, so we only need to making sure that the $T(\bbeta)$ are the same for both prior and posterior.
+notice the posterior ``inherited'' $h(\bbeta)$ from the prior, so we only need to make sure that the $T(\bbeta)$ are the same for both prior and posterior.
 
 \end{itemize}
 
@@ -1898,7 +1896,7 @@ notice the posterior ``inherited'' $h(\bbeta)$ from the prior, so we only need t
 \item {\bf Complete likelihood}
 
 \begin{equation}\begin{split}
-p(\x, \z | \beta ) &= \prod_{n=1}^{N} \Big\{ h(x_n,z_n) \exp\{ \bbeta^\top T ( x_n, z_n) - A_l (\bbeta) \} \Big\} \\
+p(\x, \z | \bbeta ) &= \prod_{n=1}^{N} \Big\{ h(x_n,z_n) \exp\{ \bbeta^\top T ( x_n, z_n) - A_l (\bbeta) \} \Big\} \\
 &= \prod_{n=1}^{N} h(x_n,z_n) \prod_{n=1}^{N} \exp\{ \bbeta^\top T ( x_n, z_n) - A_l (\bbeta) \}  \\
 &= h(\x,\z) \exp\left\{ \sum_{n=1}^{N} \bbeta^\top T ( x_n, z_n) - N \times A_l (\bbeta) \right\} \\
 \end{split}\end{equation}
@@ -1914,7 +1912,7 @@ p(\bbeta | \x, \z, \aalpha)
 \; \underline{\exp\left\{ \sum_{n=1}^{N} \bbeta^\top T ( x_n, z_n) - N \times A_l (\bbeta) \right\}}\\
 %---------------------------------------------------
 &= 
-h (\bbeta) \exp \bigg\{ \begin{bmatrix} \bbeta \\ {\color{red} - A_l(\bbeta)} \end{bmatrix}^\top \; \underbrace{\begin{bmatrix}  \aalpha_1 + \sum_{n=1}^{^N}  T ( x_n, z_n)  \\ \alpha_2  + N \end{bmatrix}}_{\eta_\post(\x,\z,\aalpha)} \bigg\}  \\
+h (\bbeta) \exp \bigg\{ \begin{bmatrix} \bbeta \\ {\color{red} - A_l(\bbeta)} \end{bmatrix}^\top \; \underbrace{\begin{bmatrix}  \aalpha_1 + \sum_{n=1}^{N}  T ( x_n, z_n)  \\ \alpha_2  + N \end{bmatrix}}_{\eta_\post(\x,\z,\aalpha)} \bigg\}  \\
 \end{split}\end{equation}
 
 
@@ -1923,12 +1921,12 @@ h (\bbeta) \exp \bigg\{ \begin{bmatrix} \bbeta \\ {\color{red} - A_l(\bbeta)} \e
 %\implies p(\bbeta | \x, \z, \alpha) &\propto h (\bbeta) \exp \Big\{ \begin{bmatrix} \alpha_1 + \sum_{n=1}^{N}  T ( x_n, z_n)  & \alpha_2  + N \end{bmatrix} T(\bbeta)  \Big\}  \\
 %\end{split}\end{equation}
 
-When we use the expression and use $\eta_\post (\x,\z,\aalpha) $ instead:
+Now we use the expression with $\eta_\post (\x,\z,\aalpha) $ instead:
 
 \begin{equation}\begin{split}
 p(\bbeta | \x, \z, \aalpha) &= h (\bbeta) \exp \big\{ \eta_\post (\x,\z,\aalpha)^\top T(\bbeta) - A_\post (\eta_\post (\x, \z, \aalpha)) \big\}\\
-\implies  \eta_\post (\x,\z,\aalpha) &= \begin{bmatrix} \aalpha_1 +\sum_{n=1}^{^N}  T ( x_n, z_n)  \\ \alpha_2  + N \end{bmatrix}\\
-\implies \exp \big( A_\post (\eta_\post (\x, \z, \aalpha)) \big) &= \int_{\bbeta} h (\bbeta) \exp \big\{ \eta_\post (\x,\z,\aalpha)^\top T(\beta) \big\} \d \bbeta
+\implies  \eta_\post (\x,\z,\aalpha) &= \begin{bmatrix} \aalpha_1 +\sum_{n=1}^{N}  T ( x_n, z_n)  \\ \alpha_2  + N \end{bmatrix}\\
+\implies \exp \big( A_\post (\eta_\post (\x, \z, \aalpha)) \big) &= \int_{\bbeta} h (\bbeta) \exp \big\{ \eta_\post (\x,\z,\aalpha)^\top T(\bbeta) \big\} \d \bbeta
 \end{split}\end{equation}
 
 
@@ -1945,7 +1943,7 @@ p(\bbeta | \x, \z, \aalpha) &= h (\bbeta) \exp \big\{ \eta_\post (\x,\z,\aalpha)
  
 %\subsubsection{likelihood}
 
-suppose data $x_i$ come from unit variance Gaussian. Compare with Section (\ref{sec Gaussian: Natural Parameter Representation}), we saved one parameter:
+suppose data $x_i$ come from a unit variance Gaussian. Compared with Section (\ref{sec Gaussian: Natural Parameter Representation}), we save one parameter:
 
 \begin{equation}\begin{split}
 p( x | \mu ) &= \frac{1}{\sqrt{2 \pi}} \exp \Big\{  -\frac{ 1}{2 } ( x - \mu)^2   \Big\} \\
@@ -1966,7 +1964,7 @@ substitute into:
 \begin{equation}\begin{split}
 p( x | \beta ) 
 %&= \frac{\exp \left( - x^2/2   \right) }{\sqrt{2 \pi} } \exp \Big\{ \mu x -  \frac{ \mu^2}{2 }  \Big\}\\
-&=  \frac{\exp \left( - x^2/2   \right) }{\sqrt{2 \pi} } \exp \Big\{ \beta x  + \underbrace{ {\color{red}-  \frac{ \beta^2}{2 }}}_{A_l(\beta)}  \Big\} 
+&=  \frac{\exp \left( - x^2/2   \right) }{\sqrt{2 \pi} } \exp \Big\{ \beta x  + \underbrace{ {\color{red}-  \frac{ \beta^2}{2 }}}_{-A_l(\beta)}  \Big\}
 \end{split}\end{equation}
 
 
@@ -1978,7 +1976,7 @@ A {\bf conjugate prior} MUST be:
 
 \begin{equation}\begin{split}\label{eq conjugate prior for variance one Gaussian}
 p (\beta | \alpha) &= h (\beta) \exp \Big\{   \alpha_1 \beta   + \alpha_2 ( \underbrace{- \beta^2/2}_{A_l(\beta)} )   - A_g (\alpha)	\Big\}\\
-&= h (\beta) \exp \Big\{   \begin{bmatrix}  \alpha_1 \\ \alpha_2\end{bmatrix}^\top \; \begin{bmatrix}  \beta   \\   {\color{red}-\frac{\beta_2}{2}} \end{bmatrix}  - A_g (\alpha) \Big\}
+&= h (\beta) \exp \Big\{   \begin{bmatrix}  \alpha_1 \\ \alpha_2\end{bmatrix}^\top \; \begin{bmatrix}  \beta   \\   {\color{red}-\frac{\beta^2}{2}} \end{bmatrix}  - A_g (\alpha) \Big\}
 \end{split}\end{equation}
 
 Wait, this doesn't look exactly in the form of Eq.(\ref{eq Gaussian: Natural Parameter Representation}), i.e.,:
@@ -1988,11 +1986,11 @@ Wait, this doesn't look exactly in the form of Eq.(\ref{eq Gaussian: Natural Par
  - \frac{\mu^2}{ 2 \sigma^2} - \frac{1}{2} \log ( 2 \pi \sigma^2) \Bigg)\\
 \end{split}\end{equation}
 
-We can arrange Eq.(\ref{eq conjugate prior for variance one Gaussian}) to look like, but with parameter $\begin{bmatrix}\alpha_1  & -\frac{\alpha_2}{2}  \end{bmatrix}^\top$:
+We can rearrange Eq.(\ref{eq conjugate prior for variance one Gaussian}) to look like it, but with parameter $\begin{bmatrix}\alpha_1  & -\frac{\alpha_2}{2}  \end{bmatrix}^\top$:
 
 
 \begin{equation}\begin{split}
-p (\bbeta | \alpha) &= h (\bbeta) \exp \left\{  
+p (\beta | \alpha) &= h (\beta) \exp \left\{
 \begin{bmatrix}\alpha_1  \\ -\frac{\alpha_2}{2}  \end{bmatrix} ^\top \; \begin{bmatrix} \beta \\ \beta^2   \end{bmatrix}  - A_g (\alpha)	\right\}
 \end{split}\end{equation}
 
@@ -2000,7 +1998,7 @@ From our knowledge, a distribution with sufficient statistics $T(\beta) = \begin
 
 \vspace{2mm}
 
-Suppose the likelihood is an exponential family distribution. Every exponential family has a conjugate prior in theory. The natural parameter $\aalpha = \begin{bmatrix} \aalpha_1 & \alpha_2 \end{bmatrix}^\top$ has dimension dim$(\bbeta)$ + 1. The sufficient statistics of the prior are $\begin{bmatrix} \bbeta & -A_l(\beta)\end{bmatrix}^\top$
+Suppose the likelihood is an exponential family distribution. Every exponential family has a conjugate prior in theory. The natural parameter $\aalpha = \begin{bmatrix} \aalpha_1 & \alpha_2 \end{bmatrix}^\top$ has dimension dim$(\bbeta)$ + 1. The sufficient statistics of the prior are $\begin{bmatrix} \bbeta & -A_l(\bbeta)\end{bmatrix}^\top$.
 
 
 
@@ -2037,9 +2035,9 @@ proof:
 &\int_{\beta} q (\beta | \lambda) \d \beta =  \int_{\beta}  h (\beta) \exp \{ \lambda^\top T(\beta) - A_g (\lambda) \} \d \beta = 1\\
 &\implies  \DLambda \left( \int_{\beta}  h (\beta) \exp \{ \lambda^\top T(\beta) - A_g (\lambda) \} \d \beta \right) = \DLambda (1) = 0\\
 &\implies \int_{\beta}    \DLambda \left( h (\beta) \exp \{ \lambda^\top T(\beta) - A_g (\lambda) \} \right) \d \beta  = 0\\
-&\implies \int_{\beta}   h (\beta) \exp \big\{ \lambda^\top T(\beta) - A_g (\lambda) \big\}  \left(   T(\beta) -  \DLambda A_g (\lambda) \right)  = 0\\
-&\implies \underbrace{\int_{\beta}  h (\beta) \exp \big\{ \lambda^\top T(\beta) - A_g (\lambda) \big\} T(\beta) }_{\E_{q(\beta)}[ T(\beta)]}  -
-\underbrace{\int_{\beta}  h (\beta) \exp \big\{ \lambda^\top T(\beta) - A_g (\lambda) \big\}}_{=1}  \DLambda A_g (\lambda)  = 0\\
+&\implies \int_{\beta}   h (\beta) \exp \big\{ \lambda^\top T(\beta) - A_g (\lambda) \big\}  \left(   T(\beta) -  \DLambda A_g (\lambda) \right) \d \beta  = 0\\
+&\implies \underbrace{\int_{\beta}  h (\beta) \exp \big\{ \lambda^\top T(\beta) - A_g (\lambda) \big\} T(\beta) \d \beta }_{\E_{q(\beta)}[ T(\beta)]}  -
+\underbrace{\int_{\beta}  h (\beta) \exp \big\{ \lambda^\top T(\beta) - A_g (\lambda) \big\} \d \beta}_{=1}  \DLambda A_g (\lambda)  = 0\\
 &\implies  \E_{q(\beta)}[ T(\beta)]  - \DLambda A_g(\lambda)  = 0
 \end{split}\end{equation}
 
@@ -2101,11 +2099,11 @@ Our goal is to maximize the ELBO, i.e.,
 \text{ELBO}(q) \triangleq \E_{q(\beta, \z)} [\log p (\x, \z, \beta | \alpha )] - \E_{q(\beta, \z)} [\log q(\z, \beta)]\\
 \end{split}\end{equation}
 
-Note that $q$ used here is $q(\beta, \z)$ not just $q(\beta | \lambda)$
+Note that $q$ used here is $q(\beta, \z)$, not just $q(\beta | \lambda)$.
 
 \begin{equation}\begin{split}
 \text{ELBO}( \lambda)
-&= \E_{q(\beta, \z)} [\log p (\beta | \x, \z, \alpha )] + \E_{q(\beta, \z)} [\log p (\x, \z)] - \E_{q(\beta, \z)} [\log q(\beta)] \\
+&= \E_{q(\beta, \z)} [\log p (\beta | \x, \z, \alpha )] + \E_{q(\beta, \z)} [\log p (\x, \z | \alpha)] - \E_{q(\beta, \z)} [\log q(\beta)] \\
 	&= \E_{q(\beta, \z)} \big[\log p (\beta | \x, \z, \alpha )\big] - \E_{q} \big[\log q(\beta)\big]+\C \\
 &= \E_{q(\beta, \z)} \left[\log \big(  h (\beta) \exp \big\{ \eta_\post (\x,\z,\alpha)^\top T(\beta) - A_\post (\eta_\post (\x,\z, \alpha)) \big\}  \big) \right] - {\color{red}\E_{q} [\log q(\beta)]}+\C \\
 %---------------------------------------------------
@@ -2115,13 +2113,13 @@ Note that $q$ used here is $q(\beta, \z)$ not just $q(\beta | \lambda)$
 &= \underbrace{\E_{q(\beta, \z)} [\log (h (\beta))]}_{\text{doesn't contain } \lambda} +\underline{\E_{q(\z|\Phi)} [\eta_\post (\x,\z,\alpha)]^\top  \E_{q (\beta | \lambda)} [  T(\beta) ]} 
    - \underbrace{\E_{q(\beta, \z)} [\log  h (\beta)]}_{\text{doesn't contain } \lambda} - \E_q [ \lambda^\top T(\beta) ]+  A_\pri (\lambda) + \C \\
 %---------------------------------------------------
-&=  \E_{q(\z|\Phi)} [\eta_\post (x,z,\alpha)]^\top \E_{q(\beta |\lambda)} [  T(\beta) ] - \lambda^\top \E_{q(\beta|\lambda)} [  T(\beta) ]+  A_\pri (\lambda) + \C \quad\quad \because A_\pri (\lambda) \text{ contains } \lambda\\
+&=  \E_{q(\z|\Phi)} [\eta_\post (\x,\z,\alpha)]^\top \E_{q(\beta |\lambda)} [  T(\beta) ] - \lambda^\top \E_{q(\beta|\lambda)} [  T(\beta) ]+  A_\pri (\lambda) + \C \quad\quad \because A_\pri (\lambda) \text{ contains } \lambda\\
 \end{split}\end{equation}
 
 now let's substitute $\E_{q(\beta|\lambda)} [ T(\beta) ] = \DLambda A_\pri(\lambda)$ into \text{ELBO}$(\lambda)$:
 
 \begin{equation}\begin{split}
-\text{ELBO}(\lambda) &= \E_{q(\z|\Phi)} [\eta_\post (x,z,\alpha)]^\top  \DLambda A_\pri(\lambda) {\color{red}- \lambda^\top  \DLambda A_\pri(\lambda)} + A_\pri (\lambda) + \C \\
+\text{ELBO}(\lambda) &= \E_{q(\z|\Phi)} [\eta_\post (\x,\z,\alpha)]^\top  \DLambda A_\pri(\lambda) {\color{red}- \lambda^\top  \DLambda A_\pri(\lambda)} + A_\pri (\lambda) + \C \\
 \end{split}\end{equation}
 
 
@@ -2137,8 +2135,8 @@ now let's substitute $\E_{q(\beta|\lambda)} [ T(\beta) ] = \DLambda A_\pri(\lamb
 Maximize $\text{ELBO} (\lambda)$ we get:
 
 \begin{equation}\begin{split}
-\DLambda \text{ELBO}(\lambda) &= \E_{q(\z|\Phi)} [\eta_g (\x,\z,\alpha)]^\top  \nabla^2_{\lambda} A_\pri(\lambda) {\color{red} - \DLambda A_\pri(\lambda) -  \lambda^\top \DLambda^2 A_\pri(\lambda)} + \DLambda A_\pri (\lambda) = 0 \\
-&= \E_{q(\z|\Phi)} [\eta_g (\x,\z,\alpha)]^\top  \nabla^2_{\lambda} A_\pri(\lambda) -  \lambda^\top \DLambda^2 A_\pri(\lambda) = 0 \\
+\DLambda \text{ELBO}(\lambda) &= \E_{q(\z|\Phi)} [\eta_\post (\x,\z,\alpha)]^\top  \nabla^2_{\lambda} A_\pri(\lambda) {\color{red} - \DLambda A_\pri(\lambda) -  \lambda^\top \DLambda^2 A_\pri(\lambda)} + \DLambda A_\pri (\lambda) = 0 \\
+&= \E_{q(\z|\Phi)} [\eta_\post (\x,\z,\alpha)]^\top  \nabla^2_{\lambda} A_\pri(\lambda) -  \lambda^\top \DLambda^2 A_\pri(\lambda) = 0 \\
 &\implies  \nabla^2_{\lambda} A_\pri(\lambda) \big( \E_{q(\z|\Phi)} [\eta_\post (\x,\z,\alpha)]^\top   -  \lambda^\top \big) = 0 \\
 \end{split}\end{equation}
 
@@ -2148,7 +2146,7 @@ Maximize $\text{ELBO} (\lambda)$ we get:
 \end{split}\end{equation}
 
 
-in words, when we try to update $\lambda$ for $q(\beta | \lambda)$, it find the corresponding posterior $p (\beta | \x, \z, \alpha )$, and its natural parameter $\eta_\post (\x, \z,\alpha)$, then computes the expectation with all the $q(\cdot)$ that its natural parameter has random variable for.
+in words, when we try to update $\lambda$ for $q(\beta | \lambda)$, we find the corresponding posterior $p (\beta | \x, \z, \alpha )$, and its natural parameter $\eta_\post (\x, \z,\alpha)$, then compute the expectation with all the $q(\cdot)$ that its natural parameter has random variables for.
 
 
 %------------------------------------------------------------------------
@@ -2157,7 +2155,7 @@ in words, when we try to update $\lambda$ for $q(\beta | \lambda)$, it find the 
 
  
 
-In a very similar fashion to $\L(\lambda)$, we can prove:
+In a very similar fashion to $\text{ELBO}(\lambda)$, we can prove:
 
 \begin{equation}\begin{split}
 	\DPhi \text{ELBO}(\phi_{n,j}) &=  \nabla^2_{\phi_{n,j}} A_l(\phi_{n,j}) \big( \E_{q(\lambda)} [\eta_l (x_n, z_{n,-j},\beta)]^\top   - \phi_{n,j}^\top \big) = 0 \\
@@ -2169,7 +2167,7 @@ In a very similar fashion to $\L(\lambda)$, we can prove:
  \phi_{n,j} =  \E_{q(\lambda)} \big[\eta_l(x_n,z_{n,-j}, \beta)\big]
 \end{split}\end{equation}
 
-in words, when we try to update $ \phi_{n,j} $ for $q(z_{n,j} | \phi_{n,j})$, it find the corresponding posterior $p ( z_{n,j} | x_n, z_{n,-j} )$, and its natural parameter $\eta_l (x_n, z_{n,-j})$, then computes the expectation with all the $q(\cdot)$ that its natural parameter has random variable for.
+in words, when we try to update $ \phi_{n,j} $ for $q(z_{n,j} | \phi_{n,j})$, we find the corresponding posterior $p ( z_{n,j} | x_n, z_{n,-j} )$, and its natural parameter $\eta_l (x_n, z_{n,-j})$, then compute the expectation with all the $q(\cdot)$ that its natural parameter has random variables for.
 
 \newpage
 
@@ -2226,7 +2224,7 @@ For each document $d$:\\
 \hspace{5 mm} $\ttheta_d \sim \text{Dir} ( \alpha, \dots, \alpha)$\\
 \hspace{5 mm} For each word $w \in \{1,...,N\}$:\\
 \hspace{10 mm} $z_{dn} \sim \text{Mult} (\ttheta_d)$\\
-\hspace{10 mm} $w_{dn} \sim \text{Mult} (\beta_{z_{dn}})$
+\hspace{10 mm} $w_{dn} \sim \text{Mult} (\bbeta_{z_{dn}})$
 
 
 \end{itemize}
@@ -2289,7 +2287,7 @@ p(z_{d,n} = k | \ttheta_d, \bbeta_{1:K},w_{d,n} ) &\propto  p(z_{d,n} = k | \tth
 &\propto \exp \bigg( \underbrace{\log(\theta_{d,k}) +\log(\beta_{k,w_{d,n}})}_{\eta_l \left(\ttheta_d, \bbeta_{1:K}, w_{d,n} \right)}  \times \underbrace{1}_{T(z_{d,n})}\bigg)\\
 \end{split}\end{equation}
 
-for the last line, we substitute the exponential family form of multinomial distribution. Expressing it using ``normal '' multinomial distribution, then its parameter is:
+for the last line, we substitute the exponential family form of the multinomial distribution. Expressing it using the ``normal'' multinomial distribution, its parameter is:
 
 
 \begin{equation}\begin{split}
@@ -2305,7 +2303,7 @@ diagrammatically, $\bbeta_{1:K}$ is represented as a matrix of:
 \bbeta_{1:K} \equiv \begin{bmatrix}
 -- & \bbeta_1 & --\\
 \vdots & \vdots & \vdots\\
--- & \bbeta_k & --\\
+-- & \bbeta_K & --\\
 \end{bmatrix}
 \equiv \begin{bmatrix}
 \beta_{1,w_1}& \dots & \beta_{1,w_{|\mathcal{V}|}}\\
@@ -2319,7 +2317,7 @@ diagrammatically, $\bbeta_{1:K}$ is represented as a matrix of:
 \subsubsection{optimize $\pphi_{d,n}$}
 
 
-apply the update formula, in which we need the natural parameter for $p(z_{d,n} | \ttheta_d, \bbeta_{1:K}, w_{d,n} )$ in the exception:
+apply the update formula, in which we need the natural parameter for $p(z_{d,n} | \ttheta_d, \bbeta_{1:K}, w_{d,n} )$ in the expectation:
 
 \begin{equation}\begin{split}
 \eta( \phi^k_{d,n} ) = \log( \phi^k_{d,n} ) &\propto \E_{q(\ttheta_d)q(\bbeta_k) } \left[ \eta_l \left(\ttheta_d, \bbeta_{1:K}, w_{d,n} \right) \right]\\
@@ -2343,7 +2341,7 @@ to obtain $\pphi_{d,n}$:
 \implies \phi^k_{d,n} &\propto  
 \exp \Bigg[ \Psi(\gamma_{d,k}) - \Psi \Big( \sum_{k=1}^K \gamma_{d,k}  \Big)+  \Psi \Big( \lambda_{k, w_{d,n}} \Big) - \Psi \Big( \sum_{v} \lambda_{k,v}  \Big) \Bigg] \\
 &\propto \exp \bigg[ \Psi(\gamma_{d,k}) +  \Psi \Big( \lambda_{k, w_{d,n}} \Big) - \Psi \Big( \sum_{v} \lambda_{k,v}  \Big) \bigg] \quad
-\because \sum_{k=1}^K \gamma_{d,k}  \text{ has same value irrespective of } k\\
+\because \sum_{k=1}^K \gamma_{d,k}  \text{ has the same value irrespective of } k\\
 \end{split}\end{equation}
 
 
@@ -2356,7 +2354,7 @@ to obtain $\pphi_{d,n}$:
 
 
 \begin{equation}\begin{split}\label{eq posterior of theta d}
-p( \ttheta_d | \z_{d} ) &= p(\ttheta_d | \aalpha) \prod_{n=1}^N  p(z_{d,n} | \ttheta_d)
+p( \ttheta_d | \z_{d} ) &\propto p(\ttheta_d | \aalpha) \prod_{n=1}^N  p(z_{d,n} | \ttheta_d)
 = \text{Dir} (\aalpha) \times \prod_{n=1}^N \text{Mult} ( z_{d,n} | \ttheta_d)\\ 
 %-------------------------
 &= \prod_{k} \Big( \theta_{d,k}^{\alpha_k - 1} \prod_{n=1}^{N} \theta_{d,k}^{\1(z_{d,n}= k)} \Big) \\
@@ -2375,7 +2373,7 @@ p( \ttheta_d | \z_{d} ) &= p(\ttheta_d | \aalpha) \prod_{n=1}^N  p(z_{d,n} | \tt
 =&\text{Dir}(\alpha_1 + n_1, \dots, \alpha_K + n_K)\\
 \end{split}\end{equation}
 
-It turns out that the Dirichlet distribution is the only distribution with exactly the same "normal" and natural parameters.
+It turns out that the Dirichlet distribution is the only distribution with exactly the same ``normal'' and natural parameters.
 
 %\subsubsection{define corresponding $q(\cdot)$}
 %\begin{equation}\begin{split}
@@ -2387,7 +2385,7 @@ It turns out that the Dirichlet distribution is the only distribution with exact
 
 \subsubsection{optimize $\ggamma_d$}
 
-let's use $q(\eta(\ggamma_d)) = \text{Dir}((\eta(\ggamma_d))$ to approximate $p( \ttheta_d | \z_{d} ) $ (another Dirichlet distribution), we apply for the exponential family update formula Eq.(\ref{eq exponential family update}):
+let's use $q(\eta(\ggamma_d)) = \text{Dir}(\eta(\ggamma_d))$ to approximate $p( \ttheta_d | \z_{d} ) $ (another Dirichlet distribution), we apply the exponential family update formula Eq.(\ref{eq exponential family update}):
 
 \begin{equation}\begin{split}
 \eta(\ggamma_d) &= \E_{q(z_{d,n} | \pphi_{d,n} )} \left[ \eta_l \left(\alpha,  z_{d} \right) \right]\\
@@ -2400,12 +2398,12 @@ compare this with Eq.(\ref{eq exponential family update}), i.e., $\eta_j =  \E_{
 \z \setminus z_j &\equiv \{ z_{d,n} \}
 \end{split}\end{equation}
 
-how to compute $\E_{q(z_{d,n} | \pphi_{d,n} )}  \big[n_1)\big]$? Firstly, let's recognize that $\pphi_{d,n}$ itself is a probability vector:
+how to compute $\E_{q(z_{d,n} | \pphi_{d,n} )}  \big[n_1\big]$? Firstly, let's recognize that $\pphi_{d,n}$ itself is a probability vector:
 
 \begin{equation}\begin{split}\label{eq update for phi d n}
-\pphi_{d,n} &= 
+\pphi_{d,n} &=
 \begin{bmatrix}
-\pphi_{d,n}^1 & \dots & \pphi_{d,n}^K
+\phi_{d,n}^1 & \dots & \phi_{d,n}^K
 \end{bmatrix}\\
 &=\begin{bmatrix}
 q(z_{d,n} = 1) & \dots & q(z_{d,n} = K)
@@ -2417,18 +2415,18 @@ since:
 \begin{equation}\begin{split}
 \E\big[\sum_{n=1}^N \1(z_{d,n} =  k) \big]&= \sum_{n=1}^N \E[ \1(z_{d,n} =  k) ]\\
 &= \sum_{n=1}^N  q( z_{d,n} =  k)\\
-&=  \sum_{n=1}^N  \pphi_{d,n}^k
+&=  \sum_{n=1}^N  \phi_{d,n}^k
 \end{split}\end{equation}
 
 continue with Eq.(\ref{eq update for phi d n}), we have:
 
 \begin{equation}\begin{split}
-\eta(\ggamma_d) &= \begin{bmatrix}\alpha_1 - 1 + \sum_{n=1}^N  \pphi_{d,n}^k  & \dots &  \alpha_K - 1 + \sum_{n=1}^N  \pphi_{d,n}^k \end{bmatrix} \\
+\eta(\ggamma_d) &= \begin{bmatrix}\alpha_1 - 1 + \sum_{n=1}^N  \phi_{d,n}^1  & \dots &  \alpha_K - 1 + \sum_{n=1}^N  \phi_{d,n}^K \end{bmatrix} \\
 %&= \begin{bmatrix}(\alpha_1 - 1 + \sum_{n=1}^N \1(z_{d,n} =  1 ) \phi^1_{d,n} )  & \dots &  (\alpha_K - 1 + \sum_{n=1}^N  \1(z_{d,n} = K ) \phi^K_{d,n}) \end{bmatrix} \\
 \end{split}\end{equation}
 
 
-to obtain the Dirichlet distribution parameter $\ggamma_d$, luckily, for Dirichlet distribution, the natural and ``normal'' parameter are the same.
+to obtain the Dirichlet distribution parameter $\ggamma_d$: luckily, for the Dirichlet distribution, the natural and ``normal'' parameters are the same.
 
 
 \begin{equation}\begin{split}
@@ -2447,9 +2445,9 @@ to obtain the Dirichlet distribution parameter $\ggamma_d$, luckily, for Dirichl
 \subsubsection{find natural parameter of posterior $p( \bbeta_{k} | \z, \w )$}
 
 \begin{equation}\begin{split}
-p( \bbeta_{k} | \z, \w ) &= p(\bbeta_k | \xi) \prod_{d=1}^D \prod_{n=1}^N  p \left(w_{d,n} | \bbeta_{k}\right)^{ \1(z_{d,n}= k)}
-= \text{Dir} (\eta) \times  \prod_{d=1}^D \prod_{n=1}^N \beta_{k,w_{d,n}}^{\1(z_{d,n}= k) } \\
-&\propto \exp\bigg( \underbrace{\left(   \xi - 1 +  \sum_{d=1}^D \sum_{n=1}^N  w_{d,n}  \1(z_{d,n}= k)    \right)}_{\eta_l \left(\eta,  Z, W \right)}  \times \underbrace{\log(\bbeta_k)}_{T(\bbeta_{k})}\bigg)\\
+p( \bbeta_{k} | \z, \w ) &\propto p(\bbeta_k | \xi) \prod_{d=1}^D \prod_{n=1}^N  p \left(w_{d,n} | \bbeta_{k}\right)^{ \1(z_{d,n}= k)}
+= \text{Dir} (\xi) \times  \prod_{d=1}^D \prod_{n=1}^N \beta_{k,w_{d,n}}^{\1(z_{d,n}= k) } \\
+&\propto \exp\bigg( \underbrace{\left(   \xi - 1 +  \sum_{d=1}^D \sum_{n=1}^N  w_{d,n}  \1(z_{d,n}= k)    \right)}_{\eta_l \left(\xi,  Z, W \right)}  \times \underbrace{\log(\bbeta_k)}_{T(\bbeta_{k})}\bigg)\\
 &=\text{Dir}(\eta_l \left(\xi,  Z, W \right))
 \end{split}\end{equation}
 
@@ -2465,13 +2463,13 @@ p( \bbeta_{k} | \z, \w ) &= p(\bbeta_k | \xi) \prod_{d=1}^D \prod_{n=1}^N  p \le
 
 \subsubsection{optimize $\llambda_k$}
 
-let's use $q(\eta(\llambda_k)) = \text{Dir}((\eta(\llambda_k))$ to approximate $p( \bbeta_{k} | \z, \w )$ (another Dirichlet distribution), we apply for the exponential family update formula Eq.(\ref{eq exponential family update}):
+let's use $q(\eta(\llambda_k)) = \text{Dir}(\eta(\llambda_k))$ to approximate $p( \bbeta_{k} | \z, \w )$ (another Dirichlet distribution), we apply the exponential family update formula Eq.(\ref{eq exponential family update}):
 
 
 \begin{equation}\begin{split}
 \eta(\llambda_k) &= \E_{\prod_{d=1}^D \prod_{n=1}^N q(z_{d,n} | \phi^k_{d,n})  } \left[ \eta_l (\xi,  \z, \w ) \right]\\
 &=  \E_{\prod_{d=1}^D \prod_{n=1}^N q(z_{d,n} | \phi^k_{d,n})  }  \left[ \xi -1 +  \sum_{d=1}^D \sum_{n=1}^N  w_{d,n}  \1(z_{d,n}= k)  \right]\\
-&= \eta -1  +  \sum_{d=1}^D \sum_{n=1}^N  w_{d,n} \phi^k_{d,n}  \\
+&= \xi -1  +  \sum_{d=1}^D \sum_{n=1}^N  w_{d,n} \phi^k_{d,n}  \\
 \end{split}\end{equation}
 
 
@@ -2504,13 +2502,13 @@ let's use $q(\eta(\llambda_k)) = \text{Dir}((\eta(\llambda_k))$ to approximate $
 
 \begin{equation}
 \begin{split}
-\implies q(Z, \theta_1\dots \ttheta_d, \beta_1 \dots \bbeta_k) 
-&= \left( \prod_{d=1}^{d=D} \prod_{n=1}^N q (z_{d,n} | \pphi_{d,n})\right) \prod_{d=1}^{D} q (\ttheta_d | \ggamma_d) \prod_{k=1}^K  q (\theta _k| \llambda_k)\\
-\text{ now change to:} &=  \underbrace{\left( \prod_{d=1}^{d=D} \prod_{n=1}^N q (z_{d,n} | \pphi_{d,n})\right)}_{q(Z)}  q({ \Theta}, { \beta} | Z)\\
+\implies q(Z, \ttheta_1\dots \ttheta_D, \bbeta_1 \dots \bbeta_K)
+&= \left( \prod_{d=1}^{D} \prod_{n=1}^N q (z_{d,n} | \pphi_{d,n})\right) \prod_{d=1}^{D} q (\ttheta_d | \ggamma_d) \prod_{k=1}^K  q (\bbeta_k| \llambda_k)\\
+\text{ now change to:} &=  \underbrace{\left( \prod_{d=1}^{D} \prod_{n=1}^N q (z_{d,n} | \pphi_{d,n})\right)}_{q(Z)}  q({ \Theta}, { \beta} | Z)\\
 \end{split}
 \end{equation}
 
-Maximize ELOB, it becomes: (remove $X$ for clarity)
+Maximizing ELBO, it becomes: (remove $X$ for clarity)
 
 
 Let $U = \{ \Theta, \beta \}$:
@@ -2520,11 +2518,11 @@ Let $U = \{ \Theta, \beta \}$:
 	\text{ELBO}(q) &\triangleq \E_{q( U, Z) } [\log p (Z, U )] - \E_{q( U, Z)} [\log q(Z, U)]\\
 	&= \E_{q( U, Z) } [\log p (Z, U )] - \E_{q( U, Z)} [\log q(U | Z) - \log q(Z) ]\\
 	&= \E_{q (Z)} \left(  \E_{ q( U | Z) } [\log p (Z, U )]  \right) - \E_{q (Z)} \left(  \E_{ q( U | Z) }  [\log q( U | Z)] \right) -  \E_{q(Z, U)} [\log q(Z)] \\
-	&= \E_{q (Z)} \left(  \underbrace{ \E_{ q( U | Z) } \left( [\log p (Z, U )] -  [\log q( U | Z)] \right)}_{\L(q( U | Z)) }  \right)-  \E_{q(Z)} [\log q(Z)] \\
+	&= \E_{q (Z)} \left(  \underbrace{ \E_{ q( U | Z) } \left( [\log p (Z, U )] -  [\log q( U | Z)] \right)}_{\mathcal{L}(q( U | Z)) }  \right)-  \E_{q(Z)} [\log q(Z)] \\
 \end{split}
 \end{equation}
 
-Think this as treating $Z$ as $X$.
+Think of this as treating $Z$ as $X$.
 
 
  
@@ -2534,17 +2532,17 @@ Think this as treating $Z$ as $X$.
 
 \begin{equation}\begin{split}
 	\argmax_{q( U | Z) } ( \text{ELBO}(q) )
-	&=  \argmax_{q( U | Z) } \left[ \E_{q (Z)} \left(  \underbrace{ \E_{ q( U | Z) } \left( [\log p_X (Z, U )] -  [\log q( U | Z)] \right)}_{\L(q( U | Z)) }  \right)-  \E_{q(Z)} [\log q(Z)] \right] \\
-		&= \E_{q (Z)} \left(  \underbrace{ \argmax_{q( U | Z) } \left[  \E_{ q( U | Z) } \left( [\log p (Z, U )] -  [\log q( U | Z)] \right) \right]}_{ }  \right) -  \E_{q(Z)} [\log q(Z)] \\
-		&= \E_{q (Z)} [  \underbrace{p(Z)} ]-  \E_{q(Z)} [\log q(Z)]  \\
+	&=  \argmax_{q( U | Z) } \left[ \E_{q (Z)} \left(  \underbrace{ \E_{ q( U | Z) } \left( [\log p_X (Z, U )] -  [\log q( U | Z)] \right)}_{\mathcal{L}(q( U | Z)) }  \right)-  \E_{q(Z)} [\log q(Z)] \right] \\
+		&= \E_{q (Z)} \left(  \underbrace{ \max_{q( U | Z) } \left[  \E_{ q( U | Z) } \left( [\log p (Z, U )] -  [\log q( U | Z)] \right) \right]}_{ }  \right) -  \E_{q(Z)} [\log q(Z)] \\
+		&= \E_{q (Z)} [  \underbrace{\log p(Z)} ]-  \E_{q(Z)} [\log q(Z)]  \\
 \end{split}\end{equation}
 
 \begin{equation}\begin{split}
- \argmax_{q( U | Z) } \left[  \E_{ q( U | Z) } \left( [\log p (Z, U )] -  [\log q( U | Z)] \right) \right] = p(Z) 
+ \max_{q( U | Z) } \left[  \E_{ q( U | Z) } \left( [\log p (Z, U )] -  [\log q( U | Z)] \right) \right] = \log p(Z)
 \end{split}\end{equation}
 
 
-maximum occur when $q ( U | Z ) = p( U | Z) \implies \KL  \left( q( U | Z)  \| p(U | Z) \right) = 0$    
+the maximum occurs when $q ( U | Z ) = p( U | Z) \implies \KL  \left( q( U | Z)  \| p(U | Z) \right) = 0$
 
 %-------------------------------------------------------------------------
 
@@ -2552,4 +2550,3 @@ maximum occur when $q ( U | Z ) = p( U | Z) \implies \KL  \left( q( U | Z)  \| p
 \bibliography{../includes/refs}
 \bibliographystyle{../includes/IEEEbib}
 \end{document}
-document}
