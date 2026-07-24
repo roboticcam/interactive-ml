@@ -84,13 +84,63 @@
 
 
 
-\title{Variational Bayes}
+% ── Paper-style layout (course-standard template) ──────────────────────────────
+\geometry{a4paper, textwidth=6.3in, textheight=9.2in}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Variational Bayes}
+\fancyhead[R]{\small Richard Xu}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+
+\title{\bfseries Variational Bayes:\\
+Turning Bayesian Inference into Optimization,\\
+from the ELBO to Exponential-Family Updates}
 \author{Richard Xu}
+\date{}
 
 \begin{document}
 
-\maketitle 
+\maketitle
+\thispagestyle{plain}
 
+\begin{center}
+\textit{Lecture notes and tutorial}
+\end{center}
+
+\begin{abstract}
+\noindent
+Bayesian inference and generative modelling are blocked by the same integral:
+the evidence $\int p(\x|\z)p(\z)\,\d\z$ rarely has a closed form, so the
+posterior $p(\z|\x)$ cannot be computed directly. Variational Bayes sidesteps
+the integral by turning inference into optimization: choose a tractable family
+$q_\phi(\z)$ and make it as close as possible to the posterior. These notes
+develop the framework from first principles. The evidence decomposes exactly as
+$\log p(\x) = \text{ELBO}(q) + \KL(q\,\|\,p(\z|\x))$, so maximizing the
+computable ELBO is equivalent to minimizing the incomputable KL divergence.
+Under the mean-field family $q(\z)=\prod_i q_i(z_i)$, each factor's optimum has
+the closed form $\log q_j^*(z_j) = \E_{\z\setminus z_j}[\log p(\x,\z)]$,
+yielding the coordinate-ascent algorithm (CAVI). The machinery is worked in
+full on the conjugate Normal-Gamma model --- where the exact posterior is known
+and the factorised approximation can be judged against it --- and on the
+Bayesian Gaussian mixture model. The second half develops the
+exponential-family view: natural parameters, conjugacy, and the master update
+$\eta_j = \E[\eta_{\text{post}}]$ that reduces variational updates to
+expectations of natural parameters, culminating in the three classical digamma
+updates for Latent Dirichlet Allocation and a brief account of collapsed
+variational inference.
+\end{abstract}
+
+\vspace{2mm}
+\noindent
+\textbf{Keywords:} variational Bayes; ELBO; mean-field; CAVI; exponential
+family; conjugacy; natural parameters; latent Dirichlet allocation
+
+\newpage
+\tableofcontents
+\newpage
 
 \section{Motivation}
 
@@ -242,7 +292,7 @@ we just need to optimize with respect to $\{  \llambda_j \}, \{ \ggamma_d \}, \{
 
 \subsection{A bit of history \dots}
 
-This note started in 2010 when I was inspired to help people read Chapter 10 of Bishop \cite{bishop2006pattern} where I was trying to explain a few things in an oversimplified (hopefully!) way. I later revamped it. I also added exponential family distributions and an example on LDA when the model is fully conjugate \cite{hoffman2013stochastic}.
+This note started in 2010 when I was inspired to help people read Chapter 10 of Bishop \cite{bishop2006pattern} where I was trying to explain a few things in an oversimplified (hopefully!) way. I later revamped it. I also added exponential family distributions and an example on LDA when the model is fully conjugate \cite{hoffman2013stochastic}. For a modern review of variational inference from a statistician's perspective, see \cite{blei2017variational}.
 
 \section{The Variational Bayes Framework}
 

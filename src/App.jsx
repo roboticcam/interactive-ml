@@ -8,6 +8,7 @@ import { useHashRoute } from "./lib/router.js";
 import Home from "./pages/Home.jsx";
 import ModuleStub from "./pages/ModuleStub.jsx";
 import EMModule, { EM_CHAPTERS } from "./modules/em/index.jsx";
+import VBModule, { VB_CHAPTERS } from "./modules/vb/index.jsx";
 import { getModule } from "./modules/registry.js";
 
 // Map every section anchor to its module, so plain in-page links (#dpa,
@@ -16,6 +17,7 @@ import { getModule } from "./modules/registry.js";
 const SECTION_MODULE = new Map();
 CHAPTERS.forEach((c) => [c.id, ...(c.subs || [])].forEach((id) => SECTION_MODULE.set(id, "transformer")));
 EM_CHAPTERS.forEach((c) => [c.id, ...(c.subs || [])].forEach((id) => SECTION_MODULE.set(id, "em")));
+VB_CHAPTERS.forEach((c) => [c.id, ...(c.subs || [])].forEach((id) => SECTION_MODULE.set(id, "vb")));
 
 function useScrollSpy(ids) {
   const [active, setActive] = useState(ids[0]);
@@ -233,6 +235,9 @@ export default function App() {
   if (seg[0] === "m" && seg[1] === "em") {
     return <EMModule section={seg[2]} />;
   }
+  if (seg[0] === "m" && seg[1] === "vb") {
+    return <VBModule section={seg[2]} />;
+  }
   if (seg[0] === "m" && seg[1] && getModule(seg[1])) {
     // Not-yet-live modules get a status landing page (never a dead click).
     return <ModuleStub id={seg[1]} />;
@@ -244,6 +249,9 @@ export default function App() {
   }
   if (legacyMod === "em") {
     return <EMModule section={route.legacy} />;
+  }
+  if (legacyMod === "vb") {
+    return <VBModule section={route.legacy} />;
   }
   return <Home />;
 }

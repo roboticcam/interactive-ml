@@ -40,7 +40,7 @@ export const MODULES = [
   // Part III
   { id: "graphical-models", part: "p3", status: "planned", src: "estimation/intermediate_graphical.tex", en: "Graphical Models", hans: "概率图模型", hant: "機率圖模型" },
   { id: "em", part: "p3", status: "live", src: "em/intermediate_em.tex", en: "The EM Algorithm", hans: "EM 算法", hant: "EM 演算法" },
-  { id: "vb", part: "p3", status: "pilot", src: "vb/intermediate_vb.tex", en: "Variational Bayes", hans: "变分贝叶斯", hant: "變分貝氏" },
+  { id: "vb", part: "p3", status: "live", src: "vb/intermediate_vb.tex", en: "Variational Bayes", hans: "变分贝叶斯", hant: "變分貝氏" },
   { id: "vb-flows", part: "p3", status: "planned", src: "vb/vb_nf.tex", en: "VB: Flows & Modern Examples", hans: "变分贝叶斯：流模型与现代实例", hant: "變分貝氏：流模型與現代實例" },
   { id: "mcmc", part: "p3", status: "pilot", src: "monte_carlo/intermediate_mcmc.tex", en: "Markov Chains & MCMC", hans: "马尔可夫链与 MCMC", hant: "馬可夫鏈與 MCMC" },
   { id: "particle-filter", part: "p3", status: "planned", src: "particle/particle_filter.tex", en: "Particle Filters & SMC", hans: "粒子滤波与序贯蒙特卡罗", hant: "粒子濾波與循序蒙地卡羅" },
