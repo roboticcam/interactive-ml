@@ -114,12 +114,6 @@
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
             \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
-\newcommand{\notforexam}{%
-  \mbox{\normalfont\scriptsize\colorbox{orange!15}{%
-    \color{red!70!black}\bfseries
-    \enspace$\star$\enspace Not included for MATH4245 (2026) exam\enspace
-  }}%
-}
 
 
 % ── Paper-style layout (matches the transformer_standard_paper reference) ──────
@@ -206,7 +200,7 @@ p(x) &=  \mathcal{N}(x | \mu, \Sigma)\\
 \end{split}
 \end{equation}
 
-Clearly not! Data like this is typically modelled using mixture densities — in this case, a Gaussian Mixture Model with $k$ mixtures (GMM):
+Clearly not! Data like this is typically modelled using mixture densities \cite{bishop2006pattern} — in this case, a Gaussian Mixture Model with $k$ mixtures (GMM):
 
 \begin{equation}\begin{split}
 p(x) =  \sum_{l=1}^k \alpha_l \mathcal{N} (x | \mu_l, \Sigma_l) \quad\quad \text{s.t.}\quad \sum_{l=1}^k \alpha_l = 1
@@ -263,7 +257,7 @@ The {\bf goal} is to find an iterative process that ensures that $\log(p(X | \Th
 To do so, for data $X = \{x_1, \dots x_n\}$, we introduce ``latent'' variables $Z = \{ z_1, \dots z_n\}$, each $z_i$ indicating which mixture component $x_i$ belongs to. The core problem then simply boils down to fitting a single Gaussian.
 
 
-\section[Preliminaries]{Preliminaries \notforexam}
+\section{Preliminaries}
 
 %-------------------------------------------------------------
 
@@ -381,13 +375,13 @@ Instead of performing:
 
 {\bf The trick } is to introduce some ``latent'' variable $Z$ into the model.
 
-For each iteration of the E-M algorithm, we perform:
+For each iteration of the E-M algorithm \cite{dempster1977maximum}, we perform:
 
 \begin{equation}\begin{split}
 \Theta^{(g+1)} = \argmax_{\Theta} \left( \int_Z \log{(p(X,Z|\Theta))} p(Z|X,\Theta^{(g)}) \d Z \right)
 \end{split}\end{equation}
 
-However, before we apply it, we must ensure convergence, i.e.,
+However, before we apply it, we must ensure convergence \cite{wu1983convergence}, i.e.,
 
 \begin{equation}\begin{split}
 \log (p(X| \Theta^{(g+1)} )) &=  \L( \Theta^{(g+1)} | X)\\
@@ -400,9 +394,9 @@ Note the difference between the variable $\Theta$ and the constant $\Theta^{(g)}
 
 %-------------------------------------------------------------
 
-\section[Proof of convergence: Maximization-Maximization]{Proof of convergence: Maximization-Maximization \notforexam}
+\section{Proof of convergence: Maximization-Maximization}
 
-We have seen this in the variational-inference literature, as the ELBO-KL decomposition:
+We have seen this in the variational-inference literature \cite{neal1998view}, as the ELBO-KL decomposition:
 
 \begin{equation}\begin{split}
 \L(\Theta|X) &= \log \left(p(X|\Theta) \right) \\
@@ -1078,7 +1072,7 @@ substitute $\lambda  = - n$ into Eq.(\ref{eq Lagrange Multiplier derivative alph
 
 %-------------------------------------------------------------
 
-\subsection[The M-Step: maximizing $\mu, \Sigma$]{The M-Step: maximizing $\mu, \Sigma$ \notforexam} 
+\subsection{The M-Step: maximizing $\mu, \Sigma$}
 
 Here I jot down the MLE steps for the parameters of a single multidimensional Gaussian distribution. The MLE of a single 1D Gaussian distribution can be easily found in your previous work.
 
@@ -1091,10 +1085,7 @@ So, maximizing $\mu, \Sigma$ means that:
 \end{split}
 \end{equation}
 
-\begin{itemize}
-     \item You will need some linear algebra identities to solve this. It's quite involved. For details, please refer:
-     \item J. Bilmes. ``A Gentle Tutorial on the EM Algorithm and its Application to Parameter Estimation for Gaussian Mixture and Hidden Markov Models'' 
- \end{itemize}
+You will need some linear algebra identities to solve this; it is quite involved. For full details, refer to Bilmes' gentle tutorial \cite{bilmes1998gentle}.
 
 
 
