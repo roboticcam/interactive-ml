@@ -6,6 +6,8 @@ import { Rich } from "./i18n/rich.jsx";
 import { useT, LanguageSwitcher } from "./i18n/LangContext.jsx";
 import { useHashRoute } from "./lib/router.js";
 import Home from "./pages/Home.jsx";
+import ModuleStub from "./pages/ModuleStub.jsx";
+import { getModule } from "./modules/registry.js";
 
 // Anchors that belong to the Transformer module — legacy links (#dpa …, incl.
 // the PDF's "OPEN IN APP" badges) get redirected to #/m/transformer/<anchor>.
@@ -215,6 +217,10 @@ export default function App() {
   const seg = route.seg || [];
   if (seg[0] === "m" && seg[1] === "transformer") {
     return <TransformerModule section={seg[2]} />;
+  }
+  if (seg[0] === "m" && seg[1] && getModule(seg[1])) {
+    // Not-yet-live modules get a status landing page (never a dead click).
+    return <ModuleStub id={seg[1]} />;
   }
   if (route.legacy && TRANSFORMER_IDS.has(route.legacy)) {
     // Render the module immediately while the redirect happens (no flash).

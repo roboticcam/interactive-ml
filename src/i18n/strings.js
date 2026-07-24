@@ -54,6 +54,10 @@ export const EN = {
   "ui.status.pilot": "In production",
   "ui.status.planned": "Coming soon",
   "ui.module.allmodules": "All modules",
+  "ui.stub.pilot": "This module is being built right now — the LaTeX notes have been proofread and the interactive companion is in production. Check back soon.",
+  "ui.stub.planned": "This module is on the roadmap. It will be built from the lecture notes below, in the same interactive style as the live modules.",
+  "ui.stub.source": "Source lecture notes",
+  "ui.stub.trylive": "Try a live module: the Transformer →",
 
   // ── Nav (chapter + sub labels) ────────────────────────────────────────────
   "nav.dpa": "Dot-Product Attention",

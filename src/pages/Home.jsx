@@ -26,33 +26,34 @@ function StatusChip({ status }) {
 function ModuleCard({ m, num, picked, onPick }) {
   const { lang } = useLang();
   const live = m.status === "live";
-  const inner = (
-    <div
-      className={
-        "group flex items-center gap-3 rounded-xl border px-4 py-3 transition " +
-        (live
-          ? "cursor-pointer border-line bg-white hover:border-accent hover:shadow-md"
-          : "border-line/70 bg-panel/60")
-      }
-    >
-      <span className={"flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[12px] font-bold " + (live ? "bg-accent text-white" : "bg-white text-faint ring-1 ring-line")}>
-        {num}
-      </span>
-      <span className={"min-w-0 flex-1 truncate text-[14.5px] " + (live ? "font-semibold text-ink group-hover:text-accent" : "text-muted")}>
-        {moduleTitle(m, lang)}
-      </span>
-      <StatusChip status={m.status} />
-      <input
-        type="checkbox"
-        checked={picked}
-        onClick={(e) => e.stopPropagation()}
-        onChange={(e) => { e.stopPropagation(); onPick(m.id); }}
-        className="h-4 w-4 shrink-0 cursor-pointer accent-indigo-600"
-        title="My subject"
-      />
-    </div>
+  // Every card is clickable: live modules open the real module; the rest open a
+  // status landing page (ModuleStub) — never a dead click.
+  return (
+    <a href={`#/m/${m.id}`} className="block">
+      <div
+        className={
+          "group flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition hover:border-accent hover:shadow-md " +
+          (live ? "border-line bg-white" : "border-line/70 bg-panel/60")
+        }
+      >
+        <span className={"flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[12px] font-bold " + (live ? "bg-accent text-white" : "bg-white text-faint ring-1 ring-line")}>
+          {num}
+        </span>
+        <span className={"min-w-0 flex-1 truncate text-[14.5px] group-hover:text-accent " + (live ? "font-semibold text-ink" : "text-muted")}>
+          {moduleTitle(m, lang)}
+        </span>
+        <StatusChip status={m.status} />
+        <input
+          type="checkbox"
+          checked={picked}
+          onClick={(e) => { e.stopPropagation(); e.preventDefault(); onPick(m.id); }}
+          onChange={() => {}}
+          className="h-4 w-4 shrink-0 cursor-pointer accent-indigo-600"
+          title="My subject"
+        />
+      </div>
+    </a>
   );
-  return live ? <a href={`#/m/${m.id}`} className="block">{inner}</a> : inner;
 }
 
 export default function Home() {

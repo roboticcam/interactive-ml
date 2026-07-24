@@ -49,6 +49,10 @@ export default {
   "ui.status.pilot": "制作中",
   "ui.status.planned": "即将推出",
   "ui.module.allmodules": "全部模块",
+  "ui.stub.pilot": "该模块正在制作中——LaTeX 讲义已完成校对，交互式学习指南正在开发。敬请期待。",
+  "ui.stub.planned": "该模块已列入路线图，将基于下方的讲义笔记构建，风格与已上线模块一致。",
+  "ui.stub.source": "源讲义",
+  "ui.stub.trylive": "试试已上线的模块：Transformer →",
 
   // ── Nav (chapter + sub labels) ────────────────────────────────────────────
   "nav.dpa": "点积注意力",

@@ -48,6 +48,10 @@ export default {
   "ui.status.pilot": "製作中",
   "ui.status.planned": "即將推出",
   "ui.module.allmodules": "全部模組",
+  "ui.stub.pilot": "此模組正在製作中——LaTeX 講義已完成校對，互動式學習夥伴正在開發。敬請期待。",
+  "ui.stub.planned": "此模組已列入路線圖，將以下方的講義筆記為基礎打造，風格與已上線模組一致。",
+  "ui.stub.source": "來源講義",
+  "ui.stub.trylive": "試試已上線的模組：Transformer →",
 
   // ── Nav (chapter + sub labels) ────────────────────────────────────────────
   "nav.dpa": "點積注意力",
