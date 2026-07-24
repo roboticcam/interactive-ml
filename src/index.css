@@ -3,10 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* min-height (not height): a fixed 100% height caps the body at one viewport,
+   which makes Chrome silently no-op smooth scrolls to targets beyond it. */
 html,
 body,
 #root {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
 }
 

@@ -7,12 +7,15 @@ import { useT, LanguageSwitcher } from "./i18n/LangContext.jsx";
 import { useHashRoute } from "./lib/router.js";
 import Home from "./pages/Home.jsx";
 import ModuleStub from "./pages/ModuleStub.jsx";
-import EMModule from "./modules/em/index.jsx";
+import EMModule, { EM_CHAPTERS } from "./modules/em/index.jsx";
 import { getModule } from "./modules/registry.js";
 
-// Anchors that belong to the Transformer module — legacy links (#dpa …, incl.
-// the PDF's "OPEN IN APP" badges) get redirected to #/m/transformer/<anchor>.
-const TRANSFORMER_IDS = new Set(CHAPTERS.flatMap((c) => [c.id, ...(c.subs || [])]));
+// Map every section anchor to its module, so plain in-page links (#dpa,
+// #em-motivation, the PDF's "OPEN IN APP" badges, hero CTAs, sidebar entries)
+// all redirect to the right module route: #<id> → #/m/<module>/<id>.
+const SECTION_MODULE = new Map();
+CHAPTERS.forEach((c) => [c.id, ...(c.subs || [])].forEach((id) => SECTION_MODULE.set(id, "transformer")));
+EM_CHAPTERS.forEach((c) => [c.id, ...(c.subs || [])].forEach((id) => SECTION_MODULE.set(id, "em")));
 
 function useScrollSpy(ids) {
   const [active, setActive] = useState(ids[0]);
@@ -173,10 +176,21 @@ function TransformerModule({ section }) {
       window.scrollTo({ top: 0 });
       return;
     }
-    requestAnimationFrame(() => {
+    // Deferred: the legacy-anchor redirect swaps the hash right after this
+    // effect, and a hash swap cancels an in-flight smooth scroll. Waiting lets
+    // the URL settle so one uninterrupted scroll runs. A follow-up check jumps
+    // instantly if the animation was cancelled for any reason.
+    const id = setTimeout(() => {
       const el = document.getElementById(section);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    }, 120);
+    const verify = setTimeout(() => {
+      const el = document.getElementById(section);
+      if (el && Math.abs(el.getBoundingClientRect().top) > 150) {
+        el.scrollIntoView({ behavior: "auto", block: "start" });
+      }
+    }, 1100);
+    return () => { clearTimeout(id); clearTimeout(verify); };
   }, [section]);
 
   return (
@@ -206,13 +220,10 @@ function TransformerModule({ section }) {
 export default function App() {
   const route = useHashRoute();
 
-  // Legacy anchors (#dpa …) → module route, keeping PDF back-links working.
+  // Plain section anchors → module route, keeping every in-module link working.
   useEffect(() => {
-    if (route.legacy && TRANSFORMER_IDS.has(route.legacy)) {
-      window.location.replace("#/m/transformer/" + route.legacy);
-    } else if (route.legacy === "top") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    const mod = route.legacy && SECTION_MODULE.get(route.legacy);
+    if (mod) window.location.replace(`#/m/${mod}/` + route.legacy);
   }, [route.legacy]);
 
   const seg = route.seg || [];
@@ -226,9 +237,13 @@ export default function App() {
     // Not-yet-live modules get a status landing page (never a dead click).
     return <ModuleStub id={seg[1]} />;
   }
-  if (route.legacy && TRANSFORMER_IDS.has(route.legacy)) {
+  const legacyMod = route.legacy && SECTION_MODULE.get(route.legacy);
+  if (legacyMod === "transformer") {
     // Render the module immediately while the redirect happens (no flash).
     return <TransformerModule section={route.legacy} />;
+  }
+  if (legacyMod === "em") {
+    return <EMModule section={route.legacy} />;
   }
   return <Home />;
 }

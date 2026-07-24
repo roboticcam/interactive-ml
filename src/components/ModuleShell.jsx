@@ -131,10 +131,21 @@ export default function ModuleShell({ chapters, labels, pdf, paperTitleKey, Hero
       window.scrollTo({ top: 0 });
       return;
     }
-    requestAnimationFrame(() => {
+    // Deferred: the legacy-anchor redirect swaps the hash right after this
+    // effect, and a hash swap cancels an in-flight smooth scroll. Waiting lets
+    // the URL settle so one uninterrupted scroll runs. A follow-up check jumps
+    // instantly if the animation was cancelled for any reason.
+    const id = setTimeout(() => {
       const el = document.getElementById(section);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    }, 120);
+    const verify = setTimeout(() => {
+      const el = document.getElementById(section);
+      if (el && Math.abs(el.getBoundingClientRect().top) > 150) {
+        el.scrollIntoView({ behavior: "auto", block: "start" });
+      }
+    }, 1100);
+    return () => { clearTimeout(id); clearTimeout(verify); };
   }, [section]);
 
   return (
