@@ -113,6 +113,33 @@ function GMMExample() {
   );
 }
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+function Exercise({ n }) {
+  const t = useT();
+  return (
+    <details className="group my-3 rounded-xl border border-line bg-white open:border-indigo-200 open:bg-indigo-50/40">
+      <summary className="cursor-pointer list-none px-5 py-3.5 text-[15px] leading-relaxed text-ink/85 marker:content-none">
+        <span className="mr-2 font-mono text-[12px] font-bold text-accent">{n}.</span>
+        <Rich>{t("em.ex." + n + ".q")}</Rich>
+        <span className="ml-2 text-[12px] font-semibold text-accent group-open:hidden">{t("em.ex.show")}</span>
+      </summary>
+      <div className="border-t border-indigo-100 px-5 py-3.5 text-[14.5px] leading-relaxed text-muted">
+        <Rich>{t("em.ex." + n + ".a")}</Rich>
+      </div>
+    </details>
+  );
+}
+
+function Exercises() {
+  const t = useT();
+  return (
+    <Chapter id="em-exercises" num={6} title={t("em.ch6.title")} paper={{ sec: "6", page: 15 }} lead={t("em.ch6.lead")}>
+      {[1, 2, 3, 4, 5].map((n) => <Exercise key={n} n={n} />)}
+    </Chapter>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 function EMHero() {
   const t = useT();
@@ -151,6 +178,7 @@ export const EM_CHAPTERS = [
   { id: "em-algorithm", num: 3, Body: Algorithm, subs: [] },
   { id: "em-convergence", num: 4, Body: Convergence, subs: ["em-step1", "em-step2"] },
   { id: "em-gmm", num: 5, Body: GMMExample, subs: ["em-resp", "em-updates", "em-lab"] },
+  { id: "em-exercises", num: 6, Body: Exercises, subs: [] },
 ];
 
 export default function EMModule({ section }) {

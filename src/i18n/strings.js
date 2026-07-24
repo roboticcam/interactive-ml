@@ -302,6 +302,22 @@ export const EN = {
   "em.resp.slider": "position of the point x",
   "em.resp.caption": "Near the crossover both components share the blame — exactly the soft assignment the E-step feeds to the M-step.",
 
+
+  "em.nav.em-exercises": "Exercises",
+  "em.ch6.title": "Exercises",
+  "em.ch6.lead": "Five problems drawn straight from the notes. Try each before revealing the worked answer.",
+  "em.ex.show": "show answer ▾",
+  "em.ex.1.q": "**Jensen's inequality.** Let $\\phi(x) = -\\log x$, $p_1 = p_2 = \\tfrac12$, $x_1 = 1$, $x_2 = 4$. Compute both sides of $\\phi(\\sum_i p_i x_i) \\le \\sum_i p_i \\phi(x_i)$ and verify it. When does equality hold?",
+  "em.ex.1.a": "LHS: $-\\log(2.5) \\approx -0.916$. RHS: $-\\tfrac12 \\log 4 \\approx -0.693$. Indeed $-0.916 \\le -0.693$. Equality holds iff $x_1 = x_2$ — $-\\log$ is strictly convex, so the chord touches the curve only when it degenerates to a point.",
+  "em.ex.2.q": "**Responsibilities.** A 1-D GMM has $\\alpha_1 = 0.4$, $\\mathcal{N}(x|0, 2)$ and $\\alpha_2 = 0.6$, $\\mathcal{N}(x|3, 0.5)$. For $x = 2$, compute $p(l|x,\\Theta)$ for both components (3 d.p.).",
+  "em.ex.2.a": "$w_1 = 0.4 \\cdot \\tfrac{1}{\\sqrt{4\\pi}} e^{-1} \\approx 0.0415$, $w_2 = 0.6 \\cdot \\tfrac{1}{\\sqrt{\\pi}} e^{-1} \\approx 0.1245$. Normalizing: $p(1|x) \\approx 0.250$, $p(2|x) \\approx 0.750$. (Check it against the responsibilities lab above — slide $x$ to 2.)",
+  "em.ex.3.q": "**The α update.** For $k=2$, $n=4$, with responsibilities to component 1 of $0.9, 0.8, 0.2, 0.1$, show $\\alpha_1^{(g+1)} = \\tfrac12$, and verify $\\alpha_1 + \\alpha_2 = 1$ *without* computing component 2's responsibilities.",
+  "em.ex.3.a": "$\\alpha_1^{(g+1)} = \\tfrac14(0.9+0.8+0.2+0.1) = \\tfrac12$. Per point the responsibilities sum to 1, so $\\sum_i p(2|x_i) = 4 - 2 = 2$, giving $\\alpha_2^{(g+1)} = \\tfrac12$ — normalization is automatic, which is exactly what the Lagrange multiplier $\\lambda = -n$ enforced.",
+  "em.ex.4.q": "**Single-Gaussian sanity check.** Set $k=1$ in the three M-step updates and show each reduces to the ordinary single-Gaussian MLE.",
+  "em.ex.4.a": "With one component every responsibility is 1. Then $\\alpha_1 = \\tfrac{n}{n} = 1$; $\\mu_1 = \\tfrac{1}{n}\\sum_i x_i$ (sample mean); $\\Sigma_1 = \\tfrac{1}{n}\\sum_i (x_i-\\mu_1)(x_i-\\mu_1)^{\\top}$ (sample covariance).",
+  "em.ex.5.q": "**Why H cannot decrease.** Using Jensen with $\\phi = -\\log$, prove $H(\\Theta|\\Theta^{(g)}) - H(\\Theta^{(g)}|\\Theta^{(g)}) \\ge 0$ for all $\\Theta$, and state exactly where the proof uses $\\int_Z p(Z|X,\\Theta)\\,\\mathrm{d}Z = 1$.",
+  "em.ex.5.a": "The difference equals $\\int_Z -\\log\\big(\\tfrac{p(Z|X,\\Theta)}{p(Z|X,\\Theta^{(g)})}\\big) p(Z|X,\\Theta^{(g)}) \\mathrm{d}Z \\ge -\\log \\int_Z \\tfrac{p(Z|X,\\Theta)}{p(Z|X,\\Theta^{(g)})} p(Z|X,\\Theta^{(g)}) \\mathrm{d}Z$ by Jensen. The densities cancel inside, leaving $-\\log \\int_Z p(Z|X,\\Theta) \\mathrm{d}Z$ — and normalization ($=1$) is used precisely here, giving $-\\log 1 = 0$.",
+
 };
 
 // Compose { key: {en, zhHans, zhHant} } with English fallback for missing keys.

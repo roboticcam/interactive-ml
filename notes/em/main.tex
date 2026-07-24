@@ -1402,6 +1402,41 @@ which becomes the parameter update of a single Gaussian
 %See the MATLAB Demos
 %%-------------------------------------------------------------
 
+%-------------------------------------------------------------
+\newpage
+
+\section{Exercises}
+
+\begin{enumerate}
+
+\item {\bf (Jensen's inequality.)} Let $\phi(x) = -\log(x)$ and let $p_1 = p_2 = \tfrac{1}{2}$, $x_1 = 1$, $x_2 = 4$. Compute both sides of Jensen's inequality $\phi\big(\sum_i p_i x_i\big) \le \sum_i p_i \phi(x_i)$ and verify the inequality holds. For which $x_1, x_2$ does equality hold?
+
+\item {\bf (Responsibilities.)} A 1-D GMM has two components: $\alpha_1 = 0.4$, $\N(x \mid 0, 2)$ and $\alpha_2 = 0.6$, $\N(x \mid 3, 0.5)$. For the observation $x = 2$, compute the responsibilities $p(l \mid x, \Theta)$ for $l = 1, 2$. (Three decimal places.)
+
+\item {\bf (The $\alpha$ update.)} Following the Lagrange-multiplier derivation of Section 5, show that for a $k=2$ mixture with $n = 4$ data points whose responsibilities to component 1 are $0.9,\, 0.8,\, 0.2,\, 0.1$, the update gives $\alpha_1^{(g+1)} = \tfrac{1}{2}$. Verify $\alpha_1^{(g+1)} + \alpha_2^{(g+1)} = 1$ without computing $\alpha_2$ from its own responsibilities.
+
+\item {\bf (Single-Gaussian sanity check.)} Set $k=1$ in the three M-step update formulas of Section 5 and show each reduces to the ordinary maximum-likelihood estimate of a single Gaussian.
+
+\item {\bf (Why $H$ cannot decrease.)} Using Jensen's inequality with the convex function $\phi = -\log$, prove that $H(\Theta \mid \Theta^{(g)}) - H(\Theta^{(g)} \mid \Theta^{(g)}) \ge 0$ for all $\Theta$, and state exactly where the proof uses $\int_Z p(Z \mid X, \Theta) \,\d Z = 1$.
+
+\end{enumerate}
+
+\section{Solutions}
+
+\begin{enumerate}
+
+\item LHS: $\phi\big(\tfrac{1}{2}\cdot 1 + \tfrac{1}{2}\cdot 4\big) = -\log(2.5) \approx -0.916$. RHS: $\tfrac{1}{2}(-\log 1) + \tfrac{1}{2}(-\log 4) = -\tfrac{1}{2}\log 4 \approx -0.693$. Indeed $-0.916 \le -0.693$. Equality holds iff $x_1 = x_2$ (the chord degenerates to a point; $-\log$ is strictly convex).
+
+\item Unnormalized weights: $w_1 = 0.4 \cdot \tfrac{1}{\sqrt{2\pi \cdot 2}}e^{-\tfrac{(2-0)^2}{2\cdot 2}} = 0.4 \cdot 0.2820 \cdot e^{-1} \approx 0.0415$; $w_2 = 0.6 \cdot \tfrac{1}{\sqrt{2\pi \cdot 0.5}}e^{-\tfrac{(2-3)^2}{2\cdot 0.5}} = 0.6 \cdot 0.5642 \cdot e^{-1} \approx 0.1245$. Normalizing: $p(1\mid x) \approx 0.250$, $p(2 \mid x) \approx 0.750$.
+
+\item $\alpha_1^{(g+1)} = \tfrac{1}{n}\sum_i p(1 \mid x_i, \Theta^{(g)}) = \tfrac{1}{4}(0.9+0.8+0.2+0.1) = \tfrac{2}{4} = \tfrac{1}{2}$. Since responsibilities per point sum to one, $\sum_i p(2\mid x_i) = n - \sum_i p(1 \mid x_i) = 2$, so $\alpha_2^{(g+1)} = \tfrac{2}{4} = \tfrac{1}{2}$ and the two sum to one automatically.
+
+\item With $k=1$, $p(l{=}1 \mid x_i, \Theta^{(g)}) = 1$ for every $i$. Then $\alpha_1 = \tfrac{1}{n}\sum_i 1 = 1$; $\mu_1 = \tfrac{\sum_i x_i}{n}$ (sample mean); $\Sigma_1 = \tfrac{1}{n}\sum_i (x_i - \mu_1)(x_i - \mu_1)^\top$ (sample covariance) — the single-Gaussian MLE.
+
+\item $H(\Theta \mid \Theta^{(g)}) - H(\Theta^{(g)} \mid \Theta^{(g)}) = \int_Z -\log\big(\tfrac{p(Z\mid X,\Theta)}{p(Z\mid X,\Theta^{(g)})}\big) p(Z \mid X, \Theta^{(g)}) \d Z \ge -\log \int_Z \tfrac{p(Z\mid X,\Theta)}{p(Z\mid X,\Theta^{(g)})} p(Z\mid X, \Theta^{(g)}) \d Z$ by Jensen ($\phi = -\log$ convex, expectation under $p(Z\mid X,\Theta^{(g)})$). The inner integral collapses to $\int_Z p(Z \mid X, \Theta)\, \d Z = 1$ — used exactly here — giving $-\log 1 = 0$.
+
+\end{enumerate}
+
 \bibliography{../includes/refs}
 \bibliographystyle{../includes/IEEEbib}
 \end{document}

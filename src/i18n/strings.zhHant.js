@@ -296,4 +296,20 @@ export default {
   "em.resp.slider": "點 x 的位置",
   "em.resp.caption": "在交界附近兩個成分分擔責任——這正是 E 步餵給 M 步的軟指派。",
 
+
+  "em.nav.em-exercises": "練習",
+  "em.ch6.title": "練習",
+  "em.ch6.lead": "五道直接取自講義的題目。先自己做，再展開查看詳解。",
+  "em.ex.show": "查看答案 ▾",
+  "em.ex.1.q": "**Jensen 不等式。**設 $\\phi(x) = -\\log x$，$p_1 = p_2 = \\tfrac12$，$x_1 = 1$，$x_2 = 4$。計算 $\\phi(\\sum_i p_i x_i) \\le \\sum_i p_i \\phi(x_i)$ 的兩邊並驗證。何時取等？",
+  "em.ex.1.a": "左邊：$-\\log(2.5) \\approx -0.916$。右邊：$-\\tfrac12 \\log 4 \\approx -0.693$。確實 $-0.916 \\le -0.693$。當且僅當 $x_1 = x_2$ 時取等——$-\\log$ 嚴格凸，弦只有退化成一點才碰到曲線。",
+  "em.ex.2.q": "**責任機率。**一維 GMM：$\\alpha_1 = 0.4$，$\\mathcal{N}(x|0, 2)$；$\\alpha_2 = 0.6$，$\\mathcal{N}(x|3, 0.5)$。對 $x = 2$ 計算兩個成分的 $p(l|x,\\Theta)$（取三位小數）。",
+  "em.ex.2.a": "$w_1 = 0.4 \\cdot \\tfrac{1}{\\sqrt{4\\pi}} e^{-1} \\approx 0.0415$，$w_2 = 0.6 \\cdot \\tfrac{1}{\\sqrt{\\pi}} e^{-1} \\approx 0.1245$。正規化後：$p(1|x) \\approx 0.250$，$p(2|x) \\approx 0.750$。（可在上方責任機率實驗中把 $x$ 滑到 2 驗證。）",
+  "em.ex.3.q": "**α 更新。**取 $k=2$、$n=4$，四個點對成分 1 的責任機率為 $0.9, 0.8, 0.2, 0.1$。證明 $\\alpha_1^{(g+1)} = \\tfrac12$，並在*不*計算成分 2 責任機率的情況下驗證 $\\alpha_1 + \\alpha_2 = 1$。",
+  "em.ex.3.a": "$\\alpha_1^{(g+1)} = \\tfrac14(0.9+0.8+0.2+0.1) = \\tfrac12$。每個點的責任機率總和為 1，故 $\\sum_i p(2|x_i) = 4 - 2 = 2$，$\\alpha_2^{(g+1)} = \\tfrac12$——正規化自動成立，這正是拉格朗日乘子 $\\lambda = -n$ 所保證的。",
+  "em.ex.4.q": "**單高斯合理性檢驗。**在三個 M 步更新公式中取 $k=1$，證明它們各自退化為普通單高斯的 MLE。",
+  "em.ex.4.a": "只有一個成分時所有責任機率皆為 1。於是 $\\alpha_1 = 1$；$\\mu_1 = \\tfrac{1}{n}\\sum_i x_i$（樣本平均）；$\\Sigma_1 = \\tfrac{1}{n}\\sum_i (x_i-\\mu_1)(x_i-\\mu_1)^{\\top}$（樣本共變異數）。",
+  "em.ex.5.q": "**為什麼 H 不會下降。**用 $\\phi = -\\log$ 的 Jensen 不等式證明對所有 $\\Theta$ 有 $H(\\Theta|\\Theta^{(g)}) - H(\\Theta^{(g)}|\\Theta^{(g)}) \\ge 0$，並指出證明在哪一步用到 $\\int_Z p(Z|X,\\Theta)\\,\\mathrm{d}Z = 1$。",
+  "em.ex.5.a": "差值等於 $\\int_Z -\\log\\big(\\tfrac{p(Z|X,\\Theta)}{p(Z|X,\\Theta^{(g)})}\\big) p(Z|X,\\Theta^{(g)}) \\mathrm{d}Z$，由 Jensen $\\ge -\\log \\int_Z \\tfrac{p(Z|X,\\Theta)}{p(Z|X,\\Theta^{(g)})} p(Z|X,\\Theta^{(g)}) \\mathrm{d}Z$。密度相消後剩 $-\\log \\int_Z p(Z|X,\\Theta) \\mathrm{d}Z$——正規化（$=1$）正是在這裡用到，得 $-\\log 1 = 0$。",
+
 };

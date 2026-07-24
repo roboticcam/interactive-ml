@@ -297,4 +297,20 @@ export default {
   "em.resp.slider": "点 x 的位置",
   "em.resp.caption": "在交界附近两个成分分担责任——这正是 E 步喂给 M 步的软分配。",
 
+
+  "em.nav.em-exercises": "练习",
+  "em.ch6.title": "练习",
+  "em.ch6.lead": "五道直接取自讲义的题目。先自己做，再展开查看详解。",
+  "em.ex.show": "查看答案 ▾",
+  "em.ex.1.q": "**Jensen 不等式。**设 $\\phi(x) = -\\log x$，$p_1 = p_2 = \\tfrac12$，$x_1 = 1$，$x_2 = 4$。计算 $\\phi(\\sum_i p_i x_i) \\le \\sum_i p_i \\phi(x_i)$ 的两边并验证。何时取等？",
+  "em.ex.1.a": "左边：$-\\log(2.5) \\approx -0.916$。右边：$-\\tfrac12 \\log 4 \\approx -0.693$。确实 $-0.916 \\le -0.693$。当且仅当 $x_1 = x_2$ 时取等——$-\\log$ 严格凸，弦只有退化成一点才碰到曲线。",
+  "em.ex.2.q": "**责任概率。**一维 GMM：$\\alpha_1 = 0.4$，$\\mathcal{N}(x|0, 2)$；$\\alpha_2 = 0.6$，$\\mathcal{N}(x|3, 0.5)$。对 $x = 2$ 计算两个成分的 $p(l|x,\\Theta)$（保留三位小数）。",
+  "em.ex.2.a": "$w_1 = 0.4 \\cdot \\tfrac{1}{\\sqrt{4\\pi}} e^{-1} \\approx 0.0415$，$w_2 = 0.6 \\cdot \\tfrac{1}{\\sqrt{\\pi}} e^{-1} \\approx 0.1245$。归一化后：$p(1|x) \\approx 0.250$，$p(2|x) \\approx 0.750$。（可在上方责任概率实验中把 $x$ 滑到 2 验证。）",
+  "em.ex.3.q": "**α 更新。**取 $k=2$、$n=4$，四个点对成分 1 的责任概率为 $0.9, 0.8, 0.2, 0.1$。证明 $\\alpha_1^{(g+1)} = \\tfrac12$，并在*不*计算成分 2 责任概率的情况下验证 $\\alpha_1 + \\alpha_2 = 1$。",
+  "em.ex.3.a": "$\\alpha_1^{(g+1)} = \\tfrac14(0.9+0.8+0.2+0.1) = \\tfrac12$。每个点的责任概率之和为 1，故 $\\sum_i p(2|x_i) = 4 - 2 = 2$，$\\alpha_2^{(g+1)} = \\tfrac12$——归一化自动成立，这正是拉格朗日乘子 $\\lambda = -n$ 所保证的。",
+  "em.ex.4.q": "**单高斯合理性检验。**在三个 M 步更新公式中取 $k=1$，证明它们各自退化为普通单高斯的 MLE。",
+  "em.ex.4.a": "只有一个成分时所有责任概率均为 1。于是 $\\alpha_1 = 1$；$\\mu_1 = \\tfrac{1}{n}\\sum_i x_i$（样本均值）；$\\Sigma_1 = \\tfrac{1}{n}\\sum_i (x_i-\\mu_1)(x_i-\\mu_1)^{\\top}$（样本协方差）。",
+  "em.ex.5.q": "**为什么 H 不会下降。**用 $\\phi = -\\log$ 的 Jensen 不等式证明对所有 $\\Theta$ 有 $H(\\Theta|\\Theta^{(g)}) - H(\\Theta^{(g)}|\\Theta^{(g)}) \\ge 0$，并指出证明在哪一步用到 $\\int_Z p(Z|X,\\Theta)\\,\\mathrm{d}Z = 1$。",
+  "em.ex.5.a": "差值等于 $\\int_Z -\\log\\big(\\tfrac{p(Z|X,\\Theta)}{p(Z|X,\\Theta^{(g)})}\\big) p(Z|X,\\Theta^{(g)}) \\mathrm{d}Z$，由 Jensen $\\ge -\\log \\int_Z \\tfrac{p(Z|X,\\Theta)}{p(Z|X,\\Theta^{(g)})} p(Z|X,\\Theta^{(g)}) \\mathrm{d}Z$。密度相消后剩 $-\\log \\int_Z p(Z|X,\\Theta) \\mathrm{d}Z$——归一化（$=1$）正是在这里用到，得 $-\\log 1 = 0$。",
+
 };
